@@ -1,26 +1,41 @@
-var path = require('path');
 var express = require('express');
 var app = express();
-var dir = path.join(__dirname, 'public');
-app.use(express.static(dir));
-
 var handlebars = require('express-handlebars').create({defaultLayout:'main'});
-var session = require('express-session');
-var bodyParser = require('body-parser');
-
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-app.use(session({secret:'SuperSecretPassword'}));
 
 app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
+app.use(express.static(__dirname));
+var bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 app.set('port', process.env.PORT || 5000);
+
+// Connect with Postgres
+const { Client } = require('pg');
+const pg = new Client({
+    connectionString: process.env.DATABASE_URL || "postgres://postgres:postgres@localhost:5432/ethical_eating",
+    // ssl: {
+    //   rejectUnauthorized: false
+    // }
+});
+pg.connect();
 
 app.get('/',function(req,res,next){
     let context = {};
     context.title = "Ethical Eating";
 
-    res.render('home', context);
+    // Select all from the test_table
+    pg.query('SELECT * FROM test_table', (err, result) => {
+        if(err){
+            next(err);
+            return;
+        }
+
+        context.results = result.rows;
+        res.render('home', context);
+    });
+
+
 });
 
 app.use(function(req,res){
