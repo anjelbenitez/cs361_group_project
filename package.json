@@ -1,0 +1,23 @@
+{
+  "name": "EthicalEating",
+  "version": "1.0.0",
+  "description": "Group project of team Pacific Time for CS 361 at OSU.",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "preinstall": "npx npm-force-resolutions"
+  },
+  "resolutions": {
+    "graceful-fs": "^4.2.4"
+  },
+  "author": "Team Pacific Time",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.13.3",
+    "express": "^4.13.2",
+    "express-handlebars": "^2.0.1",
+    "express-session": "^1.11.3",
+    "mysql": "^2.16.0",
+    "request": "^2.87.0"
+  }
+}
