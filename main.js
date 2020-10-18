@@ -23,19 +23,23 @@ pg.connect();
 app.get('/',function(req,res,next){
     let context = {};
     context.title = "Ethical Eating";
+    res.render('home', context);
+});
 
-    // Select all from the test_table
-    pg.query('SELECT * FROM test_table', (err, result) => {
-        if(err){
-            next(err);
-            return;
-        }
+app.get('/dbtest',function(req,res,next){
+  let context = {};
+  context.title = "Ethical Eating";
 
-        context.results = result.rows;
-        res.render('home', context);
-    });
+  // Select all from the test_table
+  pg.query('SELECT * FROM test_table', (err, result) => {
+    if(err){
+      next(err);
+      return;
+    }
 
-
+    context.results = result.rows;
+    res.render('home', context);
+  });
 });
 
 app.use(function(req,res){
