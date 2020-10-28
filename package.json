@@ -14,9 +14,10 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.13.3",
-    "express": "^4.13.2",
+    "express": "^4.17.1",
     "express-handlebars": "^2.0.1",
     "express-session": "^1.11.3",
+    "handlebars": "^4.7.6",
     "mysql": "^2.16.0",
     "pg": "^8.4.1",
     "request": "^2.87.0"
