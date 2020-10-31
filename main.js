@@ -31,7 +31,9 @@ app.get('/dbtest',function(req,res,next){
   context.title = "Ethical Eating";
 
   // Select all from the test_table
-  pg.query('SELECT * FROM test_table', (err, result) => {
+  let query = "select r.name as recipeName, i.name as ingredientName from recipe r inner join recipe_ingredient ri on r.id = ri.recipe_id inner join ingredient i on ri.ingredient_id = i.id";
+
+  pg.query(query, (err, result) => {
     if(err){
       next(err);
       return;
