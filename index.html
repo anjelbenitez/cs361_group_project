@@ -17,13 +17,51 @@
         <a href="appointments.html">FAQ</a>
         <div class="account">
           <a href="about.html">Log In</a>				
-          <a href="menu.html">Register</a>
+          <a href="#" id="register_button" class="register_button">Register</a>
         </div>
-    </div>
-
+  </div>
 </header>
 
 <body>
+  <!--Model-->
+  <div class="register_model_container">
+    <div class="register_model_content">
+      <button id="register_close" class="register_close">+</button>
+      <h2>Sign Up</h2>
+      <p>Create an Ethical Eating account</p>
+      <form>
+        <fieldset>
+          <div>
+            <label for="first_name">First Name</label>
+            <input type="text" name="first_name" id="first_name" value="" size="15" maxlength="35">
+            <label for="last_name">Last Name</label>
+            <input type="text" name="last_name" id="last_name" value="" size="15" maxlength="35">
+          </div>
+        <div>
+          <label for="username">Username</label>
+          <input type="text" name="username" id="username" value="" size="30" maxlength="35">
+        </div>
+        <div>
+          <label for="email">Email</label>
+          <input type="text" name="Email" id="Email" value="" size="30" maxlength="35">
+        </div>
+        <div>
+          <label for="password">Password</label>
+          <input type="text" name="password" id="password" value="" size="30" maxlength="35">
+        </div>
+        <div>
+          <label for="confirm_password">Confirm Password</label>
+          <input type="text" name="confirm_password" id="confirm_password" value="" size="30" maxlength="35">
+        </div>
+        <div>
+          <input type="submit" value="Create Account"></input>
+        </div>
+        </fieldset>
+      </form>
+    </div>
+  </div>
+  <!--End Model-->
+  </div>
   <form class="searchbar" style="margin:auto;max-width:60%" >
     <input type="text" placeholder="Search..." name="search">
     <button type="submit">Search</button>
@@ -54,6 +92,7 @@
     </div>
 
   </div>
+  <script src="register.js"></script>
 </body>
 
 
