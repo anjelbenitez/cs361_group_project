@@ -8,7 +8,7 @@ app.use(express.static(__dirname));
 var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.set('port', process.env.PORT || 5000);
+app.set('port', process.env.PORT || 3000);
 
 // Connect with Postgres
 const { Client } = require('pg');

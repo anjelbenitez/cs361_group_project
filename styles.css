@@ -1,0 +1,102 @@
+/* BANNER*/
+
+
+h1{
+  margin-left: 650px;
+  margin-bottom: 20px;
+}
+
+/* END BANNER*/
+
+
+.searchbar{
+  padding-top:40px;
+
+}
+.searchbar input {
+  padding: 10px;
+  font-size: 17px;
+  border: 1px solid black;
+  float: left;
+  width: 80%;
+  background: lightgrey;
+  height: 40px;
+
+}
+
+.searchbar button {
+  width: 20%;
+  padding: 10px;
+  background: lightseagreen;
+  font-size: 20px;
+  height: 40px;
+  border: none;
+  color:white;
+  border-radius: 10px;
+  border: 1px solid black;
+
+  }
+
+
+/* NAVIGATION BAR*/
+
+.navbar {
+  background-color: white;
+  overflow: hidden;
+}
+
+.navbar a {
+float: left;
+color: black;
+text-align: center;
+padding: 12px 16px;
+text-decoration: none;
+font-family: monospace;
+font-size: 25px;
+}
+
+.navbar a:hover {
+text-decoration: underline;
+color: black;
+}
+
+.account {
+  float: right;
+}
+
+/*  END NAVIGATION BAR*/
+
+
+/* HOMEPAGE IMAGES AND LABEL*/
+
+#label a{
+  float: center;
+  color: black;
+  font-family: monospace;
+  text-align: center;
+  text-decoration: none;
+  font-size: 25px;
+  margin-left:90px;
+  }
+
+
+.hp_options {
+    display: flex;
+    margin-top: 10px;
+    margin-left: 300px;
+    width: 250px;
+    height: 250px;
+  }
+  
+.column {
+    flex: 20%;
+    padding: 50px;
+    height:20px;
+    text-decoration: none;
+  }
+.hp_options img {
+  width: 350px;
+  height: 350px;
+  border-radius: 10px;
+}
+  /* END HOMEPAGE IMAGES AND LABEL*/
