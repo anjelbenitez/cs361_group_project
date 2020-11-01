@@ -39,7 +39,8 @@ INSERT INTO ingredient (name) VALUES
     ('avocado'),            -- 10
     ('onion'),              -- 11
     ('heavy cream'),        -- 12
-    ('cashew cream');       -- 13
+    ('cashew cream'),       -- 13
+    ('soy milk');           -- 14
 
 
 -- Note that user is a reserved word in Postgres, so we need to surround it with quotes
@@ -125,4 +126,5 @@ create table ingredient_alternative (
 );
 
 insert into ingredient_alternative (ingredient_id, alternative_id) values
-    (12, 13); -- Heavy cream and cashew cream
+    (12, 13), -- Heavy cream and cashew cream
+    (12, 14); -- Heavy cream and soy milk
