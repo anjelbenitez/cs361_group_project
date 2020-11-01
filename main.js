@@ -44,6 +44,23 @@ app.get('/dbtest',function(req,res,next){
   });
 });
 
+app.get('/custom_recipe',function(req,res,next){
+  let context = {};
+
+  // Select names from ingredients
+  let query = "select name as ingredientName from ingredient";
+
+  pg.query(query, (err, result) => {
+    if(err){
+      next(err);
+      return;
+    }
+
+    context.results = result.rows;
+    res.render('custom_recipe', context);
+  });
+});
+
 app.use(function(req,res){
     res.status(404);
     res.render('404');
