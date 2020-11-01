@@ -44,6 +44,30 @@ app.get('/dbtest',function(req,res,next){
   });
 });
 
+/*
+The /getIngredients endpoint returns a list of all ingredients in the database and their IDs
+ */
+app.post('/getIngredients', function (req, res, next) {
+
+  // Construct the query
+  const query = `select * from ingredient i order by name asc`;
+
+  // Run the query and send response
+  pg.query(query, function(err, result){
+    if(err){
+      next(err);
+      return;
+    }
+
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify(result.rows));
+  });
+});
+
+/*
+The /getEthicalProblemForIngredientId endpoint takes the id of an ingredient as parameter and returns as a response
+the name of the ingredient and the title of the ethical problem.
+ */
 app.post('/getEthicalProblemForIngredientId', function (req, res, next) {
 
   // Construct the query
@@ -68,6 +92,10 @@ app.post('/getEthicalProblemForIngredientId', function (req, res, next) {
   });
 });
 
+/*
+The /getAlternativesForIngredientId endpoint takes the id of an ingredient as parameter and returns as a response
+the name of the ingredient and a list of alternatives.
+ */
 app.post('/getAlternativesForIngredientId', function (req, res, next) {
 
   // Construct the query
