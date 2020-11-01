@@ -165,8 +165,11 @@ color: black;
   opacity: 0.3;
 }
 
-.first_name_error .last_name_error{
+.error_msg {
   position: absolute;
 }
 
+.name_input_container {
+  display: inline;
+}
   /* END REGISTER MODEL */
