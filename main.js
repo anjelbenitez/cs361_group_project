@@ -99,6 +99,60 @@ app.post('/getEthicalProblemForIngredientId', function (req, res, next) {
 });
 
 /*
+The /getRecipeByCategory endpoint takes an id of a category as a parameter and returns a list of all the recipes within that category
+ */
+app.post('/getRecipesByCategoryId', function (req, res, next) {
+
+  // Construct the query
+  const query = {
+    text: `select r.name as recipeName
+	        from recipe r 
+	        inner join recipe_category rc on r.id = rc.recipe_id 
+	        inner join category c on rc.category_id = c.id
+          where c.id = $1`,
+    values: [req.body["id"]]
+  };
+
+  // Run the query and send response
+  pg.query(query, function(err, result){
+    if(err){
+      next(err);
+      return;
+    }
+
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify(result.rows));
+  });
+});
+
+/*
+The /getIngredientsByRecipeId endpoint takes an id of a recipe as a parameter and returns a list of all the ingredients for that recipe
+ */
+app.post('/getIngredientsByRecipeId', function (req, res, next) {
+
+  // Construct the query
+  const query = {
+    text: `select i.name as ingredientList
+          from recipe r
+          inner join recipe_ingredient ri on r.id = ri.recipe_id 
+          inner join ingredient i on ri.ingredient_id = i.id
+          where r.id = $1`,
+    values: [req.body["id"]]
+  };
+
+  // Run the query and send response
+  pg.query(query, function(err, result){
+    if(err){
+      next(err);
+      return;
+    }
+
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify(result.rows));
+  });
+});
+
+/*
 The /getAlternativesForIngredientId endpoint takes the id of an ingredient as parameter and returns as a response
 the name of the ingredient and a list of alternatives.
  */

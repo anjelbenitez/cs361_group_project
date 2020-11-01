@@ -2,6 +2,7 @@ DROP TABLE IF EXISTS test_table;
 
 -- First drop tables that depend on the other tables
 DROP TABLE IF EXISTS recipe_ingredient;
+DROP TABLE IF EXISTS recipe_category;
 DROP TABLE IF EXISTS ingredient_ethical_problem;
 DROP TABLE IF EXISTS ingredient_alternative;
 
@@ -56,10 +57,10 @@ INSERT INTO ingredient (name) VALUES
     ('Barbeque Sauce'),         --25
     ('Salt'),                   --26
     ('Black Pepper'),           --27
-    ('Sugar');                  --28
-    ('heavy cream'),            --29
-    ('cashew cream'),           --30
-    ('soy milk');               --31
+    ('Sugar'),                  --28
+    ('Heavy Cream'),            --29
+    ('Cashew Cream'),           --30
+    ('Soy Milk');               --31
 
 -- Note that user is a reserved word in Postgres, so we need to surround it with quotes
 CREATE TABLE "user" (
