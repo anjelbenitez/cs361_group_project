@@ -17,9 +17,11 @@ function signUpAttempt() {
     console.log("signUpform", signUpForm);
     let formValidated = validateSignUp(signUpForm);
     if (formValidated == true){
-        //create account
+        //create account goes here?
     }
-    else return;
+    else {
+        return;
+    }
 }
 
 function SignUpForm(first_name, last_name, email, username, password, confirm_password) {
@@ -55,37 +57,119 @@ SignUpForm.prototype.getConfirmPassword = function() {
     return this.confirm_password;
 }
 
+
 function emptyFieldsVerification(signUpFormObj) {
     let verfication = true;
     if (signUpFormObj.getFirstName().trim().length == 0){
-        //display emptyFieldsError
-        verfication = false
+        if (document.querySelector(".first_name_error").childElementCount == 0){
+            let first_name_error_msg = document.createElement("span");
+            first_name_error_msg.innerHTML = "This field is required";
+            first_name_error_msg.style.color = "red";
+            first_name_error_msg.style.position = "absolute";
+            first_name_error_msg.id = "first_name_error_msg";
+            document.querySelector(".first_name_error").appendChild(first_name_error_msg);
+        }
+        verfication = false;
     }
-    else if (signUpFormObj.getLastName().trim().length == 0){
-        //display emptyFieldsError
-        verfication = false
+    else{
+        if (document.querySelector(".first_name_error").childElementCount != 0){
+            document.getElementById("first_name_error_msg").remove();
+        }
     }
-    else if (signUpFormObj.getEmail().trim().length == 0){
-        //display emptyFieldsError
-        verfication = false
+
+    if (signUpFormObj.getLastName().trim().length == 0){
+        if (document.querySelector(".last_name_error").childElementCount == 0){
+            let last_name_error_msg = document.createElement("span");
+            last_name_error_msg.innerHTML = "This field is required";
+            last_name_error_msg.style.color = "red";
+            last_name_error_msg.style.position = "absolute";
+            last_name_error_msg.style.paddingLeft = "245px";
+            last_name_error_msg.id = "last_name_error_msg";
+            document.querySelector(".last_name_error").appendChild(last_name_error_msg);
+        }
+        verfication = false;
     }
-    else if (signUpFormObj.getUsername().trim().length == 0){
-        //display emptyFieldsError
-        verfication = false
+    else{
+        if (document.querySelector(".last_name_error").childElementCount != 0){
+            document.getElementById("last_name_error_msg").remove();
+        }
     }
-    else if (signUpFormObj.getPassword().trim().length == 0){
-        //display emptyFieldsError
-        verfication = false
+
+    if (signUpFormObj.getUsername().trim().length == 0){
+        if (document.querySelector(".username_error").childElementCount == 0){
+            let username_error_msg = document.createElement("span");
+            username_error_msg.innerHTML = "This field is required";
+            username_error_msg.style.color = "red";
+            username_error_msg.style.position = "absolute";
+            username_error_msg.id = "username_error_msg";
+            document.querySelector(".username_error").appendChild(username_error_msg);
+        }
+        verfication = false;
     }
-    else if (signUpFormObj.getConfirmPassword().trim().length == 0){
-        //display emptyFieldsError
-        verfication = false
+    else{
+        if (document.querySelector(".username_error").childElementCount != 0){
+            document.getElementById("username_error_msg").remove();
+        }
+    }
+
+    if (signUpFormObj.getEmail().trim().length == 0){
+        if (document.querySelector(".email_error").childElementCount == 0){
+            let email_error_msg = document.createElement("span");
+            email_error_msg.innerHTML = "This field is required";
+            email_error_msg.style.color = "red";
+            email_error_msg.style.position = "absolute";
+            email_error_msg.id = "email_error_msg";
+            document.querySelector(".email_error").appendChild(email_error_msg);
+        }
+        verfication = false;
+    }
+    else{
+        if (document.querySelector(".email_error").childElementCount != 0){
+            document.getElementById("email_error_msg").remove();
+        }
+    }
+
+    if (signUpFormObj.getPassword().trim().length == 0){
+        if (document.querySelector(".password_error").childElementCount == 0){
+            let password_error_msg = document.createElement("span");
+            password_error_msg.innerHTML = "This field is required";
+            password_error_msg.style.color = "red";
+            password_error_msg.style.position = "absolute";
+            password_error_msg.id = "password_error_msg";
+            document.querySelector(".password_error").appendChild(password_error_msg);
+        }
+        verfication = false;
+    }
+    else{
+        if (document.querySelector(".password_error").childElementCount != 0){
+            document.getElementById("password_error_msg").remove();
+        }
+    }
+
+    if (signUpFormObj.getConfirmPassword().trim().length == 0){
+        if (document.querySelector(".confirm_password_error").childElementCount == 0){
+            let confirm_password_error_msg = document.createElement("span");
+            confirm_password_error_msg.innerHTML = "This field is required";
+            confirm_password_error_msg.style.color = "red";
+            confirm_password_error_msg.style.position = "absolute";
+            confirm_password_error_msg.id = "confirm_password_error_msg";
+            document.querySelector(".confirm_password_error").appendChild(confirm_password_error_msg);
+        }
+        verfication = false;
+    }
+    else{
+        if (document.querySelector(".confirm_password_error").childElementCount != 0){
+            document.getElementById("confirm_password_error_msg").remove();
+        }
     }
 
     if (verfication == false){
-        return false
+        return false;
     }
-    else return true; 
+    else {
+
+        return true;
+    }
 }
 
 function validateSignUp(signUpFormObj) {

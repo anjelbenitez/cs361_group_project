@@ -164,4 +164,9 @@ color: black;
 .password_req {
   opacity: 0.3;
 }
+
+.first_name_error .last_name_error{
+  position: absolute;
+}
+
   /* END REGISTER MODEL */

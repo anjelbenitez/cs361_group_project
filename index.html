@@ -37,22 +37,23 @@
             <div>
               <input type="text" name="first_name" id="first_name" value="" size="25" maxlength="35">
               <input type="text" name="last_name" id="last_name" value="" size="25" maxlength="35">
+              <div class="first_name_error"></div> <!--Reserve space for error message-->
+              <div class="last_name_error"></div> <!--Reserve space for error message-->
             </div>
-            <div></div> <!--Reserve space for error message-->
           </div>
         <div class="form_input">
           <div>
             <label for="username">Username</label>
           </div>
           <input type="text" name="username" id="username" value="" size="60" maxlength="35">
-          <div></div> <!--Reserve space for error message-->
+          <div class="username_error"></div> <!--Reserve space for error message-->
         </div>
         <div class="form_input">
           <div>
             <label for="email">Email</label>
           </div>
           <input type="text" name="email" id="email" value="" size="60" maxlength="35">
-          <div></div> <!--Reserve space for error message-->
+          <div class="email_error"></div> <!--Reserve space for error message-->
         </div>
         <div class="form_input">
           <div>
@@ -60,14 +61,14 @@
             <span class="password_req">(6 or more alphanumeric characters)</span>
           </div>
           <input type="text" name="password" id="password" value="" size="60" maxlength="35">
-          <div></div> <!--Reserve space for error message-->
+          <div class="password_error"></div> <!--Reserve space for error message-->
         </div>
         <div class="form_input">
           <div>
             <label for="confirm_password">Confirm Password</label>
           </div>
           <input type="text" name="confirm_password" id="confirm_password" value="" size="60" maxlength="35">
-          <div></div> <!--Reserve space for error message-->
+          <div class="confirm_password_error"></div> <!--Reserve space for error message-->
         </div>
         <div class="form_submit">
           <input id="create_account_button" type="submit" value="Create Account"></input>
