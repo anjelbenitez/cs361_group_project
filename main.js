@@ -4,7 +4,7 @@ var handlebars = require('express-handlebars').create({defaultLayout:'main'});
 
 app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
-app.use(express.static(__dirname));
+app.use(express.static('public'));
 var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -24,6 +24,12 @@ app.get('/',function(req,res,next){
     let context = {};
     context.title = "Ethical Eating";
     res.render('home', context);
+});
+
+app.get('/build',function(req,res,next){
+  let context = {};
+  context.title = "Ethical Eating";
+  res.render('build', context);
 });
 
 app.get('/dbtest',function(req,res,next){
