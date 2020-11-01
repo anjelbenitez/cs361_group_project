@@ -4,14 +4,14 @@ class BuildRecipeViewController {
   }
 
   pageDidLoad() {
-    document.addEventListener('DOMContentLoaded', this.loadPageContent);
+    document.addEventListener('DOMContentLoaded', this.loadPageContent.bind(this));
   }
 
   loadPageContent() {
-    console.log("BuildRecipeViewController loading page content");
 
     let si = new ServerInteractor();
-    si.getAllIngredients(function (ingredients) {
+
+    si.getAllIngredients((ingredients) => {
       console.log(ingredients);
 
       let ingredients_table_body = document.getElementById("ingredients-table-body");
@@ -35,21 +35,12 @@ class BuildRecipeViewController {
         let addButton = document.createElement('button');
         addButton.textContent = "Add";
 
+        // Use the BuildRecipeFunctionFactory to create an add ingredient function
+        let ff = new BuildRecipeFunctionFactory();
+        let addFunction = ff.createAddIngredientFunction(ingredient_id, ingredient_name, this);
+
         // When user clicks on the Add button, add it to the recipe table
-        addButton.addEventListener('click', function () {
-          let recipe_table_body = document.getElementById("recipe-table-body");
-          let row = document.createElement('tr');
-
-          let id_cell = document.createElement('td');
-          id_cell.textContent = ingredient_id;
-          row.appendChild(id_cell);
-
-          let name_cell = document.createElement('td');
-          name_cell.textContent = ingredient_name;
-          row.appendChild(name_cell);
-
-          recipe_table_body.appendChild(row);
-        });
+        addButton.addEventListener('click', addFunction);
         // Append the add button to the ingredient row
         row.appendChild(addButton);
 
