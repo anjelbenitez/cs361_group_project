@@ -95,15 +95,20 @@ function validateSignUp(signUpFormObj) {
     }
 }
 
-document.getElementById('register_button').addEventListener('click', displayRegisterForm);
+document.getElementById('register_button').addEventListener('click', function(event){
+    displayRegisterForm();
+    event.preventDefault();
+    event.stopPropagation();
+});
 
 document.getElementById('register_close').addEventListener('click', function(event){
     closeRegisterForm();
-    event.preventDefault;
+    event.preventDefault();
+    event.stopPropagation();
 });
 
 document.getElementById('create_account_button').addEventListener('click', function(event){
     signUpAttempt();
-    event.preventDefault;
-    event.stopPropagation;
+    event.preventDefault();
+    event.stopPropagation();
 });
