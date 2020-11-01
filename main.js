@@ -68,6 +68,44 @@ app.post('/getEthicalProblemForIngredientId', function (req, res, next) {
   });
 });
 
+app.post('/getAlternativesForIngredientId', function (req, res, next) {
+
+  // Construct the query
+  const query = {
+    text: `select i.name as ingredient, alt.name as alternative 
+           from ingredient i 
+           inner join ingredient_alternative ia on i.id = ia.ingredient_id 
+           inner join ingredient alt on ia.alternative_id = alt.id 
+           where i.id = $1`,
+    values: [req.body["id"]]
+  };
+
+  // Run the query and send response
+  pg.query(query, function(err, result){
+    if(err){
+      next(err);
+      return;
+    }
+
+    // Initialize a dictionary to store the response
+    var response = {};
+    // The 'ingredient' key stores the name the the ingredient
+    response['ingredient'] = result.rows[0]['ingredient'];
+    // The 'alternatives' (plural) key stores an array of alternatives for this ingredient
+    response['alternatives'] = [];
+
+    // Add the alternatives from Postgres to the response
+    for (let i = 0; i < result.rows.length; i++) {
+      let alternative = result.rows[i]['alternative'];
+      response['alternatives'].push(alternative);
+    }
+
+    // Send the response
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify(response));
+  });
+});
+
 app.use(function(req,res){
     res.status(404);
     res.render('404');
