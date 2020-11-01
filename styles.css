@@ -160,4 +160,8 @@ color: black;
 .sign_up_title {
   padding-top: 20px;
 }
+
+.password_req {
+  opacity: 0.3;
+}
   /* END REGISTER MODEL */
