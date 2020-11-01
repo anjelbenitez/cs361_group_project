@@ -1,9 +1,18 @@
 DROP TABLE IF EXISTS test_table;
+
+-- First drop tables that depend on the other tables
+DROP TABLE IF EXISTS recipe_ingredient;
+DROP TABLE IF EXISTS ingredient_ethical_problem;
+DROP TABLE IF EXISTS ingredient_alternative;
+
+-- Then drop tables that are depended on
 DROP TABLE IF EXISTS ingredient;
 DROP TABLE IF EXISTS recipe;
 DROP TABLE IF EXISTS category;
 DROP TABLE IF EXISTS recipe_category;
 DROP TABLE IF EXISTS recipe_ingredient;
+DROP TABLE IF EXISTS ethical_problem;
+DROP TABLE IF EXISTS "user";
 
 CREATE TABLE test_table (
     id SERIAL PRIMARY KEY NOT NULL,
@@ -48,19 +57,35 @@ INSERT INTO ingredient (name) VALUES
     ('Salt'),                   --26
     ('Black Pepper'),           --27
     ('Sugar');                  --28
+    ('heavy cream'),            --29
+    ('cashew cream'),           --30
+    ('soy milk');               --31
+
+-- Note that user is a reserved word in Postgres, so we need to surround it with quotes
+CREATE TABLE "user" (
+    id SERIAL PRIMARY KEY NOT NULL,
+    first_name text,
+    last_name text
+);
+
+INSERT INTO "user" (first_name, last_name) VALUES
+    ('John', 'Doe');
 
 CREATE TABLE recipe (
     id SERIAL PRIMARY KEY NOT NULL,
-    name text
+    name text,
+    owner_id int,
+    public boolean not null,
+    FOREIGN KEY (owner_id) REFERENCES "user" (id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-INSERT INTO recipe (name) VALUES
-    ('Ham and Cheese Omelette'),
-    ('Breakfast Burrito'),
-    ('Cheeseburger'),
-    ('Pulled Pork Sandwich'),
-    ('Beef Stroganoff'),
-    ('Carbonara');
+INSERT INTO recipe (name, owner_id, public) VALUES
+    ('Ham and Cheese Omelette', NULL, TRUE),  -- 1
+    ('Breakfast Burrito', NULL, TRUE),        -- 2
+    ('Cheeseburger', NULL, TRUE),             -- 3
+    ('Pulled Pork Sandwich', NULL, TRUE),     -- 4
+    ('Beef Stroganoff', NULL, TRUE),          -- 5
+    ('Carbonara', NULL, TRUE);                -- 6
 
 CREATE TABLE category (
     id SERIAL PRIMARY KEY NOT NULL,
@@ -97,6 +122,7 @@ CREATE TABLE recipe_ingredient (
 );
 
 INSERT INTO recipe_ingredient (recipe_id, ingredient_id) VALUES
+    -- Ham and Cheese Omelette
     (1, 9),
     (1, 17),
     (1, 18),
@@ -105,22 +131,26 @@ INSERT INTO recipe_ingredient (recipe_id, ingredient_id) VALUES
     (1, 21),
     (1, 26),
     (1, 27),
+    -- Breakfast Burrito
     (2, 4),
     (2, 10),
     (2, 11),
     (2, 12),
     (2, 18),
     (2, 21),
+    -- Cheeseburger
     (3, 5),
     (3, 7),
     (3, 14),
     (3, 15),
     (3, 21),
+    -- Pulled Pork Sandwich
     (4, 5),
     (4, 8),
     (4, 25),
     (4, 26),
     (4, 28),
+    -- Beef Stroganoff
     (5, 1),
     (5, 3),
     (5, 6),
@@ -130,6 +160,7 @@ INSERT INTO recipe_ingredient (recipe_id, ingredient_id) VALUES
     (5, 23),
     (5, 26),
     (5, 27),
+    -- Carbonara
     (6, 2),
     (6, 10),
     (6, 16),
@@ -139,4 +170,36 @@ INSERT INTO recipe_ingredient (recipe_id, ingredient_id) VALUES
     (6, 24),
     (6, 26),
     (6, 27);
-    
+
+create table ethical_problem (
+    id SERIAL PRIMARY KEY NOT NULL,
+    title text
+);
+
+insert into ethical_problem (title) values
+    ('deforestation'),
+    ('carbon emission');
+
+create table ingredient_ethical_problem (
+    ingredient_id INT,
+    problem_id INT,
+    PRIMARY KEY (ingredient_id, problem_id),
+    FOREIGN KEY (ingredient_id) REFERENCES ingredient (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (problem_id) REFERENCES ethical_problem (id) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+insert into ingredient_ethical_problem values
+    (12, 1), -- Avocado and deforestation
+    (29, 2); -- Heavy cream and carbon emission
+
+create table ingredient_alternative (
+    ingredient_id INT,
+    alternative_id INT,
+    PRIMARY KEY (ingredient_id, alternative_id),
+    FOREIGN KEY (ingredient_id) REFERENCES ingredient (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (alternative_id) REFERENCES ingredient (id) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+insert into ingredient_alternative (ingredient_id, alternative_id) values
+    (29, 30), -- Heavy cream and cashew cream
+    (29, 31); -- Heavy cream and soy milk
