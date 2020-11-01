@@ -9,6 +9,8 @@ DROP TABLE IF EXISTS ingredient_alternative;
 DROP TABLE IF EXISTS ingredient;
 DROP TABLE IF EXISTS recipe;
 DROP TABLE IF EXISTS ethical_problem;
+DROP TABLE IF EXISTS "user";
+
 
 CREATE TABLE test_table (
     id SERIAL PRIMARY KEY NOT NULL,
@@ -39,15 +41,29 @@ INSERT INTO ingredient (name) VALUES
     ('heavy cream'),        -- 12
     ('cashew cream');       -- 13
 
-CREATE TABLE recipe (
+
+-- Note that user is a reserved word in Postgres, so we need to surround it with quotes
+CREATE TABLE "user" (
     id SERIAL PRIMARY KEY NOT NULL,
-    name text
+    first_name text,
+    last_name text
 );
 
-INSERT INTO recipe (name) VALUES
-    ('Tomato Soup'),
-    ('Pesto'),
-    ('Guacamole');
+INSERT INTO "user" (first_name, last_name) VALUES
+    ('John', 'Doe');
+
+CREATE TABLE recipe (
+    id SERIAL PRIMARY KEY NOT NULL,
+    name text,
+    owner_id int,
+    public boolean not null,
+    FOREIGN KEY (owner_id) REFERENCES "user" (id) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+INSERT INTO recipe (name, owner_id, public) VALUES
+    ('Tomato Soup', NULL, TRUE),
+    ('Pesto', NULL, TRUE),
+    ('Guacamole', NULL, TRUE);
 
 
 CREATE TABLE recipe_ingredient (
