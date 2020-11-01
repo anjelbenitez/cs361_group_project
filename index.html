@@ -27,33 +27,43 @@
   <div class="register_model_container">
     <div class="register_model_content">
       <button id="register_close" class="register_close">+</button>
-      <h2>Sign Up</h2>
+      <h2 class="sign_up_title">Sign Up</h2>
       <p>Create an Ethical Eating account</p>
       <form>
-        <fieldset>
-          <div>
-            <label for="first_name">First Name</label>
-            <input type="text" name="first_name" id="first_name" value="" size="15" maxlength="35">
-            <label for="last_name">Last Name</label>
-            <input type="text" name="last_name" id="last_name" value="" size="15" maxlength="35">
+        <fieldset class="form_fieldset">
+          <div class="form_input">
+            <label class="first_name_label" for="first_name">First Name</label>
+            <label class="last_name_label" for="last_name">Last Name</label>
+            <div>
+              <input type="text" name="first_name" id="first_name" value="" size="25" maxlength="35">
+              <input type="text" name="last_name" id="last_name" value="" size="25" maxlength="35">
+            </div>
           </div>
-        <div>
-          <label for="username">Username</label>
-          <input type="text" name="username" id="username" value="" size="30" maxlength="35">
+        <div class="form_input">
+          <div>
+            <label for="username">Username</label>
+          </div>
+          <input type="text" name="username" id="username" value="" size="60" maxlength="35">
         </div>
-        <div>
-          <label for="email">Email</label>
-          <input type="text" name="Email" id="Email" value="" size="30" maxlength="35">
+        <div class="form_input">
+          <div>
+            <label for="email">Email</label>
+          </div>
+          <input type="text" name="Email" id="Email" value="" size="60" maxlength="35">
         </div>
-        <div>
-          <label for="password">Password</label>
-          <input type="text" name="password" id="password" value="" size="30" maxlength="35">
+        <div class="form_input">
+          <div>
+            <label for="password">Password (6 or more alphanumeric characters)</label>
+          </div>
+          <input type="text" name="password" id="password" value="" size="60" maxlength="35">
         </div>
-        <div>
-          <label for="confirm_password">Confirm Password</label>
-          <input type="text" name="confirm_password" id="confirm_password" value="" size="30" maxlength="35">
+        <div class="form_input">
+          <div>
+            <label for="confirm_password">Confirm Password</label>
+          </div>
+          <input type="text" name="confirm_password" id="confirm_password" value="" size="60" maxlength="35">
         </div>
-        <div>
+        <div class="form_submit">
           <input type="submit" value="Create Account"></input>
         </div>
         </fieldset>

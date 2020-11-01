@@ -120,18 +120,44 @@ color: black;
   height: 700px;
   background-color: white;
   text-align: center;
+  position: relative;
+  padding: 10px;
 }
 
 .register_close {
-  width: 3px;
-  height: 3px;
   cursor: pointer;
-  transform: rotate(45deg);
-  font-size: 25px;
-  padding: 0;
+  font-size: 30px;
   border: none;
   background-color: white;
   outline: none;
+  position: absolute;
+  right: 10px;
+  transform: rotate(45deg);
 }
 
+.form_fieldset {
+  text-align: left;
+  border: none;
+}
+
+.form_input {
+  padding-bottom: 40px;
+}
+
+.form_submit {
+  text-align: center;
+  padding-top: 10px;
+}
+
+.first_name_label {
+  padding-right: 170px;
+}
+
+#first_name {
+  margin-right: 50px;
+}
+
+.sign_up_title {
+  padding-top: 20px;
+}
   /* END REGISTER MODEL */
