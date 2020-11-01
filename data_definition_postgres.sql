@@ -114,7 +114,7 @@ create table ingredient_ethical_problem (
 
 insert into ingredient_ethical_problem values
     (10, 1), -- Avocado and deforestation
-    (13, 2); -- Heavy cream and carbon emission
+    (12, 2); -- Heavy cream and carbon emission
 
 create table ingredient_alternative (
     ingredient_id INT,
