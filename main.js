@@ -44,6 +44,30 @@ app.get('/dbtest',function(req,res,next){
   });
 });
 
+app.post('/getEthicalProblemForIngredientId', function (req, res, next) {
+
+  // Construct the query
+  const query = {
+    text: `select i.name as ingredient, p.title as problem 
+           from ingredient_ethical_problem ip 
+           inner join ethical_problem p on ip.problem_id = p.id 
+           inner join ingredient i on i.id = ip.ingredient_id 
+           where ip.ingredient_id = $1`,
+    values: [req.body["id"]]
+  };
+
+  // Run the query and send response
+  pg.query(query, function(err, result){
+    if(err){
+      next(err);
+      return;
+    }
+
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify(result.rows));
+  });
+});
+
 app.use(function(req,res){
     res.status(404);
     res.render('404');
