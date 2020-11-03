@@ -44,6 +44,12 @@ app.get('/dbtest',function(req,res,next){
   });
 });
 
+app.post('/register', function(req, res) {
+  var context = {Success: null}
+  console.log(req.body);
+  res.send(context);
+});
+
 app.use(function(req,res){
     res.status(404);
     res.render('404');

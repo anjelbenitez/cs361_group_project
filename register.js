@@ -46,8 +46,25 @@ function signUpAttempt() {
     let signUpForm = new SignUpForm(first_name, last_name, email, username, password, confirm_password);
     console.log("signUpform", signUpForm); //remove this later
     let formValidated = validateSignUp(signUpForm);
+    console.log("formValidated", formValidated); // remove later
     if (formValidated == true){
         //create account goes here?
+        let req = new XMLHttpRequest();
+        let payload = {first_name: signUpForm.getFirstName().value,last_name: signUpForm.getLastName().value, email: signUpForm.getEmail().value, password: signUpForm.getPassword().value, confirm_password: signUpForm.getConfirmPassword().value}
+        req.open("POST", "http://localhost:3000/register", true);
+        req.setRequestHeader("Content-Type", "application/json");
+        req.addEventListener("load", function(){
+            if (req.status >= 200 && req.status < 400) {
+                let response = JSON.parse(req.responseText);
+                console.log(response);
+                //let responseData = JSON.parse(response);
+                // if success, display success msg.
+            } else {
+                console.log(req.status);
+            }
+        });
+        console.log("payload",payload);
+        req.send(JSON.stringify(payload));
     }
     else {
         return;
@@ -91,7 +108,7 @@ function emptyFieldsVerification(signUpFormObj) {
     let verfication = true;
     for (var nodeElement of Object.values(signUpFormObj)) {
         if (nodeElement.value.trim().length == 0) {
-            if (nodeElement.nextElementSibling.childElementCount == 0){
+            if (nodeElement.nextElementSibling.childElementCount === 0){
                 let error_msg = document.createElement("span");
                 error_msg.innerHTML = "This field is required";
                 error_msg.style.color = "red";
@@ -118,12 +135,50 @@ function emptyFieldsVerification(signUpFormObj) {
     }
 }
 
+function validatePasswordReq(signUpFormObj) {
+    // if the password input has more than 1 character but less than 6.
+    if (signUpFormObj.getPassword().value.length < 6 && signUpFormObj.getPassword().value.length > 0){
+        let error_msg = document.createElement("span");
+        error_msg.innerHTML = "Invalid password, please enter 6 or more characters";
+        error_msg.style.color = "red";
+        signUpFormObj.getPassword().nextElementSibling.appendChild(error_msg)
+        return false
+    }
+    // check if the input is alphanumeric. 
+    let alphanumericRegEx  = /[^a-z\d]/i;
+    let arePasswordCharactersValid = !(alphanumericRegEx.test(signUpFormObj.getPassword().value)); // test if each letter is alphanumeric character.
+    if (arePasswordCharactersValid === false){
+        let error_msg = document.createElement("span");
+        error_msg.innerHTML = "Invalid password, please enter only alphanumeric characters";
+        error_msg.style.color = "red";
+        signUpFormObj.getPassword().nextElementSibling.appendChild(error_msg);
+        return false;
+    }
+    // check if the confirm password is the same as the password input
+    if ((signUpFormObj.getPassword().value != signUpFormObj.getConfirmPassword().value) && signUpFormObj.getConfirmPassword().value.length > 0){
+        let error_msg = document.createElement("span");
+        error_msg.innerHTML = "Password does not match";
+        error_msg.style.color = "red";
+        signUpFormObj.getConfirmPassword().nextElementSibling.appendChild(error_msg);
+        return false;
+    }
+    return true;
+}
 
 function validateSignUp(signUpFormObj) {
+    let ableToSignUp = true;
     console.log(emptyFieldsVerification(signUpFormObj)); //remove later
-    if (emptyFieldsVerification(signUpFormObj) == true) {
-        return true;
+    if (emptyFieldsVerification(signUpFormObj) == false) {
+        ableToSignUp = false;
     }
+    if (validatePasswordReq(signUpFormObj) == false) {
+        ableToSignUp = false;
+    }
+
+    // if username is taken function add here 
+    // if email is taken function add here 
+
+    return ableToSignUp;
 }
 
 document.getElementById('register_button').addEventListener('click', function(event){
