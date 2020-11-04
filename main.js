@@ -66,7 +66,7 @@ app.post('/validateUsername', function(req, res, next) {
       next(err);
       return;
     }
-    console.log(rowCount); //remove later
+    console.log(result.rowCount); //remove later
     // if the select finds something.
     if (result.rowCount > 0) {
       context.success = false

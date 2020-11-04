@@ -37,41 +37,45 @@ function closeRegisterForm() {
 }
 
 function signUpAttempt() {
-    let first_name = document.getElementById('first_name');
-    let last_name = document.getElementById('last_name');
-    let email = document.getElementById('email');
-    let username = document.getElementById('username');
-    let password = document.getElementById('password');
-    let confirm_password = document.getElementById('confirm_password');
-    let signUpForm = new SignUpForm(first_name, last_name, email, username, password, confirm_password);
-    console.log("signUpform", signUpForm); //remove this later
-    let formValidated = validateSignUp(signUpForm);
-    console.log("formValidated", formValidated); // remove later
-    if (formValidated === true){
-        //create account goes here?
-        let req = new XMLHttpRequest();
-        let payload = {first_name: signUpForm.getFirstName().value,last_name: signUpForm.getLastName().value, email: signUpForm.getEmail().value, username: signUpForm.getUsername().value, password: signUpForm.getPassword().value}
-        req.open("POST", "http://localhost:3000/register", true);
-        req.setRequestHeader("Content-Type", "application/json");
-        req.addEventListener("load", function(){
-            if (req.status >= 200 && req.status < 400) {
-                let response = JSON.parse(req.responseText);
-                console.log("response", response); // remove later
-                if (response.success === true) {
-                    return true;
-                } else {
-                    return false;
-                }
-            } else {
-                console.log(req.status);
+    return new Promise (function (resolve, reject) {
+        let first_name = document.getElementById('first_name');
+        let last_name = document.getElementById('last_name');
+        let email = document.getElementById('email');
+        let username = document.getElementById('username');
+        let password = document.getElementById('password');
+        let confirm_password = document.getElementById('confirm_password');
+        let signUpForm = new SignUpForm(first_name, last_name, email, username, password, confirm_password);
+        console.log("signUpform", signUpForm); //remove this later
+        validateSignUp(signUpForm).then(function(formValidated) {
+            console.log("formValidated", formValidated); // remove later
+            if (formValidated === true){
+                //create account goes here?
+                let req = new XMLHttpRequest();
+                let payload = {first_name: signUpForm.getFirstName().value,last_name: signUpForm.getLastName().value, email: signUpForm.getEmail().value, username: signUpForm.getUsername().value, password: signUpForm.getPassword().value}
+                req.open("POST", "http://localhost:3000/register", true);
+                req.setRequestHeader("Content-Type", "application/json");
+                req.addEventListener("load", function(){
+                    if (req.status >= 200 && req.status < 400) {
+                        let response = JSON.parse(req.responseText);
+                        console.log("response", response); // remove later
+                        if (response.success === true) {
+                            console.log("Account Created");
+                            resolve(true);
+                        } else {
+                            resolve(false);
+                        }
+                    } else {
+                        console.log(req.status);
+                    }
+                });
+                console.log("payload",payload);
+                req.send(JSON.stringify(payload));
+            }
+            else {
+                resolve(false);
             }
         });
-        console.log("payload",payload);
-        req.send(JSON.stringify(payload));
-    }
-    else {
-        return false;
-    }
+    });
 }
 
 function SignUpForm(first_name, last_name, email, username, password, confirm_password) {
@@ -169,42 +173,48 @@ function validatePasswordReq(signUpFormObj) {
 }
 
 function validateUsername(signUpFormObj) {
-    let req = new XMLHttpRequest();
-        let payload = {username: signUpFormObj.getUsername().value}
-        req.open("POST", "http://localhost:3000/validateUsername", true);
-        req.setRequestHeader("Content-Type", "application/json");
-        req.addEventListener("load", function(){
-            if (req.status >= 200 && req.status < 400) {
-                let response = JSON.parse(req.responseText);
-                console.log("response", response); // remove later
-                if (response.success === true) {
-                    return true;
+    return new Promise (function(resolve, reject) {
+        let req = new XMLHttpRequest();
+            let payload = {username: signUpFormObj.getUsername().value}
+            req.open("POST", "http://localhost:3000/validateUsername", true);
+            req.setRequestHeader("Content-Type", "application/json");
+            req.addEventListener("load", function(){
+                if (req.status >= 200 && req.status < 400) {
+                    let response = JSON.parse(req.responseText);
+                    console.log("response", response); // remove later
+                    if (response.success === true) {
+                        resolve(true);
+                    } else {
+                        // display username taken msg
+                        resolve(false);
+                    }
                 } else {
-                    // display username taken msg
-                    return false;
+                    console.log(req.status);
                 }
-            } else {
-                console.log(req.status);
-            }
-        });
-        console.log("payload",payload);
-        req.send(JSON.stringify(payload));
+            });
+            console.log("payload",payload);
+            req.send(JSON.stringify(payload));
+    });
 }
 
 function validateSignUp(signUpFormObj) {
-    let ableToSignUp = true;
-    if (emptyFieldsVerification(signUpFormObj) === false) {
-        ableToSignUp = false;
-    }
-    if (validatePasswordReq(signUpFormObj) === false) {
-        ableToSignUp = false;
-    }
-    if (validateUsername(signUpFormObj) === false) {
-        ableToSignUp = false;
-    } 
-    // if email is taken function add here
-    console.log("ableToSignUp", ableToSignUp); // remove later
-    return ableToSignUp;
+    return new Promise(function(resolve, reject) {
+        let ableToSignUp = true;
+        ableToSignUp = emptyFieldsVerification(signUpFormObj);
+        if (ableToSignUp === false){
+            resolve(ableToSignUp);
+        }
+        ableToSignUp = validatePasswordReq(signUpFormObj);
+        if (ableToSignUp === false){
+            resolve(ableToSignUp);
+        }
+        ableToSignUp = validateUsername(signUpFormObj);
+        ableToSignUp.then(function(ableToSignUp) {
+            console.log("ableToSignUp", ableToSignUp); // remove later
+            resolve(ableToSignUp)
+        });
+        // if email is taken function add here
+    });
 }
 
 document.getElementById('register_button').addEventListener('click', function(event){
