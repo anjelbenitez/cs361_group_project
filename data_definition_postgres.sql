@@ -2,6 +2,7 @@ DROP TABLE IF EXISTS test_table;
 DROP TABLE IF EXISTS ingredient;
 DROP TABLE IF EXISTS recipe;
 DROP TABLE IF EXISTS recipe_ingredient;
+DROP TABLE IF EXISTS account;
 
 CREATE TABLE test_table (
     id SERIAL PRIMARY KEY NOT NULL,
@@ -57,3 +58,12 @@ INSERT INTO recipe_ingredient (recipe_id, ingredient_id) VALUES
     (2, 7),
     (2, 8),
     (2, 9);
+
+CREATE TABLE account (
+    id SERIAL PRIMARY KEY NOT NULL,
+    first_name varchar(30),
+    last_name varchar(30),
+    email varchar(255),
+    username varchar(30),
+    "password" varchar(30)
+);

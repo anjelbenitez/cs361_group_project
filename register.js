@@ -47,18 +47,21 @@ function signUpAttempt() {
     console.log("signUpform", signUpForm); //remove this later
     let formValidated = validateSignUp(signUpForm);
     console.log("formValidated", formValidated); // remove later
-    if (formValidated == true){
+    if (formValidated === true){
         //create account goes here?
         let req = new XMLHttpRequest();
-        let payload = {first_name: signUpForm.getFirstName().value,last_name: signUpForm.getLastName().value, email: signUpForm.getEmail().value, password: signUpForm.getPassword().value, confirm_password: signUpForm.getConfirmPassword().value}
+        let payload = {first_name: signUpForm.getFirstName().value,last_name: signUpForm.getLastName().value, email: signUpForm.getEmail().value, username: signUpForm.getUsername().value, password: signUpForm.getPassword().value}
         req.open("POST", "http://localhost:3000/register", true);
         req.setRequestHeader("Content-Type", "application/json");
         req.addEventListener("load", function(){
             if (req.status >= 200 && req.status < 400) {
                 let response = JSON.parse(req.responseText);
-                console.log(response);
-                //let responseData = JSON.parse(response);
-                // if success, display success msg.
+                console.log("response", response); // remove later
+                if (response.success === true) {
+                    return true;
+                } else {
+                    return false;
+                }
             } else {
                 console.log(req.status);
             }
@@ -67,7 +70,7 @@ function signUpAttempt() {
         req.send(JSON.stringify(payload));
     }
     else {
-        return;
+        return false;
     }
 }
 
@@ -165,19 +168,42 @@ function validatePasswordReq(signUpFormObj) {
     return true;
 }
 
+function validateUsername(signUpFormObj) {
+    let req = new XMLHttpRequest();
+        let payload = {username: signUpFormObj.getUsername().value}
+        req.open("POST", "http://localhost:3000/validateUsername", true);
+        req.setRequestHeader("Content-Type", "application/json");
+        req.addEventListener("load", function(){
+            if (req.status >= 200 && req.status < 400) {
+                let response = JSON.parse(req.responseText);
+                console.log("response", response); // remove later
+                if (response.success === true) {
+                    return true;
+                } else {
+                    // display username taken msg
+                    return false;
+                }
+            } else {
+                console.log(req.status);
+            }
+        });
+        console.log("payload",payload);
+        req.send(JSON.stringify(payload));
+}
+
 function validateSignUp(signUpFormObj) {
     let ableToSignUp = true;
-    console.log(emptyFieldsVerification(signUpFormObj)); //remove later
-    if (emptyFieldsVerification(signUpFormObj) == false) {
+    if (emptyFieldsVerification(signUpFormObj) === false) {
         ableToSignUp = false;
     }
-    if (validatePasswordReq(signUpFormObj) == false) {
+    if (validatePasswordReq(signUpFormObj) === false) {
         ableToSignUp = false;
     }
-
-    // if username is taken function add here 
-    // if email is taken function add here 
-
+    if (validateUsername(signUpFormObj) === false) {
+        ableToSignUp = false;
+    } 
+    // if email is taken function add here
+    console.log("ableToSignUp", ableToSignUp); // remove later
     return ableToSignUp;
 }
 
@@ -194,7 +220,10 @@ document.getElementById('register_close').addEventListener('click', function(eve
 });
 
 document.getElementById('create_account_button').addEventListener('click', function(event){
-    signUpAttempt();
+    let success = signUpAttempt();
+    if (success === true){
+        //show success msg
+    }
     event.preventDefault();
     event.stopPropagation();
 });

@@ -12,6 +12,7 @@ app.set('port', process.env.PORT || 3000);
 
 // Connect with Postgres
 const { Client } = require('pg');
+const e = require('express');
 const pg = new Client({
     connectionString: process.env.DATABASE_URL || "postgres://postgres:postgres@localhost:5432/ethical_eating",
     // ssl: {
@@ -44,10 +45,36 @@ app.get('/dbtest',function(req,res,next){
   });
 });
 
-app.post('/register', function(req, res) {
-  var context = {Success: null}
-  console.log(req.body);
-  res.send(context);
+app.post('/register', function(req, res, next) {
+  var context = {success: null}
+  let query = `INSERT INTO account (first_name, last_name, email, username, password) VALUES ('${req.body.first_name}', '${req.body.last_name}', '${req.body.email}', '${req.body.username}', '${req.body.password}');`;
+  pg.query(query, (err, result) => {
+    if(err){
+      next(err);
+      return;
+    }
+    context.success = true
+    res.send(context);
+  })
+});
+
+app.post('/validateUsername', function(req, res, next) {
+  var context = {success: null}
+  let query = `SELECT account.username FROM account where account.username='${req.body.username}'`;
+  pg.query(query, (err, result) => {
+    if(err){
+      next(err);
+      return;
+    }
+    console.log(rowCount); //remove later
+    // if the select finds something.
+    if (result.rowCount > 0) {
+      context.success = false
+    } else {
+      context.success = true
+    }
+    res.send(context);
+  })
 });
 
 app.use(function(req,res){
