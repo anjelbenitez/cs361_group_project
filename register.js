@@ -1,10 +1,17 @@
 function displayRegisterForm() {
-    document.querySelector('.register_model_container').style.display = 'flex';
+    document.querySelector('.register_modal_container').style.display = 'flex';
 }
 
 function closeRegisterForm() {
-    document.querySelector('.register_model_container').style.display = 'none';
+    document.querySelector('.register_modal_container').style.display = 'none';
+    clearSignUpForm();
+}
 
+function closeRegisterModalContent() {
+    document.querySelector('.register_modal_content').style.display = 'none';
+}
+
+function clearSignUpForm(){
     let first_name = document.getElementById('first_name');
     let last_name = document.getElementById('last_name');
     let email = document.getElementById('email');
@@ -36,6 +43,7 @@ function closeRegisterForm() {
     }
 }
 
+
 function signUpAttempt() {
     return new Promise (function (resolve, reject) {
         let first_name = document.getElementById('first_name');
@@ -45,10 +53,17 @@ function signUpAttempt() {
         let password = document.getElementById('password');
         let confirm_password = document.getElementById('confirm_password');
         let signUpForm = new SignUpForm(first_name, last_name, email, username, password, confirm_password);
+        for (let nodeElement of Object.values(signUpForm)) {
+            if (nodeElement.nextElementSibling.childElementCount != 0) {
+                nodeElement.nextElementSibling.children[0].remove();
+            };
+        }
         console.log("signUpform", signUpForm); //remove this later
-        validateSignUp(signUpForm).then(function(formValidated) {
+        let formValidated = validateSignUp(signUpForm)
+        formValidated.then(function(formValidated) {
             console.log("formValidated", formValidated); // remove later
             if (formValidated === true){
+                console.log("formValidatedTrue", formValidated); // remove later
                 //create account goes here?
                 let req = new XMLHttpRequest();
                 let payload = {first_name: signUpForm.getFirstName().value,last_name: signUpForm.getLastName().value, email: signUpForm.getEmail().value, username: signUpForm.getUsername().value, password: signUpForm.getPassword().value}
@@ -62,6 +77,7 @@ function signUpAttempt() {
                             console.log("Account Created");
                             resolve(true);
                         } else {
+                            console.log("ERROR");
                             resolve(false);
                         }
                     } else {
@@ -185,7 +201,30 @@ function validateUsername(signUpFormObj) {
                     if (response.success === true) {
                         resolve(true);
                     } else {
-                        // display username taken msg
+                        resolve(false);
+                    }
+                } else {
+                    console.log(req.status);
+                }
+            });
+            console.log("payload",payload);
+            req.send(JSON.stringify(payload));
+    });
+}
+
+function validateEmail(signUpFormObj) {
+    return new Promise (function(resolve, reject) {
+        let req = new XMLHttpRequest();
+            let payload = {email: signUpFormObj.getEmail().value}
+            req.open("POST", "http://localhost:3000/validateEmail", true);
+            req.setRequestHeader("Content-Type", "application/json");
+            req.addEventListener("load", function(){
+                if (req.status >= 200 && req.status < 400) {
+                    let response = JSON.parse(req.responseText);
+                    console.log("response", response); // remove later
+                    if (response.success === true) {
+                        resolve(true);
+                    } else {
                         resolve(false);
                     }
                 } else {
@@ -199,23 +238,56 @@ function validateUsername(signUpFormObj) {
 
 function validateSignUp(signUpFormObj) {
     return new Promise(function(resolve, reject) {
-        let ableToSignUp = true;
-        ableToSignUp = emptyFieldsVerification(signUpFormObj);
-        if (ableToSignUp === false){
-            resolve(ableToSignUp);
+        var emptyFields = emptyFieldsVerification(signUpFormObj);
+        if (emptyFields === false){
+            //resolve(ableToSignUp);
         }
-        ableToSignUp = validatePasswordReq(signUpFormObj);
-        if (ableToSignUp === false){
-            resolve(ableToSignUp);
+        var passwordReq = validatePasswordReq(signUpFormObj);
+        if (passwordReq === false){
+            //resolve(ableToSignUp);
         }
-        ableToSignUp = validateUsername(signUpFormObj);
-        ableToSignUp.then(function(ableToSignUp) {
-            console.log("ableToSignUp", ableToSignUp); // remove later
-            resolve(ableToSignUp)
-        });
-        // if email is taken function add here
+        var usernameTaken = validateUsername(signUpFormObj);
+        usernameTaken.then(function(usernameTaken) {
+            if (usernameTaken=== false && signUpFormObj.getUsername().nextElementSibling.childElementCount === 0) {
+                let error_msg = document.createElement("span");
+                error_msg.innerHTML = "Username already taken";
+                error_msg.style.color = "red";
+                signUpFormObj.getUsername().nextElementSibling.appendChild(error_msg)
+            } 
+        })
+        var emailTaken = validateEmail(signUpFormObj);
+            emailTaken.then(function(emailTaken){
+                var ableToSignUp = false;
+                if (emailTaken === false && signUpFormObj.getEmail().nextElementSibling.childElementCount === 0) {
+                    let error_msg = document.createElement("span");
+                    error_msg.innerHTML = "Email already in use";
+                    error_msg.style.color = "red";
+                    signUpFormObj.getEmail().nextElementSibling.appendChild(error_msg)
+                }
+            });
+        Promise.all([emptyFields, passwordReq, usernameTaken, emailTaken]).then((values) => {
+            console.log("values",values); // remove later
+            if (values[0] === true && values[1] === true && values[2] === true && values[3] === true){
+                resolve(true)
+            }
+            else{
+                resolve(false)
+            }
+        })
     });
 }
+
+function displaySuccessMsg(){
+    closeRegisterModalContent()
+    document.querySelector('.success_modal_content').style.display = 'inline-block';
+}
+
+function closeSuccessMsg(){
+    document.querySelector('.register_modal_container').style.display = 'none';
+    document.querySelector('.success_modal_content').style.display = 'none';
+    document.querySelector('.register_modal_content').style.remove(display);
+}
+
 
 document.getElementById('register_button').addEventListener('click', function(event){
     displayRegisterForm();
@@ -231,9 +303,18 @@ document.getElementById('register_close').addEventListener('click', function(eve
 
 document.getElementById('create_account_button').addEventListener('click', function(event){
     let success = signUpAttempt();
-    if (success === true){
-        //show success msg
-    }
+    success.then(function(success){
+        console.log(success);
+        if (success === true){
+            displaySuccessMsg();
+        }
+    })
+    event.preventDefault();
+    event.stopPropagation();
+});
+
+document.getElementById('success_msg_close').addEventListener('click', function(event){
+    closeSuccessMsg();
     event.preventDefault();
     event.stopPropagation();
 });

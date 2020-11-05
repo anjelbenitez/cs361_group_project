@@ -66,8 +66,26 @@ app.post('/validateUsername', function(req, res, next) {
       next(err);
       return;
     }
-    console.log(result.rowCount); //remove later
     // if the select finds something.
+    if (result.rowCount > 0) {
+      context.success = false
+    } else {
+      context.success = true
+    }
+    res.send(context);
+  })
+});
+
+app.post('/validateEmail', function(req, res, next) {
+  var context = {success: null}
+  let query = `SELECT account.email FROM account where account.email='${req.body.email}'`;
+  pg.query(query, (err, result) => {
+    if(err){
+      next(err);
+      return;
+    }
+    // if the select finds something.
+    console.log("hello");
     if (result.rowCount > 0) {
       context.success = false
     } else {
