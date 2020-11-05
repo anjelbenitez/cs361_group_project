@@ -44,6 +44,13 @@ class BuildRecipeViewController {
         // Append the add button to the ingredient row
         row.appendChild(addButton);
 
+        //Add an "Info" button
+        let infoButton = document.createElement('button');
+        infoButton.textContent = "Info";
+        let infoFunction = si.getIngredientInfo(ingredient_id)
+        infoButton.addEventListener('click', infoFunction);
+        row.appendChild(infoButton);
+
         // Add the row
         ingredients_table_body.appendChild(row);
 

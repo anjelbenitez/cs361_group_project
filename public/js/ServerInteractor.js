@@ -18,4 +18,8 @@ class ServerInteractor {
 
     req.send();
   }
+
+  getIngredientInfo(ingredient_id) {
+    console.log(ingredient_id)
+  }
 }
