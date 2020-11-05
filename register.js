@@ -90,7 +90,10 @@ function signUpAttempt() {
             else {
                 resolve(false);
             }
+        }).catch(error => {
+            console.log(error)
         });
+        reject("Sign up attempt failed");
     });
 }
 
@@ -209,6 +212,7 @@ function validateUsername(signUpFormObj) {
             });
             console.log("payload",payload);
             req.send(JSON.stringify(payload));
+            reject("Validate username failed");
     });
 }
 
@@ -233,6 +237,7 @@ function validateEmail(signUpFormObj) {
             });
             console.log("payload",payload);
             req.send(JSON.stringify(payload));
+            reject("Validate Email failed");
     });
 }
 
@@ -254,7 +259,9 @@ function validateSignUp(signUpFormObj) {
                 error_msg.style.color = "red";
                 signUpFormObj.getUsername().nextElementSibling.appendChild(error_msg)
             } 
-        })
+        }).catch(error => {
+            console.log(error)
+        });
         var emailTaken = validateEmail(signUpFormObj);
             emailTaken.then(function(emailTaken){
                 var ableToSignUp = false;
@@ -264,16 +271,21 @@ function validateSignUp(signUpFormObj) {
                     error_msg.style.color = "red";
                     signUpFormObj.getEmail().nextElementSibling.appendChild(error_msg)
                 }
+            }).catch(error => {
+                console.log(error)
             });
         Promise.all([emptyFields, passwordReq, usernameTaken, emailTaken]).then((values) => {
             console.log("values",values); // remove later
             if (values[0] === true && values[1] === true && values[2] === true && values[3] === true){
-                resolve(true)
+                resolve(true);
             }
             else{
-                resolve(false)
+                resolve(false);
             }
-        })
+        }).catch(error => {
+            console.log(error)
+        });
+        reject("Validate sign up failed");
     });
 }
 
@@ -308,7 +320,7 @@ document.getElementById('create_account_button').addEventListener('click', funct
         if (success === true){
             displaySuccessMsg();
         }
-    })
+    }).catch(alert("Connection Error"))
     event.preventDefault();
     event.stopPropagation();
 });
