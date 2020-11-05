@@ -27,6 +27,10 @@ class BuildRecipeFunctionFactory {
         let removeButton_cell = document.createElement('td');
         let removeButton = document.createElement('button');
         removeButton.textContent = "Remove";
+        removeButton.addEventListener('click', function() {
+          recipe_table_body.removeChild(row);
+          delete brvc.recipe_ingredients[ingredient_id];
+        });
         removeButton_cell.appendChild(removeButton);
         row.appendChild(removeButton_cell);
 
@@ -35,5 +39,5 @@ class BuildRecipeFunctionFactory {
         brvc.recipe_ingredients[ingredient_id] = ingredient_name;
       }
     };
-  }
+  }  
 } 
