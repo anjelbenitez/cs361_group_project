@@ -50,6 +50,9 @@ app.get('/dbtest',function(req,res,next){
   });
 });
 
+/*
+dispaly recipes for breakfast
+*/
 app.get('/breakfast',function(req,res,next){
   let context = {};
   context.title = "Ethical Eating";
