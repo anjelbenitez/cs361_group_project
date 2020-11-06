@@ -51,7 +51,7 @@ app.get('/dbtest',function(req,res,next){
 });
 
 /*
-dispaly recipes for breakfast
+display recipes for breakfast
 */
 app.get('/breakfast',function(req,res,next){
   let context = {};
@@ -67,7 +67,50 @@ app.get('/breakfast',function(req,res,next){
     }
 
     context.results = result.rows;
-    res.render('home', context);
+    res.render('breakfast', context);
+  });
+});
+
+/*
+display recipes for lunch
+*/
+app.get('/lunch',function(req,res,next){
+  let context = {};
+  context.title = "Ethical Eating";
+
+  // Select all from the test_table
+  let query = "select r.name as recipeName, c.name as categoryName from recipe r inner join recipe_category rc on r.id = rc.recipe_id inner join category c on rc.category_id = c.id where rc.category_id=2";
+
+  pg.query(query, (err, result) => {
+    if(err){
+      next(err);
+      return;
+    }
+
+    context.results = result.rows;
+    res.render('lunch', context);
+  });
+});
+
+
+/*
+dispaly recipes for dinner
+*/
+app.get('/dinner',function(req,res,next){
+  let context = {};
+  context.title = "Ethical Eating";
+
+  // Select all from the test_table
+  let query = "select r.name as recipeName, c.name as categoryName from recipe r inner join recipe_category rc on r.id = rc.recipe_id inner join category c on rc.category_id = c.id where rc.category_id=3";
+
+  pg.query(query, (err, result) => {
+    if(err){
+      next(err);
+      return;
+    }
+
+    context.results = result.rows;
+    res.render('dinner', context);
   });
 });
 
