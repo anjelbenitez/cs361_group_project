@@ -50,6 +50,24 @@ app.get('/dbtest',function(req,res,next){
   });
 });
 
+app.get('/breakfast',function(req,res,next){
+  let context = {};
+  context.title = "Ethical Eating";
+
+  // Select all from the test_table
+  let query = "select r.name as recipeName, c.name as categoryName from recipe r inner join recipe_category rc on r.id = rc.recipe_id inner join category c on rc.category_id = c.id where rc.category_id=1";
+
+  pg.query(query, (err, result) => {
+    if(err){
+      next(err);
+      return;
+    }
+
+    context.results = result.rows;
+    res.render('home', context);
+  });
+});
+
 /*
 The /getIngredients endpoint returns a list of all ingredients in the database and their IDs
  */
@@ -98,6 +116,10 @@ app.post('/getEthicalProblemForIngredientId', function (req, res, next) {
   });
 });
 
+
+
+
+
 /*
 The /getRecipeByCategory endpoint takes an id of a category as a parameter and returns a list of all the recipes within that category
  */
@@ -112,6 +134,7 @@ app.post('/getRecipesByCategoryId', function (req, res, next) {
           where c.id = $1`,
     values: [req.body["id"]]
   };
+  
 
   // Run the query and send response
   pg.query(query, function(err, result){
@@ -208,4 +231,29 @@ app.use(function(err, req, res, next){
 
 app.listen(app.get('port'), function(){
     console.log('Express started on http://localhost:' + app.get('port') + '; press Ctrl-C to terminate.');
+});
+
+
+app.post('/getRecipesByCategoryId', function (req, res, next) {
+
+  // Construct the query
+  const query = {
+    text: `select r.name as recipeName
+	        from recipe r 
+	        inner join recipe_category rc on r.id = rc.recipe_id 
+	        inner join category c on rc.category_id = c.id
+          where c.id = $1`,
+    values: [req.body["id"]]
+  };
+
+  // Run the query and send response
+  pg.query(query, function(err, result){
+    if(err){
+      next(err);
+      return;
+    }
+
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify(result.rows));
+  });
 });
