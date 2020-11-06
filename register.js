@@ -43,7 +43,6 @@ function clearSignUpForm(){
     }
 }
 
-
 function signUpAttempt() {
     return new Promise (function (resolve, reject) {
         let first_name = document.getElementById('first_name');
@@ -87,13 +86,9 @@ function signUpAttempt() {
                 console.log("payload",payload);
                 req.send(JSON.stringify(payload));
             }
-            else {
-                resolve(false);
-            }
         }).catch(error => {
             console.log(error)
         });
-        reject("Sign up attempt failed");
     });
 }
 
@@ -203,7 +198,7 @@ function validateUsername(signUpFormObj) {
                     console.log("response", response); // remove later
                     if (response.success === true) {
                         resolve(true);
-                    } else {
+                    } else if (response.success === false) {
                         resolve(false);
                     }
                 } else {
@@ -212,7 +207,6 @@ function validateUsername(signUpFormObj) {
             });
             console.log("payload",payload);
             req.send(JSON.stringify(payload));
-            reject("Validate username failed");
     });
 }
 
@@ -228,7 +222,7 @@ function validateEmail(signUpFormObj) {
                     console.log("response", response); // remove later
                     if (response.success === true) {
                         resolve(true);
-                    } else {
+                    } else if (response.success === false){
                         resolve(false);
                     }
                 } else {
@@ -237,20 +231,13 @@ function validateEmail(signUpFormObj) {
             });
             console.log("payload",payload);
             req.send(JSON.stringify(payload));
-            reject("Validate Email failed");
     });
 }
 
 function validateSignUp(signUpFormObj) {
     return new Promise(function(resolve, reject) {
         var emptyFields = emptyFieldsVerification(signUpFormObj);
-        if (emptyFields === false){
-            //resolve(ableToSignUp);
-        }
         var passwordReq = validatePasswordReq(signUpFormObj);
-        if (passwordReq === false){
-            //resolve(ableToSignUp);
-        }
         var usernameTaken = validateUsername(signUpFormObj);
         usernameTaken.then(function(usernameTaken) {
             if (usernameTaken=== false && signUpFormObj.getUsername().nextElementSibling.childElementCount === 0) {
@@ -260,7 +247,7 @@ function validateSignUp(signUpFormObj) {
                 signUpFormObj.getUsername().nextElementSibling.appendChild(error_msg)
             } 
         }).catch(error => {
-            console.log(error)
+            console.log(error);
         });
         var emailTaken = validateEmail(signUpFormObj);
             emailTaken.then(function(emailTaken){
@@ -272,7 +259,7 @@ function validateSignUp(signUpFormObj) {
                     signUpFormObj.getEmail().nextElementSibling.appendChild(error_msg)
                 }
             }).catch(error => {
-                console.log(error)
+                console.log(error);
             });
         Promise.all([emptyFields, passwordReq, usernameTaken, emailTaken]).then((values) => {
             console.log("values",values); // remove later
@@ -283,9 +270,8 @@ function validateSignUp(signUpFormObj) {
                 resolve(false);
             }
         }).catch(error => {
-            console.log(error)
+            console.log(error);
         });
-        reject("Validate sign up failed");
     });
 }
 
@@ -297,7 +283,8 @@ function displaySuccessMsg(){
 function closeSuccessMsg(){
     document.querySelector('.register_modal_container').style.display = 'none';
     document.querySelector('.success_modal_content').style.display = 'none';
-    document.querySelector('.register_modal_content').style.remove(display);
+    clearSignUpForm();
+    document.querySelector('.register_modal_content').style.display = '';
 }
 
 
@@ -320,7 +307,9 @@ document.getElementById('create_account_button').addEventListener('click', funct
         if (success === true){
             displaySuccessMsg();
         }
-    }).catch(alert("Connection Error"))
+    }).catch(error =>{
+        console.log(error);
+    });
     event.preventDefault();
     event.stopPropagation();
 });

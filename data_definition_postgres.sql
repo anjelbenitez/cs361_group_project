@@ -65,5 +65,5 @@ CREATE TABLE account (
     last_name varchar(30),
     email varchar(255),
     username varchar(30),
-    "password" varchar(30)
+    "password" varchar(255)
 );

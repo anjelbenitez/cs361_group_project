@@ -1,6 +1,7 @@
 var express = require('express');
 var app = express();
 var handlebars = require('express-handlebars').create({defaultLayout:'main'});
+const bcrypt = require('bcrypt');
 
 app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
@@ -45,9 +46,11 @@ app.get('/dbtest',function(req,res,next){
   });
 });
 
-app.post('/register', function(req, res, next) {
+app.post('/register', async function(req, res, next) {
   var context = {success: null}
-  let query = `INSERT INTO account (first_name, last_name, email, username, password) VALUES ('${req.body.first_name}', '${req.body.last_name}', '${req.body.email}', '${req.body.username}', '${req.body.password}');`;
+  const hashedPassword = await bcrypt.hash(req.body.password, 10);
+  console.log(hashedPassword); // remove later
+  let query = `INSERT INTO account (first_name, last_name, email, username, password) VALUES ('${req.body.first_name}', '${req.body.last_name}', '${req.body.email}', '${req.body.username}', '${hashedPassword}');`;
   pg.query(query, (err, result) => {
     if(err){
       next(err);
@@ -85,7 +88,6 @@ app.post('/validateEmail', function(req, res, next) {
       return;
     }
     // if the select finds something.
-    console.log("hello");
     if (result.rowCount > 0) {
       context.success = false
     } else {
