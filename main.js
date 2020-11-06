@@ -168,13 +168,17 @@ app.post('/getAlternativesForIngredientId', function (req, res, next) {
     values: [req.body["id"]]
   };
 
+  testq = 'select i.name as ingredient from ingredient i where i.id = 1'
+
+  console.log(req.body.rows);
+
   // Run the query and send response
   pg.query(query, function(err, result){
     if(err){
       next(err);
       return;
     }
-
+    console.log(result)
     // Initialize a dictionary to store the response
     var response = {};
     // The 'ingredient' key stores the name the the ingredient
@@ -193,6 +197,34 @@ app.post('/getAlternativesForIngredientId', function (req, res, next) {
     res.send(JSON.stringify(response));
   });
 });
+
+
+app.post('/testCall', function (req, res, next) {
+
+  // Construct the query
+  const query = {
+    text: `select i.name as ingredient from ingredient i where i.id = $1`,
+    values: [req.body["id"]]
+  };
+
+  // Run the query and send response
+  pg.query(query, function(err, result){
+    if(err){
+      next(err);
+      return;
+    }
+    console.log(result.rows)
+    // Initialize a dictionary to store the response
+    var response = {};
+    // The 'ingredient' key stores the name the the ingredient
+    response['ingredient'] = result.rows[0]['ingredient'];
+
+    // Send the response
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify(response));
+  });
+});
+
 
 app.use(function(req,res){
     res.status(404);

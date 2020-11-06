@@ -47,13 +47,15 @@ class BuildRecipeViewController {
         //Add an "Info" button
         let infoButton = document.createElement('button');
         infoButton.textContent = "Info";
-        let infoFunction = si.getIngredientInfo(ingredient_id)
-        infoButton.addEventListener('click', infoFunction);
+        // When user clicks on Info button, ingredient info show ups asynchronously on page
+        infoButton.addEventListener('click', function() {
+          let response = si.getIngredientInfo(ingredient_id);
+          console.log(response);
+        });
         row.appendChild(infoButton);
 
         // Add the row
         ingredients_table_body.appendChild(row);
-
       }
     });
   }
