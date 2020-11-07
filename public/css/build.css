@@ -2,6 +2,10 @@ td {
     vertical-align: top;
 }
 
+.ing-info {
+    font-weight: bold;
+}
+
 #ingredients-column {
     padding-left: 100px;
     padding-right: 100px;

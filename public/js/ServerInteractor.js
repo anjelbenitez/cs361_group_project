@@ -26,8 +26,7 @@ class ServerInteractor {
     let payload = JSON.stringify({"id":ingredient_id});
     req.addEventListener('load', function() {
       if(req.status >= 200 && req.status < 400) {
-        let response = JSON.parse(req.responseText);
-        callback(response);
+        callback(JSON.parse(req.responseText));
       } else {
         console.log("Error in network request: " + req.statusText);
       }

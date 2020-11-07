@@ -201,27 +201,81 @@ app.post('/getAlternativesForIngredientId', function (req, res, next) {
 
 app.post('/testCall', function (req, res, next) {
 
-  // Construct the query
-  const query = {
-    text: `select i.name as ingredient from ingredient i where i.id = $1`,
+  // query to get ingredient name
+  const name_query = {
+    text: `select ingredient.name as ingredient from ingredient where ingredient.id = $1`,
     values: [req.body["id"]]
   };
 
+  // Initialize a dictionary to store the response
+  var response = {};
+
   // Run the query and send response
-  pg.query(query, function(err, result){
+  pg.query(name_query, function(err, result){
     if(err){
       next(err);
       return;
     }
-    console.log(result.rows)
-    // Initialize a dictionary to store the response
-    var response = {};
+
     // The 'ingredient' key stores the name the the ingredient
     response['ingredient'] = result.rows[0]['ingredient'];
 
-    // Send the response
-    res.setHeader('Content-Type', 'application/json');
-    res.send(JSON.stringify(response));
+    // Query to get alternatives of ingredient
+    const alt_query = {
+      text: `select alt.name as alternative 
+             from ingredient i 
+             inner join ingredient_alternative ia on i.id = ia.ingredient_id 
+             inner join ingredient alt on ia.alternative_id = alt.id 
+             where i.id = $1`,
+      values: [req.body["id"]]
+    };
+
+    // Nested query call 1
+    pg.query(alt_query, function(err, result) {
+      if(err) {
+        next(err);
+        return;
+      }
+
+      // The 'alternative' key stores a list of the ingredient's alternatives
+      response['alternative'] = []
+
+      if (result.rows.length) {
+        for (let i = 0; i < result.rows.length; i++) {
+          let alternative = result.rows[i]['alternative'];
+          response['alternative'].push(alternative);
+        }
+      } else {
+        response['alternative'].push("None");
+      }
+
+      // Query to get ingredient's ethical problem
+      const ethic_query = {
+        text: `select e.title as problem from ingredient i
+                inner join ingredient_ethical_problem ie on i.id = ie.ingredient_id
+                inner join ethical_problem e on ie.problem_id = e.id
+                where i.id = $1`,
+        values: [req.body["id"]]
+      };
+    
+      // Nested query call 2
+      pg.query(ethic_query, function(err, result) {
+        if(err) {
+          next(err);
+          return;
+        }
+
+        // The 'problem' key holds the ingredient's ethical problem
+        response['problem'] = "None";
+        if(result.rows.length) {
+          response['problem'] = result.rows[0]['problem'];
+        }
+        
+        // Send the response
+        res.setHeader('Content-Type', 'application/json');
+        res.send(JSON.stringify(response));
+      });
+    });
   });
 });
 
