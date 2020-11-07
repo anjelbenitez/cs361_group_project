@@ -1,0 +1,40 @@
+<script src="../main.js"></script>
+<link rel="stylesheet" href="css/styles.css">
+
+<html>
+
+<head>
+  <h1><img src="images/banner.png" alt="banner"></h1>
+</head>
+
+<header>
+
+
+  <div class="navbar">
+        <a class="active" href="index.html">Home</a> 
+        <a href="about.html">Browse</a>				
+        <a href="menu.html">Build a Recipe</a>
+        <a href="appointments.html">FAQ</a>
+        <div class="account">
+          <a href="about.html">Log In</a>				
+          <a href="menu.html">Register</a>
+        </div>
+    </div>
+
+</header>
+
+<p>Dinner Recipes</p>
+<ul>
+    {{#each results}}
+        <li>{{this.recipename}}</li>
+    {{/each}}
+</ul>
+
+<div class="viewCat">
+
+<a href="/breakfast"> View Breakfast Recipes</a>
+<a href="/lunch"> View Lunch Recipes</a>
+
+</div>
+
+
