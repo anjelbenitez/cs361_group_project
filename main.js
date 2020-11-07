@@ -118,7 +118,7 @@ app.get('/dinner',function(req,res,next){
 dispay ingredients for recipes
 */
 
-app.get('/ingredients',function(req,res,next){
+app.get('/ingredients/:recipename', function(req,res, next){
   let context = {};
   context.title = "Ethical Eating";
 
@@ -127,9 +127,11 @@ app.get('/ingredients',function(req,res,next){
               from recipe r
               inner join recipe_ingredient ri on r.id = ri.recipe_id 
               inner join ingredient i on ri.ingredient_id = i.id
-              where r.id = 1`;
-
-  pg.query(query, (err, result) => {
+              where r.name = $1`;
+  var recipe = req.params.recipename;
+  var inserts = [recipe];
+  console.log(recipe);
+  pg.query(query, inserts, (err, result) => {
     if(err){
       next(err);
       return;
