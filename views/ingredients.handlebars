@@ -24,12 +24,12 @@
 <body>
     <div class="viewCat">
 
-    <a href="/Breakfast">Return to Breakfast recipes</a>
+    <a href="javascript:history.back()">Return to View Recipes</a>
 
     </div>
     <div>
 
-    <p>View Common Ingredients</p>
+    <p>View {{#each results}}{{#if @first}}{{this.recipename}}{{/if}}{{/each}} Ingredients</p>
     <ul>
         {{#each results}}
             <li>{{this.ingredientlist}}</li>
