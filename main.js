@@ -114,6 +114,31 @@ app.get('/dinner',function(req,res,next){
   });
 });
 
+/*
+dispay ingredients for recipes
+*/
+
+app.get('/ingredients',function(req,res,next){
+  let context = {};
+  context.title = "Ethical Eating";
+
+  // Select all from the test_table
+  let query = `select i.name as ingredientList
+              from recipe r
+              inner join recipe_ingredient ri on r.id = ri.recipe_id 
+              inner join ingredient i on ri.ingredient_id = i.id
+              where r.id = 1`;
+
+  pg.query(query, (err, result) => {
+    if(err){
+      next(err);
+      return;
+    }
+
+    context.results = result.rows;
+    res.render('ingredients', context);
+  });
+});
 
 
 /*
