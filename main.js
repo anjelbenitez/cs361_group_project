@@ -123,7 +123,7 @@ app.get('/ingredients/:recipename', function(req,res, next){
   context.title = "Ethical Eating";
 
   // Select all from the test_table
-  let query = `select i.name as ingredientList
+  let query = `select r.name as recipeName, i.name as ingredientList
               from recipe r
               inner join recipe_ingredient ri on r.id = ri.recipe_id 
               inner join ingredient i on ri.ingredient_id = i.id
