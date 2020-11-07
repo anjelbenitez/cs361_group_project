@@ -19,7 +19,7 @@ class ServerInteractor {
     req.send();
   }
 
-  getIngredientInfo(ingredient_id) {
+  getIngredientInfo(callback, ingredient_id) {
     let req = new XMLHttpRequest();
     req.open('POST', this.baseUrl + '/testCall', true);
     req.setRequestHeader('Content-Type', 'application/json');
@@ -27,7 +27,7 @@ class ServerInteractor {
     req.addEventListener('load', function() {
       if(req.status >= 200 && req.status < 400) {
         let response = JSON.parse(req.responseText);
-        console.log(response);
+        callback(response);
       } else {
         console.log("Error in network request: " + req.statusText);
       }
