@@ -199,7 +199,7 @@ app.post('/getAlternativesForIngredientId', function (req, res, next) {
 });
 
 
-app.post('/testCall', function (req, res, next) {
+app.post('/getIngredientForCustomRecipe', function (req, res, next) {
 
   // query to get ingredient name
   const name_query = {
