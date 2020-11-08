@@ -12,6 +12,7 @@ DROP TABLE IF EXISTS recipe;
 DROP TABLE IF EXISTS category;
 DROP TABLE IF EXISTS recipe_category;
 DROP TABLE IF EXISTS recipe_ingredient;
+DROP TABLE IF EXISTS account;
 DROP TABLE IF EXISTS ethical_problem;
 DROP TABLE IF EXISTS "user";
 
@@ -204,3 +205,12 @@ create table ingredient_alternative (
 insert into ingredient_alternative (ingredient_id, alternative_id) values
     (29, 30), -- Heavy cream and cashew cream
     (29, 31); -- Heavy cream and soy milk
+
+CREATE TABLE account (
+    id SERIAL PRIMARY KEY NOT NULL,
+    first_name varchar(30),
+    last_name varchar(30),
+    email varchar(255),
+    username varchar(30),
+    "password" varchar(255)
+);

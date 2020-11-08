@@ -1,6 +1,7 @@
 var express = require('express');
 var app = express();
 var handlebars = require('express-handlebars').create({defaultLayout:'main'});
+const bcrypt = require('bcrypt');
 
 app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
@@ -12,6 +13,7 @@ app.set('port', process.env.PORT || 3000);
 
 // Connect with Postgres
 const { Client } = require('pg');
+const e = require('express');
 const pg = new Client({
     connectionString: process.env.DATABASE_URL || "postgres://postgres:postgres@localhost:5432/ethical_eating",
     // ssl: {
@@ -377,6 +379,56 @@ app.post('/getIngredientForCustomRecipe', function (req, res, next) {
   });
 });
 
+app.post('/register', async function(req, res, next) {
+  var context = {success: null}
+  const hashedPassword = await bcrypt.hash(req.body.password, 10);
+  console.log(hashedPassword); // remove later
+  let query = `INSERT INTO account (first_name, last_name, email, username, password) VALUES ('${req.body.first_name}', '${req.body.last_name}', '${req.body.email}', '${req.body.username}', '${hashedPassword}');`;
+  pg.query(query, (err, result) => {
+    if(err){
+      next(err);
+      return;
+    }
+    context.success = true
+    res.send(context);
+  })
+});
+
+app.post('/validateUsername', function(req, res, next) {
+  var context = {success: null}
+  let query = `SELECT account.username FROM account where account.username='${req.body.username}'`;
+  pg.query(query, (err, result) => {
+    if(err){
+      next(err);
+      return;
+    }
+    // if the select finds something.
+    if (result.rowCount > 0) {
+      context.success = false
+    } else {
+      context.success = true
+    }
+    res.send(context);
+  })
+});
+
+app.post('/validateEmail', function(req, res, next) {
+  var context = {success: null}
+  let query = `SELECT account.email FROM account where account.email='${req.body.email}'`;
+  pg.query(query, (err, result) => {
+    if(err){
+      next(err);
+      return;
+    }
+    // if the select finds something.
+    if (result.rowCount > 0) {
+      context.success = false
+    } else {
+      context.success = true
+    }
+    res.send(context);
+  })
+});
 
 app.use(function(req,res){
     res.status(404);
