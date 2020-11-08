@@ -23,17 +23,23 @@
 
 </header>
 
-
+<body>
 <p>Lunch Recipes</p>
 <ul>
     {{#each results}}
-        <li>{{this.recipename}}</li>
+        <li><a href='/ingredients/{{this.recipename}}'><p>{{this.recipename}}</p></a></li>
     {{/each}}
 </ul>
 
-<div class="viewCat">
 
-<a href="/breakfast"> View Breakfast Recipes</a>
-<a href="/dinner"> View Dinner Recipes</a>
+  <div class="viewCat">
+  <br>
+  <p>
+    <a href="/breakfast"> View Breakfast Recipes</a>
+  </p>
+  <p>
+    <a href="/dinner"> View Dinner Recipes</a>
+  </p>
 
-</div>
+  </div>
+</body>
