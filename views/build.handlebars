@@ -1,4 +1,26 @@
+<script src="../main.js"></script>
+<link rel="stylesheet" href="css/styles.css">
 <link rel="stylesheet" type="text/css" href="css/build.css">
+
+<html>
+
+<head>
+  <h1><img src="images/banner.png" alt="banner"></h1>
+</head>
+
+<header>
+  <div class="navbar">
+        <a class="active" href="index.html">Home</a> 
+        <a href="about.html">Browse</a>				
+        <a href="/build">Build a Recipe</a>
+        <a href="appointments.html">FAQ</a>
+        <div class="account">
+          <a href="about.html">Log In</a>				
+          <a href="menu.html">Register</a>
+        </div>
+    </div>
+</header>
+
 
 <p1>Build a Recipe</p1>
 <table>
@@ -20,24 +42,34 @@
         </td>
 
         <!--On the right, the list of available ingredients-->
-        <td>
+        <td id="ingredients-column">
             <div id="ingredients">
                 <p2>Here are your available ingredients</p2>
                 <table id="ingredients-table">
                     <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Ingredient</th>
-                    </tr>
+                        <tr>
+                            <th>ID</th>
+                            <th>Ingredient</th>
+                        </tr>
                     </thead>
                     <tbody id="ingredients-table-body"></tbody>
                 </table>
             </div>
         </td>
+        
+        <!--Ingredient info-->
+        <td>
+            <div id="ing-info-div">
+                <p class="ing-info">Ingredient Name</p>
+                <p id="ingredient-name"><br></p>
+                <p class="ing-info">Ethical Problem</p>
+                <p id="ingredient-ethics"><br></p>
+                <p class="ing-info">Alternatives</p>
+                <p id="ingredient-alternatives"><br></p>
+            </div>
+        </td>
     </tr>
 </table>
-
-
 
 
 <script type="text/javascript" src='/js/ServerInteractor.js'></script>

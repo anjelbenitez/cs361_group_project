@@ -24,10 +24,20 @@ class BuildRecipeFunctionFactory {
         name_cell.textContent = ingredient_name;
         row.appendChild(name_cell);
 
+        let removeButton_cell = document.createElement('td');
+        let removeButton = document.createElement('button');
+        removeButton.textContent = "Remove";
+        removeButton.addEventListener('click', function() {
+          recipe_table_body.removeChild(row);
+          delete brvc.recipe_ingredients[ingredient_id];
+        });
+        removeButton_cell.appendChild(removeButton);
+        row.appendChild(removeButton_cell);
+
         recipe_table_body.appendChild(row);
 
         brvc.recipe_ingredients[ingredient_id] = ingredient_name;
       }
     };
-  }
-}
+  }  
+} 
