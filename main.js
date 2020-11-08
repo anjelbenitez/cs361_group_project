@@ -51,6 +51,99 @@ app.get('/dbtest',function(req,res,next){
 });
 
 /*
+display recipes for breakfast
+*/
+app.get('/breakfast',function(req,res,next){
+  let context = {};
+  context.title = "Ethical Eating";
+
+  // Select all from the test_table
+  let query = "select r.name as recipeName, c.name as categoryName from recipe r inner join recipe_category rc on r.id = rc.recipe_id inner join category c on rc.category_id = c.id where rc.category_id=1";
+
+  pg.query(query, (err, result) => {
+    if(err){
+      next(err);
+      return;
+    }
+
+    context.results = result.rows;
+    res.render('breakfast', context);
+  });
+});
+
+/*
+display recipes for lunch
+*/
+app.get('/lunch',function(req,res,next){
+  let context = {};
+  context.title = "Ethical Eating";
+
+  // Select all from the test_table
+  let query = "select r.name as recipeName, c.name as categoryName from recipe r inner join recipe_category rc on r.id = rc.recipe_id inner join category c on rc.category_id = c.id where rc.category_id=2";
+
+  pg.query(query, (err, result) => {
+    if(err){
+      next(err);
+      return;
+    }
+
+    context.results = result.rows;
+    res.render('lunch', context);
+  });
+});
+
+
+/*
+display recipes for dinner
+*/
+app.get('/dinner',function(req,res,next){
+  let context = {};
+  context.title = "Ethical Eating";
+
+  // Select all from the test_table
+  let query = "select r.name as recipeName, c.name as categoryName from recipe r inner join recipe_category rc on r.id = rc.recipe_id inner join category c on rc.category_id = c.id where rc.category_id=3";
+
+  pg.query(query, (err, result) => {
+    if(err){
+      next(err);
+      return;
+    }
+
+    context.results = result.rows;
+    res.render('dinner', context);
+  });
+});
+
+/*
+dispay ingredients for recipes
+*/
+
+app.get('/ingredients/:recipename', function(req,res, next){
+  let context = {};
+  context.title = "Ethical Eating";
+
+  // Select all from the test_table
+  let query = `select r.name as recipeName, i.name as ingredientList
+              from recipe r
+              inner join recipe_ingredient ri on r.id = ri.recipe_id 
+              inner join ingredient i on ri.ingredient_id = i.id
+              where r.name = $1`;
+  var recipe = req.params.recipename;
+  var inserts = [recipe];
+  console.log(recipe);
+  pg.query(query, inserts, (err, result) => {
+    if(err){
+      next(err);
+      return;
+    }
+
+    context.results = result.rows;
+    res.render('ingredients', context);
+  });
+});
+
+
+/*
 The /getIngredients endpoint returns a list of all ingredients in the database and their IDs
  */
 app.post('/getIngredients', function (req, res, next) {
@@ -98,6 +191,10 @@ app.post('/getEthicalProblemForIngredientId', function (req, res, next) {
   });
 });
 
+
+
+
+
 /*
 The /getRecipeByCategory endpoint takes an id of a category as a parameter and returns a list of all the recipes within that category
  */
@@ -112,6 +209,7 @@ app.post('/getRecipesByCategoryId', function (req, res, next) {
           where c.id = $1`,
     values: [req.body["id"]]
   };
+  
 
   // Run the query and send response
   pg.query(query, function(err, result){
@@ -209,3 +307,30 @@ app.use(function(err, req, res, next){
 app.listen(app.get('port'), function(){
     console.log('Express started on http://localhost:' + app.get('port') + '; press Ctrl-C to terminate.');
 });
+
+
+app.post('/getRecipesByCategoryId', function (req, res, next) {
+
+  // Construct the query
+  const query = {
+    text: `select r.name as recipeName
+	        from recipe r 
+	        inner join recipe_category rc on r.id = rc.recipe_id 
+	        inner join category c on rc.category_id = c.id
+          where c.id = $1`,
+    values: [req.body["id"]]
+  };
+
+  // Run the query and send response
+  pg.query(query, function(err, result){
+    if(err){
+      next(err);
+      return;
+    }
+
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify(result.rows));
+  });
+});
+
+
