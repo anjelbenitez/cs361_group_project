@@ -1,5 +1,3 @@
-DROP TABLE IF EXISTS test_table;
-
 -- First drop tables that depend on the other tables
 DROP TABLE IF EXISTS recipe_ingredient;
 DROP TABLE IF EXISTS recipe_category;
@@ -10,23 +8,21 @@ DROP TABLE IF EXISTS ingredient_alternative;
 DROP TABLE IF EXISTS ingredient;
 DROP TABLE IF EXISTS recipe;
 DROP TABLE IF EXISTS category;
-DROP TABLE IF EXISTS recipe_category;
-DROP TABLE IF EXISTS recipe_ingredient;
+DROP TABLE IF EXISTS account;
 DROP TABLE IF EXISTS ethical_problem;
-DROP TABLE IF EXISTS "user";
-
-CREATE TABLE test_table (
-    id SERIAL PRIMARY KEY NOT NULL,
-    title text
-);
-
-INSERT INTO test_table (title) VALUES
-	('Random Title 1'),
-	('Random Title 2');
 
 CREATE TABLE ingredient (
     id SERIAL PRIMARY KEY NOT NULL,
     name text
+);
+
+CREATE TABLE account (
+    id SERIAL PRIMARY KEY NOT NULL,
+    first_name varchar(30),
+    last_name varchar(30),
+    email varchar(255),
+    username varchar(30),
+    "password" varchar(255)
 );
 
 INSERT INTO ingredient (name) VALUES
@@ -62,22 +58,12 @@ INSERT INTO ingredient (name) VALUES
     ('Cashew Cream'),           --30
     ('Soy Milk');               --31
 
--- Note that user is a reserved word in Postgres, so we need to surround it with quotes
-CREATE TABLE "user" (
-    id SERIAL PRIMARY KEY NOT NULL,
-    first_name text,
-    last_name text
-);
-
-INSERT INTO "user" (first_name, last_name) VALUES
-    ('John', 'Doe');
-
 CREATE TABLE recipe (
     id SERIAL PRIMARY KEY NOT NULL,
     name text,
     owner_id int,
     public boolean not null,
-    FOREIGN KEY (owner_id) REFERENCES "user" (id) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (owner_id) REFERENCES account (id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 INSERT INTO recipe (name, owner_id, public) VALUES
