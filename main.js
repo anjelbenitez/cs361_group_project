@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt');
 
 app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
-app.use(express.static('public'));
+app.use(express.static(__dirname + '/public'));
 var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -105,7 +105,7 @@ dispay ingredients for recipes
 app.get('/ingredients/:recipename', function(req,res, next){
   let context = {};
   var recipe = req.params.recipename;
-  context.title = recipe;
+  context.title = "Ethical Eating - " + recipe;
 
   // Select all from the test_table
   let query = `select r.name as recipeName, i.name as ingredientList
