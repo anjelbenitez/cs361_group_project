@@ -1,14 +1,13 @@
 /* BANNER*/
-
-
-h1{
-  margin-left: 650px;
+img#banner {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 40%;
   margin-bottom: 20px;
 }
 
 /* END BANNER*/
-
-
 .searchbar{
   padding-top:40px;
 
