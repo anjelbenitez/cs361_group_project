@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt');
 
 app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
-app.use(express.static('public'));
+app.use(express.static(__dirname + '/public'));
 var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -24,32 +24,14 @@ pg.connect();
 
 app.get('/',function(req,res,next){
     let context = {};
-    context.title = "Ethical Eating";
+    context.title = "Home";
     res.render('home', context);
 });
 
 app.get('/build',function(req,res,next){
   let context = {};
-  context.title = "Ethical Eating";
+  context.title = "Build a Recipe";
   res.render('build', context);
-});
-
-app.get('/dbtest',function(req,res,next){
-  let context = {};
-  context.title = "Ethical Eating";
-
-  // Select all from the test_table
-  let query = "select r.name as recipeName, i.name as ingredientName from recipe r inner join recipe_ingredient ri on r.id = ri.recipe_id inner join ingredient i on ri.ingredient_id = i.id";
-
-  pg.query(query, (err, result) => {
-    if(err){
-      next(err);
-      return;
-    }
-
-    context.results = result.rows;
-    res.render('home', context);
-  });
 });
 
 /*
@@ -57,7 +39,7 @@ display recipes for breakfast
 */
 app.get('/breakfast',function(req,res,next){
   let context = {};
-  context.title = "Ethical Eating";
+  context.title = "Breakfast";
 
   // Select all from the test_table
   let query = "select r.name as recipeName, c.name as categoryName from recipe r inner join recipe_category rc on r.id = rc.recipe_id inner join category c on rc.category_id = c.id where rc.category_id=1";
@@ -78,7 +60,7 @@ display recipes for lunch
 */
 app.get('/lunch',function(req,res,next){
   let context = {};
-  context.title = "Ethical Eating";
+  context.title = "Lunch";
 
   // Select all from the test_table
   let query = "select r.name as recipeName, c.name as categoryName from recipe r inner join recipe_category rc on r.id = rc.recipe_id inner join category c on rc.category_id = c.id where rc.category_id=2";
@@ -100,7 +82,7 @@ display recipes for dinner
 */
 app.get('/dinner',function(req,res,next){
   let context = {};
-  context.title = "Ethical Eating";
+  context.title = "Dinner";
 
   // Select all from the test_table
   let query = "select r.name as recipeName, c.name as categoryName from recipe r inner join recipe_category rc on r.id = rc.recipe_id inner join category c on rc.category_id = c.id where rc.category_id=3";
@@ -122,7 +104,8 @@ dispay ingredients for recipes
 
 app.get('/ingredients/:recipename', function(req,res, next){
   let context = {};
-  context.title = "Ethical Eating";
+  var recipe = req.params.recipename;
+  context.title = "Ethical Eating - " + recipe;
 
   // Select all from the test_table
   let query = `select r.name as recipeName, i.name as ingredientList
@@ -130,7 +113,7 @@ app.get('/ingredients/:recipename', function(req,res, next){
               inner join recipe_ingredient ri on r.id = ri.recipe_id 
               inner join ingredient i on ri.ingredient_id = i.id
               where r.name = $1`;
-  var recipe = req.params.recipename;
+
   var inserts = [recipe];
   console.log(recipe);
   pg.query(query, inserts, (err, result) => {

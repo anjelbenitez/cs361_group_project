@@ -2,9 +2,25 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>{{title}}</title>
+    <title>Ethical Eating - {{title}}</title>
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-{{{body}}}
+    <!--Header and navigation bar-->
+    <header>
+        <div><img src="/images/banner.png" alt="banner" id="banner"></div>
+        <div class="navbar">
+            <a class="active" href="/">Home</a>
+            <a href="about.html">Browse</a>
+            <a href="/build">Build a Recipe</a>
+            <a href="/faq">FAQ</a>
+            <div class="account">
+                <a href="about.html">Log In</a>
+                <a href="#" id="register_button" class="register_button">Register</a>
+            </div>
+        </div>
+    </header>
+    <!--Here is the body-->
+    <div>{{{body}}}</div>
 </body>
 </html>
