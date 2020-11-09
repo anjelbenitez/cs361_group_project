@@ -8,11 +8,8 @@ DROP TABLE IF EXISTS ingredient_alternative;
 DROP TABLE IF EXISTS ingredient;
 DROP TABLE IF EXISTS recipe;
 DROP TABLE IF EXISTS category;
-DROP TABLE IF EXISTS recipe_category;
-DROP TABLE IF EXISTS recipe_ingredient;
 DROP TABLE IF EXISTS account;
 DROP TABLE IF EXISTS ethical_problem;
-DROP TABLE IF EXISTS "user";
 
 CREATE TABLE ingredient (
     id SERIAL PRIMARY KEY NOT NULL,
