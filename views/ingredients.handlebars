@@ -1,39 +1,15 @@
-<link rel="stylesheet" href="../css/styles.css">
+<div class="viewCat">
 
-<html>
+<a href="javascript:history.back()">Return to View Recipes</a>
 
-<head>
-  <h1><img src="../images/banner.png" alt="banner"></h1>
-</head>
+</div>
+<div>
 
-<header>
+<p>View {{#each results}}{{#if @first}}{{this.recipename}}{{/if}}{{/each}} Ingredients</p>
+<ul>
+    {{#each results}}
+        <li>{{this.ingredientlist}}</li>
+    {{/each}}
+</ul>
 
-  <div class="navbar">
-        <a class="active" href="../index.html">Home</a> 
-        <a href="../about.html">Browse</a>				
-        <a href="../menu.html">Build a Recipe</a>
-        <a href="../appointments.html">FAQ</a>
-        <div class="account">
-          <a href="../about.html">Log In</a>				
-          <a href="../menu.html">Register</a>
-        </div>
-    </div>
-
-</header>
-<body>
-    <div class="viewCat">
-
-    <a href="javascript:history.back()">Return to View Recipes</a>
-
-    </div>
-    <div>
-
-    <p>View {{#each results}}{{#if @first}}{{this.recipename}}{{/if}}{{/each}} Ingredients</p>
-    <ul>
-        {{#each results}}
-            <li>{{this.ingredientlist}}</li>
-        {{/each}}
-    </ul>
-
-    </div>
-</body>
+</div>
