@@ -83,7 +83,6 @@ color: black;
 .hp_options {
     display: flex;
     margin-top: 10px;
-    margin-left: 300px;
     width: 250px;
     height: 250px;
   }
