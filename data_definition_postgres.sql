@@ -1,5 +1,3 @@
-DROP TABLE IF EXISTS test_table;
-
 -- First drop tables that depend on the other tables
 DROP TABLE IF EXISTS recipe_ingredient;
 DROP TABLE IF EXISTS recipe_category;
@@ -15,15 +13,6 @@ DROP TABLE IF EXISTS recipe_ingredient;
 DROP TABLE IF EXISTS account;
 DROP TABLE IF EXISTS ethical_problem;
 DROP TABLE IF EXISTS "user";
-
-CREATE TABLE test_table (
-    id SERIAL PRIMARY KEY NOT NULL,
-    title text
-);
-
-INSERT INTO test_table (title) VALUES
-	('Random Title 1'),
-	('Random Title 2');
 
 CREATE TABLE ingredient (
     id SERIAL PRIMARY KEY NOT NULL,
