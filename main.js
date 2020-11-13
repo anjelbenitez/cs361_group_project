@@ -413,6 +413,13 @@ app.post('/validateEmail', function(req, res, next) {
   })
 });
 
+// DISPLAY LOGIN PAGE
+app.get('/login',function(req,res,next){
+  let context = {};
+  context.title = "Login";
+  res.render('login', context);
+});
+
 app.use(function(req,res){
     res.status(404);
     res.render('404');
