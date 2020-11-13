@@ -3,6 +3,7 @@ var app = express();
 var handlebars = require('express-handlebars').create({defaultLayout:'main'});
 const bcrypt = require('bcrypt');
 const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
 const session = require('express-session');
 const flash = require('express-flash');
 
@@ -31,6 +32,8 @@ app.use(session({
   resave : false,
   saveUninitialized : false
 }));
+
+
 
 app.get('/',function(req,res,next){
     let context = {};
