@@ -1,24 +1,29 @@
-<form class="login_form" action="/login" method="POST">
-    <fieldset class="login_form_fieldset">
-        <div id="username_input">
-            <div>
-                <label for="username">Username</label>
-            </div>
-            <div>
-                <input type="text" name="username" id="username" value="" size="60" maxlength="35">
-            </div>
-        </div>
-        <div id="password_input">
-            <div>
-                <label for="password">Password</label>
-            </div>
-            <div>
-                <input type="password" name="password" id="password" value="" size="60" maxlength="35">
-            </div>
-        </div>
-        <div id="login_button_container">
-            <button id="login_button" type="submit">Login</button>
-        </div>
-    </fieldset>
-</form>
+<div class="login_form_container">
+    <div class="login_form_content">
+        <h2>Login</h2>
+        <form class="login_form" action="/loginAttempt" method="POST">
+            <fieldset class="login_form_fieldset">
+                <div id="username_input" class="form_input">
+                    <div>
+                        <label for="username">Username</label>
+                    </div>
+                    <div>
+                        <input type="text" name="username" id="username" value="" size="45" maxlength="35">
+                    </div>
+                </div>
+                <div id="password_input" class="form_input">
+                    <div>
+                        <label for="password">Password</label>
+                    </div>
+                    <div>
+                        <input type="password" name="password" id="password" value="" size="45" maxlength="35">
+                    </div>
+                </div>
+                <div id="login_button_container" class="form_submit">
+                    <button id="login_button" type="submit">Login</button>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>
 <link rel="stylesheet" type="text/css" href="css/login.css">
