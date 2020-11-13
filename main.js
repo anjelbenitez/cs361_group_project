@@ -2,6 +2,9 @@ var express = require('express');
 var app = express();
 var handlebars = require('express-handlebars').create({defaultLayout:'main'});
 const bcrypt = require('bcrypt');
+const passport = require('passport');
+const session = require('express-session');
+const flash = require('express-flash');
 
 app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
@@ -21,6 +24,13 @@ const pg = new Client({
     // }
 });
 pg.connect();
+
+app.use(flash());
+app.use(session({
+  secret : 'super secret key',
+  resave : false,
+  saveUninitialized : false
+}));
 
 app.get('/',function(req,res,next){
     let context = {};
