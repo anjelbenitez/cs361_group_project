@@ -8,7 +8,7 @@ DROP TABLE IF EXISTS ingredient_alternative;
 DROP TABLE IF EXISTS ingredient;
 DROP TABLE IF EXISTS recipe;
 DROP TABLE IF EXISTS category;
-DROP TABLE IF EXISTS account;
+DROP TABLE IF EXISTS account; -- remove later?
 DROP TABLE IF EXISTS ethical_problem;
 
 CREATE TABLE ingredient (

@@ -14,10 +14,20 @@
             <a href="about.html">Browse</a>
             <a href="/build">Build a Recipe</a>
             <a href="/faq">FAQ</a>
+            {{#if user}}
+            <div class="account">
+                <a>Profile: {{this.user.username}}</a>
+                <a>|</a>
+                <a href="">My Recipes</a>
+                <a>|</a>
+                <a href="/logout">Logout</a>
+            </div>
+            {{else}}
             <div class="account">
                 <a href="/login">Log In</a>
                 <a href="#" id="register_button" class="register_button">Register</a>
             </div>
+            {{/if}}
         </div>
     </header>
     <!--Here is the body-->

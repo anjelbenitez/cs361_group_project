@@ -3,9 +3,10 @@ var app = express();
 var handlebars = require('express-handlebars').create({defaultLayout:'main'});
 const bcrypt = require('bcrypt');
 const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
 const session = require('express-session');
 const flash = require('express-flash');
+const initializePassport = require('./passportConfig.js')
+initializePassport(passport);
 
 app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
@@ -32,17 +33,25 @@ app.use(session({
   resave : false,
   saveUninitialized : false
 }));
-
-
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.get('/',function(req,res,next){
     let context = {};
+    if (req.user){
+      context.user = req.user
+    }
+    console.log(context); //remove later
     context.title = "Home";
+    console.log(context);
     res.render('home', context);
 });
 
 app.get('/build',function(req,res,next){
   let context = {};
+  if (req.user){
+    context.user = req.user
+  }
   context.title = "Build a Recipe";
   res.render('build', context);
 });
@@ -52,6 +61,9 @@ display recipes for breakfast
 */
 app.get('/breakfast',function(req,res,next){
   let context = {};
+  if (req.user){
+    context.user = req.user
+  }
   context.title = "Breakfast";
 
   // Select all from the test_table
@@ -73,6 +85,9 @@ display recipes for lunch
 */
 app.get('/lunch',function(req,res,next){
   let context = {};
+  if (req.user){
+    context.user = req.user
+  }
   context.title = "Lunch";
 
   // Select all from the test_table
@@ -95,6 +110,9 @@ display recipes for dinner
 */
 app.get('/dinner',function(req,res,next){
   let context = {};
+  if (req.user){
+    context.user = req.user
+  }
   context.title = "Dinner";
 
   // Select all from the test_table
@@ -117,6 +135,9 @@ dispay ingredients for recipes
 
 app.get('/ingredients/:recipename', function(req,res, next){
   let context = {};
+  if (req.user){
+    context.user = req.user
+  }
   var recipe = req.params.recipename;
   context.title = "Ethical Eating - " + recipe;
 
@@ -433,6 +454,20 @@ app.get('/login',function(req,res,next){
   res.render('login', context);
 });
 
+// LOGIN Attempt
+app.post('/login', passport.authenticate("local", {
+  successRedirect: "/",
+  failureRedirect: "/login",
+  failureFlash: true
+  })
+);
+
+// LOGOUT
+app.get('/logout', function(req,res){
+  req.logOut();  // removes the session
+  res.redirect('/login');
+})
+
 app.use(function(req,res){
     res.status(404);
     res.render('404');
@@ -473,5 +508,3 @@ app.post('/getRecipesByCategoryId', function (req, res, next) {
     res.send(JSON.stringify(result.rows));
   });
 });
-
-
