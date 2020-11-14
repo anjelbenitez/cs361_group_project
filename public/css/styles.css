@@ -195,3 +195,8 @@ color: black;
     margin-bottom: 100px;
   }
    /* END SUCCESS MESSAGE CONTENT */
+
+    /*for the profile name in the nav bar*/
+   .profile_name{
+     text-transform: capitalize;
+   }

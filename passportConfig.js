@@ -16,7 +16,7 @@ function initialize(passport) {
             if(err){
               throw err;
             }
-            if (result.rows.length > 0) { // if an account is found
+            if (result.rows.length === 1) { // if an account is found
                 const user = result.rows[0];
                 bcrypt.compare(password, user.password, (err, match) => {
                     if (err) {
