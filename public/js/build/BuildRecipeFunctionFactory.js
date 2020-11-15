@@ -31,9 +31,22 @@ class BuildRecipeFunctionFactory {
           recipe_table_body.removeChild(row);
           delete brvc.recipe_ingredients[ingredient_id];
         });
+
         removeButton_cell.appendChild(removeButton);
         row.appendChild(removeButton_cell);
+        recipe_table_body.appendChild(row);
 
+
+        // swap ingredient feature
+        let si = new ServerInteractor();
+        let swapButton_cell = document.createElement('td');
+        let swapButton = document.createElement('button');
+        swapButton.textContent="Swap";
+
+
+
+        swapButton_cell.appendChild(swapButton);
+        row.appendChild(swapButton);
         recipe_table_body.appendChild(row);
 
         brvc.recipe_ingredients[ingredient_id] = ingredient_name;
