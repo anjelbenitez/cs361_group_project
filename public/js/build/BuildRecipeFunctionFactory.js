@@ -43,7 +43,29 @@ class BuildRecipeFunctionFactory {
         let swapButton = document.createElement('button');
         swapButton.textContent="Swap";
 
+        let alternative_table_body = document.getElementById("alternative-table-body");
+        let alt_row = document.createElement('tr');
 
+        //adding swap button, need to add function to swap
+        swapButton.addEventListener('click', function() {
+          function myCallback(result) {
+            document.getElementById("ingredient-name").textContent = result.ingredient;
+            document.getElementById("ingredient-ethics").textContent = result.problem;
+            document.getElementById("ingredient-alternatives").innerHTML = result.alternative.join("<br>");
+
+            
+            let infoSwap_cell = document.createElement('td');
+            let infoSwap = document.createElement("button");
+            infoSwap.textContent = "Swap Ingredient";
+            
+            infoSwap_cell.appendChild(infoSwap);
+            alt_row.appendChild(infoSwap);
+            alternative_table_body.appendChild(alt_row);
+
+
+          }
+          si.getIngredientInfo(myCallback, ingredient_id);
+        });
 
         swapButton_cell.appendChild(swapButton);
         row.appendChild(swapButton);
