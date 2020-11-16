@@ -38,20 +38,14 @@ app.use(passport.session());
 
 app.get('/',function(req,res,next){
     let context = {};
-    if (req.user){
-      context.user = req.user
-    }
-    console.log(context); //remove later
+    context.user = req.user || null  // req.user exists when a user is logged in
     context.title = "Home";
-    console.log(context);
     res.render('home', context);
 });
 
 app.get('/build',function(req,res,next){
   let context = {};
-  if (req.user){
-    context.user = req.user
-  }
+  context.user = req.user || null  // req.user exists when a user is logged in
   context.title = "Build a Recipe";
   res.render('build', context);
 });
@@ -61,9 +55,7 @@ display recipes for breakfast
 */
 app.get('/breakfast',function(req,res,next){
   let context = {};
-  if (req.user){
-    context.user = req.user
-  }
+  context.user = req.user || null  // req.user exists when a user is logged in
   context.title = "Breakfast";
 
   // Select all from the test_table
@@ -85,9 +77,7 @@ display recipes for lunch
 */
 app.get('/lunch',function(req,res,next){
   let context = {};
-  if (req.user){
-    context.user = req.user
-  }
+  context.user = req.user || null  // req.user exists when a user is logged in
   context.title = "Lunch";
 
   // Select all from the test_table
@@ -110,9 +100,7 @@ display recipes for dinner
 */
 app.get('/dinner',function(req,res,next){
   let context = {};
-  if (req.user){
-    context.user = req.user
-  }
+  context.user = req.user || null  // req.user exists when a user is logged in
   context.title = "Dinner";
 
   // Select all from the test_table
@@ -135,9 +123,7 @@ dispay ingredients for recipes
 
 app.get('/ingredients/:recipename', function(req,res, next){
   let context = {};
-  if (req.user){
-    context.user = req.user
-  }
+  context.user = req.user || null  // req.user exists when a user is logged in
   var recipe = req.params.recipename;
   context.title = "Ethical Eating - " + recipe;
 
