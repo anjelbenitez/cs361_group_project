@@ -56,6 +56,17 @@ app.get('/build',function(req,res,next){
   res.render('build', context);
 });
 
+app.post('/saveRecipe', function (req, res, next) {
+  if (!req.user) {
+    res.send({error: 'You have to log in first!'});
+  }
+
+  else {
+    // Insert the recipe into the recipe table
+    // Loop through the ingredients to insert them into the recipe_ingredient table
+  }
+});
+
 /*
 display recipes for breakfast
 */
