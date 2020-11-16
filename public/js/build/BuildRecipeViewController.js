@@ -18,7 +18,6 @@ class BuildRecipeViewController {
     let si = new ServerInteractor();
 
     si.getAllIngredients((ingredients) => {
-      console.log(ingredients);
 
       let ingredients_table_body = document.getElementById("ingredients-table-body");
 
@@ -75,14 +74,12 @@ class BuildRecipeViewController {
   saveRecipe() {
 
     let name_field = document.getElementById("recipe_name");
+    let name = name_field.value;
 
     // Test if the name field is empty
     if (name_field.value === "") {
       alert("Recipe name cannot be empty!");
       return;
-    }
-    else {
-      let name = name_field.value;
     }
 
     // Test if the list of ingredients is empty

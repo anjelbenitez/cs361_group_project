@@ -8,6 +8,9 @@ const flash = require('express-flash');
 const initializePassport = require('./passportConfig.js')
 initializePassport(passport);
 
+// Use the pg-format library to support bulk inserts
+const format = require('pg-format');
+
 app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
 app.use(express.static(__dirname + '/public'));
@@ -63,7 +66,44 @@ app.post('/saveRecipe', function (req, res, next) {
 
   else {
     // Insert the recipe into the recipe table
-    // Loop through the ingredients to insert them into the recipe_ingredient table
+    let name = req.body['name'];
+    let ingredients = req.body['ingredients'];
+
+    // Construct the query
+    let insert_recipe_query = {
+      text: `insert into recipe (name, owner_id, public) values ($1, $2, False) returning *`,
+      values: [name, req.user.id]
+    };
+
+    pg.query(insert_recipe_query, (err, result) => {
+      if (err) {
+        next(err);
+        return;
+      }
+
+      let recipe_id = result.rows[0].id;
+      // Construct the insert query
+      let insert_ingredients_query = `insert into recipe_ingredient (recipe_id, ingredient_id) values %L`;
+      var values = [];
+
+      // Loop through each ingredient to append the recipe and ingredient ID pairs to the values array
+      for (let ingredient_id in ingredients) {
+        console.log(`${ingredient_id}: ${ingredients[ingredient_id]}`);
+        values.push([recipe_id, ingredient_id]);
+      }
+
+      // Run the bulk insert query
+      pg.query(format(insert_ingredients_query, values), (err, result) => {
+        if (err) {
+          next(err);
+        }
+
+        // Send back the name and ID of the newly inserted recipe to indicate success
+        res.setHeader('Content-Type', 'application/json');
+        res.send(JSON.stringify({name: name, id: recipe_id}));
+      });
+
+    })
   }
 });
 

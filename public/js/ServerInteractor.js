@@ -38,6 +38,7 @@ class ServerInteractor {
     let req = new XMLHttpRequest();
     req.open('POST', this.baseUrl + '/saveRecipe', true);
     req.setRequestHeader('Content-Type', 'application/json');
+    let payload = JSON.stringify({name: name, ingredients: ingredients});
     req.addEventListener('load',function() {
       if(req.status >= 200 && req.status < 400){
         let response = JSON.parse(req.responseText);
@@ -46,6 +47,6 @@ class ServerInteractor {
         console.log("Error in network request: " + req.statusText);
       }});
 
-    req.send();
+    req.send(payload);
   }
 }
