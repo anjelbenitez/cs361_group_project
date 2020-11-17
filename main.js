@@ -6,6 +6,8 @@ const passport = require('passport');
 const session = require('express-session');
 const flash = require('express-flash');
 const initializePassport = require('./passportConfig.js')
+const methodOverride = require('method-override')
+app.use(methodOverride('_method'));
 initializePassport(passport);
 
 app.engine('handlebars', handlebars.engine);
@@ -449,7 +451,7 @@ app.post('/login', checkNotAuthenticated, passport.authenticate("local", {
 );
 
 // LOGOUT
-app.get('/logout', checkAuthenticated, function(req,res){
+app.delete('/logout', checkAuthenticated, function(req,res){
   req.logOut();  // removes the session
   res.redirect('/login');
 })
