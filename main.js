@@ -382,7 +382,7 @@ app.post('/getIngredientForCustomRecipe', function (req, res, next) {
   });
 });
 
-app.post('/register', async function(req, res, next) {
+app.post('/register', checkNotAuthenticated, async function(req, res, next) {
   var context = {success: null}
   const hashedPassword = await bcrypt.hash(req.body.password, 10);
   console.log(hashedPassword); // remove later
@@ -397,7 +397,7 @@ app.post('/register', async function(req, res, next) {
   })
 });
 
-app.post('/validateUsername', function(req, res, next) {
+app.post('/validateUsername', checkNotAuthenticated, function(req, res, next) {
   var context = {success: null}
   let query = `SELECT account.username FROM account where account.username='${req.body.username}'`;
   pg.query(query, (err, result) => {
@@ -415,7 +415,7 @@ app.post('/validateUsername', function(req, res, next) {
   })
 });
 
-app.post('/validateEmail', function(req, res, next) {
+app.post('/validateEmail', checkNotAuthenticated, function(req, res, next) {
   var context = {success: null}
   let query = `SELECT account.email FROM account where account.email='${req.body.email}'`;
   pg.query(query, (err, result) => {
@@ -434,14 +434,14 @@ app.post('/validateEmail', function(req, res, next) {
 });
 
 // DISPLAY LOGIN PAGE
-app.get('/login',function(req,res,next){
+app.get('/login', checkNotAuthenticated, function(req,res,next){
   let context = {};
   context.title = "Login";
   res.render('login', context);
 });
 
 // LOGIN Attempt
-app.post('/login', passport.authenticate("local", {
+app.post('/login', checkNotAuthenticated, passport.authenticate("local", {
   successRedirect: "/",
   failureRedirect: "/login",
   failureFlash: true
@@ -449,7 +449,7 @@ app.post('/login', passport.authenticate("local", {
 );
 
 // LOGOUT
-app.get('/logout', function(req,res){
+app.get('/logout', checkAuthenticated, function(req,res){
   req.logOut();  // removes the session
   res.redirect('/login');
 })
@@ -465,6 +465,20 @@ app.use(function(err, req, res, next){
     res.status(500);
     res.render('500');
 });
+
+function checkAuthenticated(req, res, next) {
+  if (req.isAuthenticated()){ // req.isAuthenticated() returns true if there is a user that is authenticated
+    return next();
+  }
+  res.redirect('/login');  // redirect to login page if a user is not authenticated
+}
+
+function checkNotAuthenticated(req, res, next) {
+  if (req.isAuthenticated()){
+    return res.redirect('/');  // redirect to home page if a user is already authenticated
+  }
+  next();
+}
 
 app.listen(app.get('port'), function(){
     console.log('Express started on http://localhost:' + app.get('port') + '; press Ctrl-C to terminate.');
