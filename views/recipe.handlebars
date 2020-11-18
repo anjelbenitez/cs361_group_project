@@ -1,0 +1,15 @@
+<div class="viewCat">
+
+<a href="javascript:history.back()">Return to View Recipes</a>
+
+</div>
+<div>
+
+<p>View {{#each results}}{{#if @first}}{{this.recipename}}{{/if}}{{/each}} Ingredients</p>
+<ul>
+    {{#each results}}
+        <li>{{this.ingredientname}}</li>
+    {{/each}}
+</ul>
+
+</div>

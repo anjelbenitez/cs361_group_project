@@ -88,7 +88,6 @@ app.post('/saveRecipe', function (req, res, next) {
 
       // Loop through each ingredient to append the recipe and ingredient ID pairs to the values array
       for (let ingredient_id in ingredients) {
-        console.log(`${ingredient_id}: ${ingredients[ingredient_id]}`);
         values.push([recipe_id, ingredient_id]);
       }
 
@@ -106,6 +105,56 @@ app.post('/saveRecipe', function (req, res, next) {
     })
   }
 });
+
+app.get('/my_recipes', function (req, res, next) {
+  let context = {};
+  context.user = req.user || null;
+
+  context.title = "My Recipes";
+
+  let query = {
+    text: `select r.name as recipename, r.id as recipeid from recipe r where r.owner_id = $1;`,
+    values: [req.user.id]
+  };
+
+  pg.query(query, (err, result) => {
+    if (err) {
+      next(err);
+      return;
+    }
+
+    context.results = result.rows;
+    res.render('my_recipes', context);
+  })
+});
+
+app.get('/recipe', function (req, res, next) {
+  let context = {};
+  context.user = req.user || null;
+
+  let recipe_id = req.query.id;
+  let query = {
+    text: `select i.name as ingredientname, r.name as recipename from recipe r 
+           inner join recipe_ingredient ri on r.id = ri.recipe_id 
+           inner join ingredient i on ri.ingredient_id = i.id 
+           where r.id = $1`,
+    values: [recipe_id]
+  };
+
+  pg.query(query, (err, result) => {
+    if (err) {
+      next(err);
+      return;
+    }
+    context.title = result.rows[0].recipename;
+    context.results = result.rows;
+
+    res.render('recipe', context);
+
+  })
+
+});
+
 
 /*
 display recipes for breakfast
