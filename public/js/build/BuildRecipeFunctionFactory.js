@@ -8,13 +8,13 @@ class BuildRecipeFunctionFactory {
    */
   createAddIngredientFunction(ingredient_id, ingredient_name, brvc) {
     return function () {
-
       if (ingredient_id in brvc.recipe_ingredients) {
         alert(`Ingredient ${ingredient_name} (ID ${ingredient_id}) is already in the recipe.`);
       }
       else {
         let recipe_table_body = document.getElementById("recipe-table-body");
         let row = document.createElement('tr');
+        row.setAttribute("id", ingredient_id);
 
         let id_cell = document.createElement('td');
         id_cell.textContent = ingredient_id;
@@ -40,4 +40,13 @@ class BuildRecipeFunctionFactory {
       }
     };
   }  
+
+  // This function removes an ingredient from the current custom recipe list.
+  removeIngredient(ingredient_id, brvc) {
+    if (ingredient_id in brvc.recipe_ingredients) {
+      delete brvc.recipe_ingredients[ingredient_id];
+      let row = document.getElementById(ingredient_id);
+      row.parentNode.removeChild(row);
+    }
+  }
 } 

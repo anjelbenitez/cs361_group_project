@@ -79,7 +79,12 @@ class BuildRecipeViewController {
                 // Add a cell to hold 'Replace' button
                 let altReplaceCell = altRow.insertCell();
                 let altReplaceButton = document.createElement("button");
+                let altReplaceFunction = function() {
+                  ff.removeIngredient(result.ingredient_id, self);
+                  altAddButton.click();
+                }
                 altReplaceButton.textContent = "Replace";
+                altReplaceButton.addEventListener("click", altReplaceFunction);
                 altReplaceCell.appendChild(altReplaceButton);
               }
             } else {
