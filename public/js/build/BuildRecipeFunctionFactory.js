@@ -37,7 +37,7 @@ class BuildRecipeFunctionFactory {
         recipe_table_body.appendChild(row);
 
 
-        // swap ingredient feature
+        // swap ingredient feature on the custom recipe
         let si = new ServerInteractor();
         let swapButton_cell = document.createElement('td');
         let swapButton = document.createElement('button');
@@ -45,7 +45,7 @@ class BuildRecipeFunctionFactory {
 
         let alternative_table_body = document.getElementById("alternative-table-body");
 
-        //adding swap button, need to add function to swap
+        //adding swap button in the async window, need to add function to swap
         swapButton.addEventListener('click', function() {
           function myCallback(result) {
             document.getElementById("ingredient-name").textContent = result.ingredient;
@@ -53,29 +53,28 @@ class BuildRecipeFunctionFactory {
             
             for(let i = 0; i < result.alternative.length; i++){
 
-              let alt_row = document.createElement('tr');
+              let alt_row = document.createElement('tr');              
+          
+                let alt_name = document.createElement('td');
+                alt_name.textcontent = document.getElementById("ingredient-alternatives").innerHTML = result.alternative.join("<br>");
+                alt_row.append(alt_name);
+    
+                
+                let infoSwap_cell = document.createElement('td');
+                let infoSwap = document.createElement("button");
+                infoSwap.textContent = "Swap Ingredient";
 
-              let table_name = result.alternative[i]['ingredient_alternative']
-              
-              let alt_name = document.createElement('td');
-              alt_name.textcontent = document.getElementById("ingredient-alternatives").innerHTML = result.alternative.join("<br>");
-              alt_row.append(alt_name);
-  
-              
-              let infoSwap_cell = document.createElement('td');
-              let infoSwap = document.createElement("button");
-              infoSwap.textContent = "Swap Ingredient";
-              
-              infoSwap_cell.appendChild(infoSwap);
-              alt_row.appendChild(infoSwap);
-              alternative_table_body.appendChild(alt_row);
-  
+                infoSwap.addEventListener('click',function(){
+                  recipe_table_body.removeChild(row);
+                  delete brvc.recipe_ingredients[ingredient_id];
 
-
+                });
+                
+                infoSwap_cell.appendChild(infoSwap);
+                alt_row.appendChild(infoSwap);
+                alternative_table_body.appendChild(alt_row);
 
             }
-
-
           }
           si.getIngredientInfo(myCallback, ingredient_id);
         });
