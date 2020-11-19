@@ -44,23 +44,35 @@ class BuildRecipeFunctionFactory {
         swapButton.textContent="Swap";
 
         let alternative_table_body = document.getElementById("alternative-table-body");
-        let alt_row = document.createElement('tr');
 
         //adding swap button, need to add function to swap
         swapButton.addEventListener('click', function() {
           function myCallback(result) {
             document.getElementById("ingredient-name").textContent = result.ingredient;
             document.getElementById("ingredient-ethics").textContent = result.problem;
-            document.getElementById("ingredient-alternatives").innerHTML = result.alternative.join("<br>");
+            
+            for(let i = 0; i < result.alternative.length; i++){
 
-            
-            let infoSwap_cell = document.createElement('td');
-            let infoSwap = document.createElement("button");
-            infoSwap.textContent = "Swap Ingredient";
-            
-            infoSwap_cell.appendChild(infoSwap);
-            alt_row.appendChild(infoSwap);
-            alternative_table_body.appendChild(alt_row);
+              let alt_row = document.createElement('tr');
+
+              let table_name = results.alternative[i]['ingredient_alternative']
+              let alt_name = document.createElement('td');
+              alt_name.textcontent = document.getElementById("ingredient-alternatives").innerHTML = result.alternative.join("<br>");
+              alt_row.append(alt_name);
+  
+              
+              let infoSwap_cell = document.createElement('td');
+              let infoSwap = document.createElement("button");
+              infoSwap.textContent = "Swap Ingredient";
+              
+              infoSwap_cell.appendChild(infoSwap);
+              alt_row.appendChild(infoSwap);
+              alternative_table_body.appendChild(alt_row);
+  
+
+
+
+            }
 
 
           }
