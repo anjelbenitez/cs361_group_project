@@ -55,7 +55,8 @@ class BuildRecipeFunctionFactory {
 
               let alt_row = document.createElement('tr');
 
-              let table_name = results.alternative[i]['ingredient_alternative']
+              let table_name = result.alternative[i]['ingredient_alternative']
+              
               let alt_name = document.createElement('td');
               alt_name.textcontent = document.getElementById("ingredient-alternatives").innerHTML = result.alternative.join("<br>");
               alt_row.append(alt_name);
