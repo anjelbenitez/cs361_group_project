@@ -9,7 +9,14 @@ class BuildRecipeFunctionFactory {
   createAddIngredientFunction(ingredient_id, ingredient_name, brvc) {
     return function () {
       if (ingredient_id in brvc.recipe_ingredients) {
-        alert(`Ingredient ${ingredient_name} (ID ${ingredient_id}) is already in the recipe.`);
+        // alert(`Ingredient ${ingredient_name} (ID ${ingredient_id}) is already in the recipe.`);
+
+        let notifDiv = document.getElementById("alert-div");
+        let notif = document.createElement("div");
+        notif.textContent = `Ingredient ${ingredient_name} (ID ${ingredient_id}) is already in the recipe.`;
+        notif.classList.add("alert", "warning");
+        notifDiv.prepend(notif);
+        setTimeout(function() { notif.remove() }, 2000);
       }
       else {
         let recipe_table_body = document.getElementById("recipe-table-body");
