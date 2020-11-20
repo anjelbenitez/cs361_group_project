@@ -235,6 +235,7 @@ app.get('/ingredients/:recipename', function(req,res, next){
   context.user = req.user || null  // req.user exists when a user is logged in
   var recipe = req.params.recipename;
   context.title = "Ethical Eating - " + recipe;
+  context.js = ["register.js"]
 
   // Select all from the test_table
   let query = `select r.name as recipeName, i.name as ingredientList
