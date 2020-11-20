@@ -55,6 +55,13 @@ app.get('/build',function(req,res,next){
   res.render('build', context);
 });
 
+app.get('/faq',function(req,res,next){
+  let context = {};
+  context.user = req.user || null  // req.user exists when a user is logged in
+  context.title = "FAQ";
+  res.render('faq', context);
+});
+
 app.post('/saveRecipe', function (req, res, next) {
   if (!req.user) {
     res.send({error: 'You have to log in first!'});
