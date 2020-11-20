@@ -170,8 +170,8 @@ create table ethical_problem (
 );
 
 insert into ethical_problem (title) values
-    ('deforestation'),
-    ('carbon emission');
+    ('Deforestation -  the decrease in forest areas across the world that are lost for other uses such as agricultural croplands, urbanization, or mining activities.'),
+    ('Carbon Emission - the release of carbon into the atmosphere; the main contributors to climate change.');
 
 create table ingredient_ethical_problem (
     ingredient_id INT,
