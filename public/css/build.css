@@ -60,6 +60,6 @@ button {
     border-radius: 5px;
 }
 
-.alert.warning {
+.alert.add-error {
     background-color: #f44336;
 }

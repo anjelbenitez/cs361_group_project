@@ -14,7 +14,7 @@ class BuildRecipeFunctionFactory {
         let notifDiv = document.getElementById("alert-div");
         let notif = document.createElement("div");
         notif.textContent = `Ingredient ${ingredient_name} (ID ${ingredient_id}) is already in the recipe.`;
-        notif.classList.add("alert", "warning");
+        notif.classList.add("alert", "add-error");
         notifDiv.prepend(notif);
         setTimeout(function() { notif.remove() }, 2000);
       }
@@ -34,16 +34,25 @@ class BuildRecipeFunctionFactory {
         let removeButton_cell = document.createElement('td');
         let removeButton = document.createElement('button');
         removeButton.textContent = "Remove";
+
         removeButton.addEventListener('click', function() {
           recipe_table_body.removeChild(row);
           delete brvc.recipe_ingredients[ingredient_id];
         });
+        
         removeButton_cell.appendChild(removeButton);
         row.appendChild(removeButton_cell);
 
         recipe_table_body.appendChild(row);
 
         brvc.recipe_ingredients[ingredient_id] = ingredient_name;
+
+        let notifDiv = document.getElementById("alert-div");
+        let notif = document.createElement("div");
+        notif.textContent = `${ingredient_name} (ID ${ingredient_id}) was added to the recipe.`;
+        notif.classList.add("alert");
+        notifDiv.prepend(notif);
+        setTimeout(function() { notif.remove() }, 2000);
       }
     };
   }  
