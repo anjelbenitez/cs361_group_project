@@ -1,21 +1,21 @@
+<<<<<<< HEAD
 <p1>Build a Recipe</p1>
 <div>
     <label for="recipe_name">Recipe Name:</label>
     <input type="text" id="recipe_name" name="recipe_name"><br>
     <button id="save_button">Save Recipe</button>
 </div>
-
-<table>
+<table id="full-table">
     <tr>
         <!--On the left, the work-in=progress recipe-->
-        <td>
+        <td class="build-column">
             <div id="recipe">
-                <p2>Custom Recipe</p2>
                 <table id="recipe-table">
                     <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Ingredient</th>
+                        <th>Added Ingredients</th>
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody id="recipe-table-body"></tbody>
@@ -24,14 +24,14 @@
         </td>
 
         <!--On the right, the list of available ingredients-->
-        <td id="ingredients-column">
+        <td id="ingredients-column" class="build-column">
             <div id="ingredients">
-                <p2>Here are your available ingredients</p2>
                 <table id="ingredients-table">
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Ingredient</th>
+                            <th>Available Ingredients</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody id="ingredients-table-body"></tbody>
@@ -40,7 +40,7 @@
         </td>
         
         <!--Ingredient info-->
-        <td>
+        <td class="build-column">
             <div id="ing-info-div">
                 <p class="ing-info">Ingredient Name</p>
                 <p id="ingredient-name"><br></p>
