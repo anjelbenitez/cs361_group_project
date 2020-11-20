@@ -2,6 +2,13 @@ var express = require('express');
 var app = express();
 var handlebars = require('express-handlebars').create({defaultLayout:'main'});
 const bcrypt = require('bcrypt');
+const passport = require('passport');
+const session = require('express-session');
+const flash = require('express-flash');
+const initializePassport = require('./passportConfig.js')
+const methodOverride = require('method-override')
+app.use(methodOverride('_method'));
+initializePassport(passport);
 
 app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
@@ -22,14 +29,25 @@ const pg = new Client({
 });
 pg.connect();
 
+app.use(flash());
+app.use(session({
+  secret : 'super secret key',
+  resave : false,
+  saveUninitialized : false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.get('/',function(req,res,next){
     let context = {};
+    context.user = req.user || null  // req.user exists when a user is logged in
     context.title = "Home";
     res.render('home', context);
 });
 
 app.get('/build',function(req,res,next){
   let context = {};
+  context.user = req.user || null  // req.user exists when a user is logged in
   context.title = "Build a Recipe";
   res.render('build', context);
 });
@@ -39,6 +57,7 @@ display recipes for breakfast
 */
 app.get('/breakfast',function(req,res,next){
   let context = {};
+  context.user = req.user || null  // req.user exists when a user is logged in
   context.title = "Breakfast";
 
   // Select all from the test_table
@@ -60,6 +79,7 @@ display recipes for lunch
 */
 app.get('/lunch',function(req,res,next){
   let context = {};
+  context.user = req.user || null  // req.user exists when a user is logged in
   context.title = "Lunch";
 
   // Select all from the test_table
@@ -82,6 +102,7 @@ display recipes for dinner
 */
 app.get('/dinner',function(req,res,next){
   let context = {};
+  context.user = req.user || null  // req.user exists when a user is logged in
   context.title = "Dinner";
 
   // Select all from the test_table
@@ -104,6 +125,7 @@ dispay ingredients for recipes
 
 app.get('/ingredients/:recipename', function(req,res, next){
   let context = {};
+  context.user = req.user || null  // req.user exists when a user is logged in
   var recipe = req.params.recipename;
   context.title = "Ethical Eating - " + recipe;
 
@@ -362,7 +384,7 @@ app.post('/getIngredientForCustomRecipe', function (req, res, next) {
   });
 });
 
-app.post('/register', async function(req, res, next) {
+app.post('/register', checkNotAuthenticated, async function(req, res, next) {
   var context = {success: null}
   const hashedPassword = await bcrypt.hash(req.body.password, 10);
   console.log(hashedPassword); // remove later
@@ -377,7 +399,7 @@ app.post('/register', async function(req, res, next) {
   })
 });
 
-app.post('/validateUsername', function(req, res, next) {
+app.post('/validateUsername', checkNotAuthenticated, function(req, res, next) {
   var context = {success: null}
   let query = `SELECT account.username FROM account where account.username='${req.body.username}'`;
   pg.query(query, (err, result) => {
@@ -395,7 +417,7 @@ app.post('/validateUsername', function(req, res, next) {
   })
 });
 
-app.post('/validateEmail', function(req, res, next) {
+app.post('/validateEmail', checkNotAuthenticated, function(req, res, next) {
   var context = {success: null}
   let query = `SELECT account.email FROM account where account.email='${req.body.email}'`;
   pg.query(query, (err, result) => {
@@ -413,6 +435,27 @@ app.post('/validateEmail', function(req, res, next) {
   })
 });
 
+// DISPLAY LOGIN PAGE
+app.get('/login', checkNotAuthenticated, function(req,res,next){
+  let context = {};
+  context.title = "Login";
+  res.render('login', context);
+});
+
+// LOGIN Attempt
+app.post('/login', checkNotAuthenticated, passport.authenticate("local", {
+  successRedirect: "/",
+  failureRedirect: "/login",
+  failureFlash: true
+  })
+);
+
+// LOGOUT
+app.delete('/logout', checkAuthenticated, function(req,res){
+  req.logOut();  // removes the session
+  res.redirect('/login');
+})
+
 app.use(function(req,res){
     res.status(404);
     res.render('404');
@@ -424,6 +467,20 @@ app.use(function(err, req, res, next){
     res.status(500);
     res.render('500');
 });
+
+function checkAuthenticated(req, res, next) {
+  if (req.isAuthenticated()){ // req.isAuthenticated() returns true if there is a user that is authenticated
+    return next();
+  }
+  res.redirect('/login');  // redirect to login page if a user is not authenticated
+}
+
+function checkNotAuthenticated(req, res, next) {
+  if (req.isAuthenticated()){
+    return res.redirect('/');  // redirect to home page if a user is already authenticated
+  }
+  next();
+}
 
 app.listen(app.get('port'), function(){
     console.log('Express started on http://localhost:' + app.get('port') + '; press Ctrl-C to terminate.');
@@ -453,5 +510,3 @@ app.post('/getRecipesByCategoryId', function (req, res, next) {
     res.send(JSON.stringify(result.rows));
   });
 });
-
-
