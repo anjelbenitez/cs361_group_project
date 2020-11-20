@@ -3,8 +3,8 @@ class BuildRecipeFunctionFactory {
 
   /*
   The createAddIngredientFunction function takes an ingredient's ID and name as the first two parameters.
-  The
-  It returns a function that will add the ingredient to the recipe-table-body.
+  The third parameter is an instance of the BuildRecipeViewController class.
+  It returns a function that will add the ingredient to the recipe-table-body and the recipe_ingredients object.
    */
   createAddIngredientFunction(ingredient_id, ingredient_name, brvc) {
     return function () {
@@ -76,5 +76,5 @@ class BuildRecipeFunctionFactory {
         setTimeout(function() { notif.remove() }, 3000);
       }
     };
-  }  
+  }
 } 

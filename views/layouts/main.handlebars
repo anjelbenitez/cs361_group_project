@@ -13,10 +13,22 @@
             <a class="active" href="/">Home</a>
             <a href="/build">Build a Recipe</a>
             <a href="/faq">FAQ</a>
+            {{#if user}}
             <div class="account">
-                <a href="about.html">Log In</a>
+                <a class="profile_name">Profile: {{this.user.username}}</a>
+                <a style="pointer-events: none">|</a>
+                <a href="/my_recipes">My Recipes</a>
+                <a style="pointer-events: none">|</a>
+                <form class="logout_form" action="/logout?_method=DELETE" method="POST">
+                    <button class="logout_button" type="submit">Logout</button>
+                </form>
+            </div>
+            {{else}}
+            <div class="account">
+                <a href="/login">Log In</a>
                 <a href="#" id="register_button" class="register_button">Register</a>
             </div>
+            {{/if}}
         </div>
     </header>
     <!--Here is the body-->
