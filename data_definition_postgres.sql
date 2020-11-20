@@ -188,6 +188,9 @@ insert into ingredient_ethical_problem values
     (18, 1), -- Eggs and carbon emission
     (19, 2), -- Butter and deforestation
     (20, 1), -- Milk and deforestation
+    (8, 1),  -- Pork and carbon emission
+    (9, 2),  -- Ham and deforestation
+    (10, 1), -- Bacon and deforestation
     (21, 1), -- Cheddar Cheese and deforestation
     (22, 1), -- Parmesan Cheese and deforestation
     (3, 2),  -- Egg Noodle and carbon emission
@@ -220,5 +223,11 @@ insert into ingredient_alternative (ingredient_id, alternative_id) values
     (20, 31), -- Milk and Soy Milk
     (21, 34), -- Cheddar Cheese and Cashew Cheese
     (22, 34), -- Parmesan Cheese and Cashew Cheese
+    (8, 35),  -- Pork and Chicken
+    (8, 36),  -- Pork and Salmon
+    (9, 35),  -- Ham and Chicken
+    (9, 36),  -- Ham and Salmon
+    (10, 35), -- Bacon and Chicken
+    (10, 36), -- Bacon and Salmon
 	(3, 11);  -- Egg Noodle and Russet Potatoes
 
