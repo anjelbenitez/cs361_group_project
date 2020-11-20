@@ -61,5 +61,9 @@ button {
 }
 
 .alert.add-error {
-    background-color: #f44336;
+    background-color: #F44336;
+}
+
+.alert.remove-success {
+    background-color: #2196F3;
 }

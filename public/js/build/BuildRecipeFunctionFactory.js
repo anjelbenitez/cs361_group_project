@@ -13,7 +13,7 @@ class BuildRecipeFunctionFactory {
 
         let notifDiv = document.getElementById("alert-div");
         let notif = document.createElement("div");
-        notif.textContent = `Ingredient ${ingredient_name} (ID ${ingredient_id}) is already in the recipe.`;
+        notif.textContent = `${ingredient_name} (ID ${ingredient_id}) is already in the recipe.`;
         notif.classList.add("alert", "add-error");
         notifDiv.prepend(notif);
         setTimeout(function() { notif.remove() }, 2000);
@@ -34,12 +34,19 @@ class BuildRecipeFunctionFactory {
         let removeButton_cell = document.createElement('td');
         let removeButton = document.createElement('button');
         removeButton.textContent = "Remove";
+        removeButton.setAttribute("id", "remove-" + ingredient_id);
 
         removeButton.addEventListener('click', function() {
           recipe_table_body.removeChild(row);
           delete brvc.recipe_ingredients[ingredient_id];
+          let notifDiv = document.getElementById("alert-div");
+          let notif = document.createElement("div");
+          notif.textContent = `${ingredient_name} (ID ${ingredient_id}) was removed from the recipe.`;
+          notif.classList.add("alert", "remove-success");
+          notifDiv.prepend(notif);
+          setTimeout(function() { notif.remove() }, 2000);
         });
-        
+
         removeButton_cell.appendChild(removeButton);
         row.appendChild(removeButton_cell);
 
@@ -56,13 +63,4 @@ class BuildRecipeFunctionFactory {
       }
     };
   }  
-
-  // This function removes an ingredient from the current custom recipe list.
-  removeIngredient(ingredient_id, brvc) {
-    if (ingredient_id in brvc.recipe_ingredients) {
-      delete brvc.recipe_ingredients[ingredient_id];
-      let row = document.getElementById(ingredient_id);
-      row.parentNode.removeChild(row);
-    }
-  }
 } 

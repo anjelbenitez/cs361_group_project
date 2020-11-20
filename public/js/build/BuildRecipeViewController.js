@@ -80,7 +80,10 @@ class BuildRecipeViewController {
                 let altReplaceCell = altRow.insertCell();
                 let altReplaceButton = document.createElement("button");
                 let altReplaceFunction = function() {
-                  ff.removeIngredient(result.ingredient_id, self);
+                  let removeButton = document.getElementById("remove-" + result.ingredient_id);
+                  if (removeButton) {
+                    removeButton.click();
+                  }
                   altAddButton.click();
                 }
                 altReplaceButton.textContent = "Replace";
