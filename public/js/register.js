@@ -15,8 +15,8 @@ function clearSignUpForm(){
     let first_name = document.getElementById('first_name');
     let last_name = document.getElementById('last_name');
     let email = document.getElementById('email');
-    let username = document.getElementById('username');
-    let password = document.getElementById('password');
+    let username = document.getElementById('user');
+    let password = document.getElementById('pass');
     let confirm_password = document.getElementById('confirm_password');
 
     // clear field values after closing
@@ -48,8 +48,8 @@ function signUpAttempt() {
         let first_name = document.getElementById('first_name');
         let last_name = document.getElementById('last_name');
         let email = document.getElementById('email');
-        let username = document.getElementById('username');
-        let password = document.getElementById('password');
+        let username = document.getElementById('user');
+        let password = document.getElementById('pass');
         let confirm_password = document.getElementById('confirm_password');
         let signUpForm = new SignUpForm(first_name, last_name, email, username, password, confirm_password);
         for (let nodeElement of Object.values(signUpForm)) {
