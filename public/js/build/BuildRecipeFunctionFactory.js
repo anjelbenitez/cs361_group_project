@@ -9,8 +9,7 @@ class BuildRecipeFunctionFactory {
   createAddIngredientFunction(ingredient_id, ingredient_name, brvc) {
     return function () {
       if (ingredient_id in brvc.recipe_ingredients) {
-        // alert(`Ingredient ${ingredient_name} (ID ${ingredient_id}) is already in the recipe.`);
-
+        // show notification that adding ingredient was not successful
         let notifDiv = document.getElementById("alert-div");
         let notif = document.createElement("div");
         notif.textContent = `${ingredient_name} (ID ${ingredient_id}) is already in the recipe.`;
@@ -31,6 +30,7 @@ class BuildRecipeFunctionFactory {
         name_cell.textContent = ingredient_name;
         row.appendChild(name_cell);
 
+        // create button to remove ingredient
         let removeButton_cell = document.createElement('td');
         let removeButton = document.createElement('button');
         removeButton.textContent = "Remove";
@@ -39,6 +39,8 @@ class BuildRecipeFunctionFactory {
         removeButton.addEventListener('click', function() {
           recipe_table_body.removeChild(row);
           delete brvc.recipe_ingredients[ingredient_id];
+
+          // show notification that ingredient was removed successfully
           let notifDiv = document.getElementById("alert-div");
           let notif = document.createElement("div");
           notif.textContent = `${ingredient_name} (ID ${ingredient_id}) was removed from the recipe.`;
@@ -50,16 +52,28 @@ class BuildRecipeFunctionFactory {
         removeButton_cell.appendChild(removeButton);
         row.appendChild(removeButton_cell);
 
+        // create button to get ingredient info
+        let infoButton = document.createElement("button");
+        infoButton.textContent = "Info";
+        infoButton.addEventListener("click", function() {
+          document.getElementById("info-" + ingredient_id).click();
+        })
+
+        let infoButtonCell = document.createElement("td");
+        infoButtonCell.appendChild(infoButton);
+        row.appendChild(infoButtonCell);
+
         recipe_table_body.appendChild(row);
 
         brvc.recipe_ingredients[ingredient_id] = ingredient_name;
 
+        // show notification that ingredient was added successfully
         let notifDiv = document.getElementById("alert-div");
         let notif = document.createElement("div");
         notif.textContent = `${ingredient_name} (ID ${ingredient_id}) was added to the recipe.`;
         notif.classList.add("alert");
         notifDiv.prepend(notif);
-        setTimeout(function() { notif.remove() }, 2000);
+        setTimeout(function() { notif.remove() }, 3000);
       }
     };
   }  

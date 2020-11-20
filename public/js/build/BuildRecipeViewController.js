@@ -48,6 +48,7 @@ class BuildRecipeViewController {
         //Add an "Info" button
         let infoButton = document.createElement('button');
         infoButton.textContent = "Info";
+        infoButton.setAttribute("id", "info-" + ingredient_id);
 
         // When user clicks on Info button, ingredient info show ups asynchronously on page
         infoButton.addEventListener('click', function() {
