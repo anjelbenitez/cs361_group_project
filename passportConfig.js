@@ -34,12 +34,9 @@ function initialize(passport) {
     passport.serializeUser((user, done) => done(null, user.id)); //store user.id in session
 
     passport.deserializeUser((id, done) => {   // uses id to obtain user details
-        let query = `SELECT * FROM account WHERE id = ${id}`;
-        pg.query(query, (err,result) => {
-            if (err) {
-                throw err;
-            } else {
-                return done(null, result.rows[0]);
+        getUserByID(id).then((userID) => {
+            if (userID){
+                return done(null, userID);
             }
         });
     });
@@ -77,6 +74,20 @@ function initialize(passport) {
             });
         });
     }
+
+    function getUserByID(id){
+        return new Promise (function(resolve, reject) {
+            let query = `SELECT * FROM account WHERE id = ${id}`;
+            pg.query(query, (err,result) => {
+            if (err) {
+                throw err;
+            } else {
+                resolve(result.rows[0]);
+            }
+            });
+        });
+    }
+
 }
 
 module.exports = initialize;
