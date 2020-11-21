@@ -13,10 +13,7 @@ function initialize(passport) {
     const authenticateLogin = (username, password, done) => {
         getUserByUsernameInput(username).then((user) => {
             if (user) { // if an account is found
-                bcrypt.compare(password, user.password, (err, match) => {
-                    if (err) {
-                        throw err;
-                    }
+                compareUserPassword(password, user).then((match) => {
                     if (match) {
                         return done(null, user);
                     } else {
@@ -60,6 +57,22 @@ function initialize(passport) {
                 }
                 else {
                     resolve(false)
+                }
+            });
+        });
+    }
+
+    function compareUserPassword(passwordInput, user){
+        return new Promise (function(resolve, reject) {
+            bcrypt.compare(passwordInput, user.password, (err, match) => {
+                if (err) {
+                    throw err;
+                }
+                if (match) {
+                    resolve(true);
+                } else {
+                    // password does not match user name
+                    resolve(false);
                 }
             });
         });
