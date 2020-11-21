@@ -20,9 +20,10 @@ class BuildRecipeViewController {
     si.getAllIngredients((ingredients) => {
 
       let ingredients_table_body = document.getElementById("ingredients-table-body");
+      let tb = new TableBuilder(ingredients_table_body);
 
       for (let i = 0; i < ingredients.length; i++) {
-        let row = document.createElement('tr');
+        let row = tb.createRow();
 
         // Add the ID cell
         let ingredient_id = ingredients[i]['id'];
@@ -56,9 +57,6 @@ class BuildRecipeViewController {
         let infoFunction = ff.createInfoFunction(ingredient_id);
         infoButton.addEventListener('click', infoFunction);
         row.appendChild(infoButton);
-
-        // Add the row
-        ingredients_table_body.appendChild(row);
       }
     });
   }
