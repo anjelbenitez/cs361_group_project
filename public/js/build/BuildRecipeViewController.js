@@ -53,16 +53,8 @@ class BuildRecipeViewController {
         let infoButton = document.createElement('button');
         infoButton.textContent = "Info";
         // When user clicks on Info button, ingredient info show ups asynchronously on page
-        infoButton.addEventListener('click', function() {
-          function myCallback(result) {
-            console.log(result);
-            // Update Ingredient Info box on page async
-            document.getElementById("ingredient-name").textContent = result.ingredient;
-            document.getElementById("ingredient-ethics").textContent = result.problem;
-            document.getElementById("ingredient-alternatives").innerHTML = result.alternative.join("<br>");
-          }
-          si.getIngredientInfo(myCallback, ingredient_id);
-        });
+        let infoFunction = ff.createInfoFunction(ingredient_id);
+        infoButton.addEventListener('click', infoFunction);
         row.appendChild(infoButton);
 
         // Add the row
