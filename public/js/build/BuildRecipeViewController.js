@@ -27,15 +27,11 @@ class BuildRecipeViewController {
 
         // Add the ID cell
         let ingredient_id = ingredients[i]['id'];
-        let id_cell = document.createElement('td');
-        id_cell.textContent = ingredient_id;
-        row.appendChild(id_cell);
+        tb.createTextOnlyCell(row, ingredient_id);
 
         // Add the name cell
         let ingredient_name = ingredients[i]['name'];
-        let name_cell = document.createElement('td');
-        name_cell.textContent = ingredient_name;
-        row.appendChild(name_cell);
+        tb.createTextOnlyCell(row, ingredient_name);
 
         // Add an "Add to recipe" button
         let addButton = document.createElement('button');
