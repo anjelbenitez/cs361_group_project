@@ -1,7 +1,7 @@
+
+<p>{{#each results}}{{#if @first}}{{this.categoryname}}{{/if}}{{/each}} Recipes</p>
 <ul>
     {{#each results}}
-         <p> {{this.categoryname}} Recipes</p>
-
         <li><a href='/ingredients/{{this.recipename}}'><p>{{this.recipename}}</p></a></li>
     {{/each}}
 </ul>
