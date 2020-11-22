@@ -34,69 +34,35 @@ app.get('/build',function(req,res,next){
   res.render('build', context);
 });
 
+
 /*
-display recipes for breakfast
+display on category page based on click
 */
-app.get('/breakfast',function(req,res,next){
+
+app.get('/category/:catname',function(req,res,next){
   let context = {};
-  context.title = "Breakfast";
+  var type = req.params.catname;
+  context.title = "Ethical Eating - " + type;
 
   // Select all from the test_table
-  let query = "select r.name as recipeName, c.name as categoryName from recipe r inner join recipe_category rc on r.id = rc.recipe_id inner join category c on rc.category_id = c.id where rc.category_id=1";
+  let query = `select r.name as recipename, c.name as categoryname
+                  from category c
+                  inner join recipe_category rc on c.id = rc.category_id
+                  inner join recipe r on rc.recipe_id = r.id
+                  where c.name = $1`
+  var inserts = [type];
 
-  pg.query(query, (err, result) => {
+  pg.query(query, inserts,(err, result) => {
     if(err){
       next(err);
       return;
     }
 
     context.results = result.rows;
-    res.render('breakfast', context);
+    res.render('category', context);
   });
 });
 
-/*
-display recipes for lunch
-*/
-app.get('/lunch',function(req,res,next){
-  let context = {};
-  context.title = "Lunch";
-
-  // Select all from the test_table
-  let query = "select r.name as recipeName, c.name as categoryName from recipe r inner join recipe_category rc on r.id = rc.recipe_id inner join category c on rc.category_id = c.id where rc.category_id=2";
-
-  pg.query(query, (err, result) => {
-    if(err){
-      next(err);
-      return;
-    }
-
-    context.results = result.rows;
-    res.render('lunch', context);
-  });
-});
-
-
-/*
-display recipes for dinner
-*/
-app.get('/dinner',function(req,res,next){
-  let context = {};
-  context.title = "Dinner";
-
-  // Select all from the test_table
-  let query = "select r.name as recipeName, c.name as categoryName from recipe r inner join recipe_category rc on r.id = rc.recipe_id inner join category c on rc.category_id = c.id where rc.category_id=3";
-
-  pg.query(query, (err, result) => {
-    if(err){
-      next(err);
-      return;
-    }
-
-    context.results = result.rows;
-    res.render('dinner', context);
-  });
-});
 
 /*
 dispay ingredients for recipes
@@ -115,7 +81,6 @@ app.get('/ingredients/:recipename', function(req,res, next){
               where r.name = $1`;
 
   var inserts = [recipe];
-  console.log(recipe);
   pg.query(query, inserts, (err, result) => {
     if(err){
       next(err);
