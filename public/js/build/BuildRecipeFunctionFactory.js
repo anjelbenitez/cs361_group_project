@@ -11,53 +11,32 @@ class BuildRecipeFunctionFactory {
       let ff = new BuildRecipeFunctionFactory();
 
       if (ingredient_id in brvc.recipe_ingredients) {
-        // show notification that ingredient is already in the recipe
         ff.createNotification("error", ingredient_name);
       }
       else {
         let recipe_table_body = document.getElementById("recipe-table-body");
         let row = document.createElement('tr');
+
         row.setAttribute("id", ingredient_id);
+        row.appendChild(ff.createIdCell(ingredient_id));
+        row.appendChild(ff.createNameCell(ingredient_name));
 
-        let id_cell = document.createElement('td');
-        id_cell.textContent = ingredient_id;
-        row.appendChild(id_cell);
-
-        let name_cell = document.createElement('td');
-        name_cell.textContent = ingredient_name;
-        row.appendChild(name_cell);
-
-        // create button to remove ingredient
-        let removeButton_cell = document.createElement('td');
-        let removeButton = document.createElement('button');
-        removeButton.textContent = "Remove";
-        removeButton.setAttribute("id", "remove-" + ingredient_id);
-
+        let removeButton = ff.createRemoveButton(ingredient_id);
         removeButton.addEventListener('click', function() {
           recipe_table_body.removeChild(row);
           delete brvc.recipe_ingredients[ingredient_id];
-
           ff.createNotification("remove", ingredient_name);
         });
+        row.appendChild(ff.createButtonCell(removeButton));
 
-        removeButton_cell.appendChild(removeButton);
-        row.appendChild(removeButton_cell);
-
-        // create button to get ingredient info
-        let infoButton = document.createElement("button");
-        infoButton.textContent = "Info";
+        let infoButton = ff.createInfoButton();
         infoButton.addEventListener("click", function() {
           document.getElementById("info-" + ingredient_id).click();
-        })
-
-        let infoButtonCell = document.createElement("td");
-        infoButtonCell.appendChild(infoButton);
-        row.appendChild(infoButtonCell);
+        });
+        row.appendChild(ff.createButtonCell(infoButton));
 
         recipe_table_body.appendChild(row);
-
         brvc.recipe_ingredients[ingredient_id] = ingredient_name;
-
         ff.createNotification("success", ingredient_name);
       }
     };
@@ -89,4 +68,40 @@ class BuildRecipeFunctionFactory {
       alert.remove()
     }, 8000);
   }
-} 
+
+  /* The createIdCell function returns a table cell containing the given ingredient's ID. */
+  createIdCell(ingredient_id) {
+    let id_cell = document.createElement('td');
+    id_cell.textContent = ingredient_id;
+    return id_cell;
+  }
+
+  /* The createNameCell function returns a table cell containing the given ingredient's name. */
+  createNameCell(ingredient_name) {
+    let name_cell = document.createElement('td');
+    name_cell.textContent = ingredient_name;
+    return name_cell;
+  }
+
+  /* The createRemoveButtonCell function returns a table cell containing a given button. */
+  createButtonCell(button) {
+    let buttonCell = document.createElement('td');
+    buttonCell.appendChild(button);
+    return buttonCell;
+  }
+
+  /* The createRemoveButton function returns a button used to remove the ingredient from the recipe. */
+  createRemoveButton(ingredient_id) {
+    let removeButton = document.createElement('button');
+    removeButton.textContent = "Remove";
+    removeButton.setAttribute("id", "remove-" + ingredient_id);
+    return removeButton;
+  }
+
+  /* The createInfoButton function returns a button used to get ingredient info. */
+  createInfoButton() {
+    let infoButton = document.createElement("button");
+    infoButton.textContent = "Info";
+    return infoButton;
+  }
+}
