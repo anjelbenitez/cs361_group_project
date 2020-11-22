@@ -357,27 +357,27 @@ app.post('/getIngredientForCustomRecipe', function (req, res, next) {
 
       });
 
-      // Query to get ingredient's ethical problem's explaination
+      // Query to get ingredient's ethical problem's description
 
-      const ethical_explaination_query = {
-        text: `select ee.explain as explaination from ingredient i
+      const ethical_description_query = {
+        text: `select ee.explain as description from ingredient i
                 inner join ingredient_ethical_problem ie on i.id = ie.ingredient_id
                 inner join ethical_problem e on ie.problem_id = e.id
-                inner join ethical_explaination ee on e.id = ee.id
+                inner join ethical_description ee on e.id = ee.id
                 where i.id =  $1`,
         values: [req.body["id"]]
       };
     
       // Nested query call 3
-      pg.query(ethical_explaination_query, function(err, result) {
+      pg.query(ethical_description_query, function(err, result) {
         if(err) {
           next(err);
           return;
         }
 
-        response['explaination'] = "None";
+        response['description'] = "None";
         if(result.rows.length) {
-          response['explaination'] = result.rows[0]['explaination'];
+          response['description'] = result.rows[0]['description'];
         }
         
         // Send the response

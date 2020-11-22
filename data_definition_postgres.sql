@@ -11,7 +11,7 @@ DROP TABLE IF EXISTS recipe;
 DROP TABLE IF EXISTS category;
 DROP TABLE IF EXISTS account;
 DROP TABLE IF EXISTS ethical_problem;
-DROP TABLE IF EXISTS ethical_explaination;
+DROP TABLE IF EXISTS ethical_description;
 
 
 CREATE TABLE ingredient (
@@ -176,12 +176,12 @@ insert into ethical_problem (title) values
     ('Deforestation'),
     ('Carbon Emission');
 
-create table ethical_explaination(
+create table ethical_description(
     id SERIAL PRIMARY KEY NOT NULL,
     explain text
 );
 
-insert into ethical_explaination (explain) values
+insert into ethical_description (explain) values
     ('The decrease in forest areas across the world that are lost for other uses such as agricultural croplands, urbanization, or mining activities.'),
     ('The release of carbon into the atmosphere; the main contributors to climate change.');
  
@@ -193,7 +193,7 @@ create table ingredient_ethical_problem (
     PRIMARY KEY (ingredient_id, problem_id, explain_id),
     FOREIGN KEY (ingredient_id) REFERENCES ingredient (id) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (problem_id) REFERENCES ethical_problem (id) ON UPDATE CASCADE ON DELETE CASCADE,
-    FOREIGN KEY (explain_id) REFERENCES ethical_explaination (id) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (explain_id) REFERENCES ethical_description (id) ON UPDATE CASCADE ON DELETE CASCADE
 
 );
 
