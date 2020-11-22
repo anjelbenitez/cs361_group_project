@@ -73,7 +73,7 @@ class BuildRecipeFunctionFactory {
         notif.textContent = `${ingredient_name} (ID ${ingredient_id}) was added to the recipe.`;
         notif.classList.add("alert");
         notifDiv.prepend(notif);
-        setTimeout(function() { notif.remove() }, 3000);
+        setTimeout(function() { notif.remove() }, 10000);
       }
     };
   }
