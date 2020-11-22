@@ -4,12 +4,15 @@ DROP TABLE IF EXISTS recipe_category;
 DROP TABLE IF EXISTS ingredient_ethical_problem;
 DROP TABLE IF EXISTS ingredient_alternative;
 
+
 -- Then drop tables that are depended on
 DROP TABLE IF EXISTS ingredient;
 DROP TABLE IF EXISTS recipe;
 DROP TABLE IF EXISTS category;
 DROP TABLE IF EXISTS account;
 DROP TABLE IF EXISTS ethical_problem;
+DROP TABLE IF EXISTS ethical_explaination;
+
 
 CREATE TABLE ingredient (
     id SERIAL PRIMARY KEY NOT NULL,
@@ -170,31 +173,44 @@ create table ethical_problem (
 );
 
 insert into ethical_problem (title) values
-    ('Deforestation -  the decrease in forest areas across the world that are lost for other uses such as agricultural croplands, urbanization, or mining activities.'),
-    ('Carbon Emission - the release of carbon into the atmosphere; the main contributors to climate change.');
+    ('Deforestation'),
+    ('Carbon Emission');
+
+create table ethical_explaination(
+    id SERIAL PRIMARY KEY NOT NULL,
+    explain text
+);
+
+insert into ethical_explaination (explain) values
+    ('The decrease in forest areas across the world that are lost for other uses such as agricultural croplands, urbanization, or mining activities.'),
+    ('The release of carbon into the atmosphere; the main contributors to climate change.');
+ 
 
 create table ingredient_ethical_problem (
     ingredient_id INT,
     problem_id INT,
-    PRIMARY KEY (ingredient_id, problem_id),
+    explain_id INT,
+    PRIMARY KEY (ingredient_id, problem_id, explain_id),
     FOREIGN KEY (ingredient_id) REFERENCES ingredient (id) ON UPDATE CASCADE ON DELETE CASCADE,
-    FOREIGN KEY (problem_id) REFERENCES ethical_problem (id) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (problem_id) REFERENCES ethical_problem (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (explain_id) REFERENCES ethical_explaination (id) ON UPDATE CASCADE ON DELETE CASCADE
+
 );
 
 insert into ingredient_ethical_problem values
-    (12, 1), -- Avocado and deforestation
-    (6, 1),  -- Sirloin Steak and deforestation
-    (7, 1),  -- Beef Patty and deforestation
-    (18, 1), -- Eggs and carbon emission
-    (19, 2), -- Butter and deforestation
-    (20, 1), -- Milk and deforestation
-    (8, 1),  -- Pork and carbon emission
-    (9, 2),  -- Ham and deforestation
-    (10, 1), -- Bacon and deforestation
-    (21, 1), -- Cheddar Cheese and deforestation
-    (22, 1), -- Parmesan Cheese and deforestation
-    (3, 2),  -- Egg Noodle and carbon emission
-    (29, 2); -- Heavy cream and carbon emission
+    (12, 1, 1), -- Avocado and deforestation
+    (6, 1, 1),  -- Sirloin Steak and deforestation
+    (7, 1, 1),  -- Beef Patty and deforestation
+    (18, 1, 1), -- Eggs and carbon emission
+    (19, 2, 2), -- Butter and deforestation
+    (20, 1, 2), -- Milk and deforestation
+    (8, 1, 1),  -- Pork and carbon emission
+    (9, 2, 2),  -- Ham and deforestation
+    (10, 1, 1), -- Bacon and deforestation
+    (21, 1, 1), -- Cheddar Cheese and deforestation
+    (22, 1, 1), -- Parmesan Cheese and deforestation
+    (3, 2, 1),  -- Egg Noodle and carbon emission
+    (29, 2, 1); -- Heavy cream and carbon emission
 
 create table ingredient_alternative (
     ingredient_id INT,
