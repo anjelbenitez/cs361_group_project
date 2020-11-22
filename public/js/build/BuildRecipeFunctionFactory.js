@@ -8,14 +8,11 @@ class BuildRecipeFunctionFactory {
    */
   createAddIngredientFunction(ingredient_id, ingredient_name, brvc) {
     return function () {
+      let ff = new BuildRecipeFunctionFactory();
+
       if (ingredient_id in brvc.recipe_ingredients) {
-        // show notification that adding ingredient was not successful
-        let notifDiv = document.getElementById("alert-div");
-        let notif = document.createElement("div");
-        notif.textContent = `${ingredient_name} (ID ${ingredient_id}) is already in the recipe.`;
-        notif.classList.add("alert", "add-error");
-        notifDiv.prepend(notif);
-        setTimeout(function() { notif.remove() }, 2000);
+        // show notification that ingredient is already in the recipe
+        ff.createNotification("error", ingredient_name);
       }
       else {
         let recipe_table_body = document.getElementById("recipe-table-body");
@@ -40,13 +37,7 @@ class BuildRecipeFunctionFactory {
           recipe_table_body.removeChild(row);
           delete brvc.recipe_ingredients[ingredient_id];
 
-          // show notification that ingredient was removed successfully
-          let notifDiv = document.getElementById("alert-div");
-          let notif = document.createElement("div");
-          notif.textContent = `${ingredient_name} (ID ${ingredient_id}) was removed from the recipe.`;
-          notif.classList.add("alert", "remove-success");
-          notifDiv.prepend(notif);
-          setTimeout(function() { notif.remove() }, 2000);
+          ff.createNotification("remove", ingredient_name);
         });
 
         removeButton_cell.appendChild(removeButton);
@@ -67,14 +58,35 @@ class BuildRecipeFunctionFactory {
 
         brvc.recipe_ingredients[ingredient_id] = ingredient_name;
 
-        // show notification that ingredient was added successfully
-        let notifDiv = document.getElementById("alert-div");
-        let notif = document.createElement("div");
-        notif.textContent = `${ingredient_name} (ID ${ingredient_id}) was added to the recipe.`;
-        notif.classList.add("alert");
-        notifDiv.prepend(notif);
-        setTimeout(function() { notif.remove() }, 10000);
+        ff.createNotification("success", ingredient_name);
       }
     };
+  }
+
+  /*
+  The createNotification function takes two strings as parameters: the notification type and ingredient name.
+  It creates a visual indicator when the user makes changes to the recipe.
+  */
+  createNotification(alertType, ingredient_name) {
+    let alertDiv = document.getElementById("alert-div");
+    let alert = document.createElement("div");
+    alert.classList.add("alert");
+    let alertString = `${ingredient_name} was added to the recipe.`;
+    
+    // modify notification appearance based on alertType
+    if (alertType == "error") {
+      alertString = `${ingredient_name} is already in the recipe.`;
+      alert.classList.add("add-error")
+    } else if (alertType == "remove") {
+      alertString = `${ingredient_name} was removed from the recipe.`;
+      alert.classList.add("remove-success")
+    }
+
+    alert.textContent = alertString;
+    alertDiv.prepend(alert);
+
+    setTimeout(() => {
+      alert.remove()
+    }, 8000);
   }
 } 
