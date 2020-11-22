@@ -155,10 +155,10 @@ app.get('/recipe', function (req, res, next) {
 display on category page based on click
 */
 
-app.get('/category/:catname',function(req,res,next){
+app.get('/category/:category',function(req,res,next){
   let context = {};
-  var type = req.params.catname;
-  context.title = "Ethical Eating - " + type;
+  var type = req.params.category;
+  context.title = type;
 
   // Select all from the test_table
   let query = `select r.name as recipename, c.name as categoryname
