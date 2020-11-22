@@ -104,4 +104,18 @@ class BuildRecipeFunctionFactory {
     infoButton.textContent = "Info";
     return infoButton;
   }
-}
+
+  createInfoFunction(ingredient_id) {
+    return function () {
+      let si = new ServerInteractor();
+
+      si.getIngredientInfo(ingredient_id, (result) => {
+        console.log(result);
+        // Update Ingredient Info box on page async
+        document.getElementById("ingredient-name").textContent = result.ingredient;
+        document.getElementById("ingredient-ethics").textContent = result.problem;
+        document.getElementById("ingredient-alternatives").innerHTML = result.alternative.join("<br>");       
+      });
+    }
+  } 
+} 
