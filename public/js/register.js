@@ -35,7 +35,6 @@ function clearSignUpForm(){
     input_list.push(username);
     input_list.push(password);
     input_list.push(confirm_password);
-    console.log(input_list);
     for (i=0; i<input_list.length; i++) {
         if (input_list[i].nextElementSibling.childElementCount != 0){
             input_list[i].nextElementSibling.children[0].remove();
@@ -52,17 +51,15 @@ function signUpAttempt() {
         let password = document.getElementById('password');
         let confirm_password = document.getElementById('confirm_password');
         let signUpForm = new SignUpForm(first_name, last_name, email, username, password, confirm_password);
+        // clear all error messages
         for (let nodeElement of Object.values(signUpForm)) {
             if (nodeElement.nextElementSibling.childElementCount != 0) {
                 nodeElement.nextElementSibling.children[0].remove();
             };
         }
-        console.log("signUpform", signUpForm); //remove this later
         let formValidated = validateSignUp(signUpForm)
         formValidated.then(function(formValidated) {
-            console.log("formValidated", formValidated); // remove later
             if (formValidated === true){
-                console.log("formValidatedTrue", formValidated); // remove later
                 //create account goes here?
                 let req = new XMLHttpRequest();
                 let payload = {first_name: signUpForm.getFirstName().value,last_name: signUpForm.getLastName().value, email: signUpForm.getEmail().value, username: signUpForm.getUsername().value, password: signUpForm.getPassword().value}
@@ -71,19 +68,15 @@ function signUpAttempt() {
                 req.addEventListener("load", function(){
                     if (req.status >= 200 && req.status < 400) {
                         let response = JSON.parse(req.responseText);
-                        console.log("response", response); // remove later
                         if (response.success === true) {
-                            console.log("Account Created");
                             resolve(true);
                         } else {
-                            console.log("ERROR");
                             resolve(false);
                         }
                     } else {
                         console.log(req.status);
                     }
                 });
-                console.log("payload",payload);
                 req.send(JSON.stringify(payload));
             }
         }).catch(error => {
@@ -129,21 +122,14 @@ function emptyFieldsVerification(signUpFormObj) {
     let verfication = true;
     for (var nodeElement of Object.values(signUpFormObj)) {
         if (nodeElement.value.trim().length == 0) {
-            if (nodeElement.nextElementSibling.childElementCount === 0){
-                let error_msg = document.createElement("span");
-                error_msg.innerHTML = "This field is required";
-                error_msg.style.color = "red";
-                if (nodeElement.id == "last_name"){
-                    error_msg.style.paddingLeft = "245px";
-                }
-                nodeElement.nextElementSibling.appendChild(error_msg);
+            let error_msg = document.createElement("span");
+            error_msg.innerHTML = "This field is required";
+            error_msg.style.color = "red";
+            if (nodeElement.id == "last_name"){
+                error_msg.style.paddingLeft = "245px";
             }
+            nodeElement.nextElementSibling.appendChild(error_msg);
             verfication = false;
-        }
-        else {
-            if (nodeElement.nextElementSibling.childElementCount != 0){
-                nodeElement.nextElementSibling.children[0].remove();
-            }
         }
     }
 
@@ -195,7 +181,6 @@ function validateUsername(signUpFormObj) {
             req.addEventListener("load", function(){
                 if (req.status >= 200 && req.status < 400) {
                     let response = JSON.parse(req.responseText);
-                    console.log("response", response); // remove later
                     if (response.success === true) {
                         resolve(true);
                     } else if (response.success === false) {
@@ -205,7 +190,6 @@ function validateUsername(signUpFormObj) {
                     console.log(req.status);
                 }
             });
-            console.log("payload",payload);
             req.send(JSON.stringify(payload));
     });
 }
@@ -219,7 +203,6 @@ function validateEmail(signUpFormObj) {
             req.addEventListener("load", function(){
                 if (req.status >= 200 && req.status < 400) {
                     let response = JSON.parse(req.responseText);
-                    console.log("response", response); // remove later
                     if (response.success === true) {
                         resolve(true);
                     } else if (response.success === false){
@@ -229,7 +212,6 @@ function validateEmail(signUpFormObj) {
                     console.log(req.status);
                 }
             });
-            console.log("payload",payload);
             req.send(JSON.stringify(payload));
     });
 }
@@ -262,7 +244,6 @@ function validateSignUp(signUpFormObj) {
                 console.log(error);
             });
         Promise.all([emptyFields, passwordReq, usernameTaken, emailTaken]).then((values) => {
-            console.log("values",values); // remove later
             if (values[0] === true && values[1] === true && values[2] === true && values[3] === true){
                 resolve(true);
             }
@@ -303,7 +284,6 @@ document.getElementById('register_close').addEventListener('click', function(eve
 document.getElementById('create_account_button').addEventListener('click', function(event){
     let success = signUpAttempt();
     success.then(function(success){
-        console.log(success);
         if (success === true){
             displaySuccessMsg();
         }
