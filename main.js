@@ -55,6 +55,13 @@ app.get('/build',function(req,res,next){
   res.render('build', context);
 });
 
+app.get('/faq',function(req,res,next){
+  let context = {};
+  context.user = req.user || null  // req.user exists when a user is logged in
+  context.title = "FAQ";
+  res.render('faq', context);
+});
+
 app.post('/saveRecipe', function (req, res, next) {
   if (!req.user) {
     res.send({error: 'You have to log in first!'});
@@ -228,6 +235,7 @@ app.get('/ingredients/:recipename', function(req,res, next){
   context.user = req.user || null  // req.user exists when a user is logged in
   var recipe = req.params.recipename;
   context.title = "Ethical Eating - " + recipe;
+  context.js = ["register.js"]
 
   // Select all from the test_table
   let query = `select r.name as recipeName, i.name as ingredientList
@@ -489,7 +497,6 @@ app.post('/getIngredientForCustomRecipe', function (req, res, next) {
 app.post('/register', checkNotAuthenticated, async function(req, res, next) {
   var context = {success: null}
   const hashedPassword = await bcrypt.hash(req.body.password, 10);
-  console.log(hashedPassword); // remove later
   let query = `INSERT INTO account (first_name, last_name, email, username, password) VALUES ('${req.body.first_name}', '${req.body.last_name}', '${req.body.email}', '${req.body.username}', '${hashedPassword}');`;
   pg.query(query, (err, result) => {
     if(err){

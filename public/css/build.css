@@ -15,7 +15,7 @@ tr {
     text-align: left;
 }
 
-button {
+button:not(.register_close) {
     vertical-align: middle;
     height: 100%;
 }
