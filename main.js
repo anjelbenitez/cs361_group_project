@@ -487,7 +487,6 @@ app.post('/getIngredientForCustomRecipe', function (req, res, next) {
 app.post('/register', checkNotAuthenticated, async function(req, res, next) {
   var context = {success: null}
   const hashedPassword = await bcrypt.hash(req.body.password, 10);
-  console.log(hashedPassword); // remove later
   let query = `INSERT INTO account (first_name, last_name, email, username, password) VALUES ('${req.body.first_name}', '${req.body.last_name}', '${req.body.email}', '${req.body.username}', '${hashedPassword}');`;
   pg.query(query, (err, result) => {
     if(err){
