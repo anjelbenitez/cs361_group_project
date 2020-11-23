@@ -41,3 +41,29 @@ button:not(.register_close) {
 #recipe-table tr:nth-child(even), #ingredients-table tr:nth-child(even) {
     background: #c4dbff;
 }
+
+#alert-div {
+    display: flex;
+    flex-direction: column-reverse;
+    position: fixed;
+    background-color: transparent;
+    width: 400px;
+    right: 10px;
+    bottom: 0;
+}
+
+.alert {
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.alert.add-error {
+    background-color: #F44336;
+}
+
+.alert.remove-success {
+    background-color: #2196F3;
+}

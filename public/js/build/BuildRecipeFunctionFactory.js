@@ -8,66 +8,66 @@ class BuildRecipeFunctionFactory {
    */
   createAddIngredientFunction(ingredient_id, ingredient_name, brvc) {
     return function () {
+      let nm = new BuildRecipeNotificationManager();
+      let recipe_table_body = document.getElementById("recipe-table-body");
+      let tb = new TableBuilder(recipe_table_body);
 
       if (ingredient_id in brvc.recipe_ingredients) {
-        alert(`Ingredient ${ingredient_name} (ID ${ingredient_id}) is already in the recipe.`);
+        nm.createErrorNotification(ingredient_name);
       }
-      else {
-        let recipe_table_body = document.getElementById("recipe-table-body");
-        let row = document.createElement('tr');
+      else { 
+        let row = tb.createRow();
+        row.setAttribute("id", ingredient_id);
 
-        let id_cell = document.createElement('td');
-        id_cell.textContent = ingredient_id;
-        row.appendChild(id_cell);
+        tb.createTextOnlyCell(row, ingredient_id);
+        tb.createTextOnlyCell(row, ingredient_name);
 
-        let name_cell = document.createElement('td');
-        name_cell.textContent = ingredient_name;
-        row.appendChild(name_cell);
+        let removeFunction = function() {
+          recipe_table_body.removeChild(row);
+          delete brvc.recipe_ingredients[ingredient_id];
+          nm.createRemoveNotification(ingredient_name);
+        }
 
-        let removeButton_cell = document.createElement('td');
-        let removeButton = document.createElement('button');
-        removeButton.textContent = "Remove";
+        let remove_cell = tb.createButtonCell(row, "Remove", removeFunction);
+        remove_cell.children[0].setAttribute("id", "Remove" + ingredient_id);
 
-        let ff = new BuildRecipeFunctionFactory();
-        let removeFunction = ff.createRemoveIngredientFunction(row, ingredient_id, brvc);
-
-        removeButton.addEventListener('click', removeFunction);
-        removeButton_cell.appendChild(removeButton);
-        row.appendChild(removeButton_cell);
+        tb.createReferenceButtonCell(row, "Info", ingredient_id);
 
         recipe_table_body.appendChild(row);
-
         brvc.recipe_ingredients[ingredient_id] = ingredient_name;
+        nm.createSuccessNotification(ingredient_name);
       }
     };
   }
 
-  /*
-  The createRemoveIngredientFunction function takes a table row to remove and an ingredient's ID
-  as the first two parameters.
-  The third parameter is an instance of the BuildRecipeViewController class.
-  It returns a function that will remove the ingredient from recipe-table-body and the recipe_ingredients object.
-   */
-  createRemoveIngredientFunction(row_to_remove, ingredient_id, brvc) {
-    return function () {
-      let recipe_table_body = row_to_remove.parentElement;
-      recipe_table_body.removeChild(row_to_remove);
-      delete brvc.recipe_ingredients[ingredient_id];
-    }
-  }
-
+  /* This function returns a function that asynchronously displays info of a given ingredient ID. */
   createInfoFunction(ingredient_id) {
     return function () {
       let si = new ServerInteractor();
+      let altTable = document.getElementById("alt-table");
+      let tb = new TableBuilder(altTable);
 
       si.getIngredientInfo(ingredient_id, (result) => {
         console.log(result);
-        // Update Ingredient Info box on page async
+        // Update Ingredient Info box on page asynchronously
         document.getElementById("ingredient-name").textContent = result.ingredient;
         document.getElementById("ingredient-ethics").textContent = result.problem;
-        document.getElementById("ethic-information").textContent = result.description;
-        document.getElementById("ingredient-alternatives").innerHTML = result.alternative.join("<br>");
-      })
+
+        // Populate alternatives table with names and buttons
+        altTable.innerHTML = "";
+        if (result.alternative[0] != "None") {
+          for (let i = 0; i < result.alternative.length; i++) {
+            let altRow = tb.createRow();
+            tb.createTextOnlyCell(altRow, result.alternative[i]);
+            tb.createReferenceButtonCell(altRow, "Add", result.alternative_id[i])
+            tb.createReplaceButtonCell(altRow, result.ingredient_id, result.alternative_id[i]);
+          }
+        } else {
+          altTable.innerHTML = "None";
+        }
+      });
     }
-  }
+  } 
 } 
+
+
