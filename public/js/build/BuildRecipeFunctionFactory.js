@@ -9,9 +9,10 @@ class BuildRecipeFunctionFactory {
   createAddIngredientFunction(ingredient_id, ingredient_name, brvc) {
     return function () {
       let ff = new BuildRecipeFunctionFactory();
+      let nm = new NotificationManager();
 
       if (ingredient_id in brvc.recipe_ingredients) {
-        ff.createNotification("error", ingredient_name);
+        nm.createErrorNotification(ingredient_name);
       }
       else {
         let recipe_table_body = document.getElementById("recipe-table-body");
@@ -25,7 +26,7 @@ class BuildRecipeFunctionFactory {
         removeButton.addEventListener('click', function() {
           recipe_table_body.removeChild(row);
           delete brvc.recipe_ingredients[ingredient_id];
-          ff.createNotification("remove", ingredient_name);
+          nm.createRemoveNotification(ingredient_name);
         });
         row.appendChild(ff.createButtonCell(removeButton));
 
@@ -37,7 +38,7 @@ class BuildRecipeFunctionFactory {
 
         recipe_table_body.appendChild(row);
         brvc.recipe_ingredients[ingredient_id] = ingredient_name;
-        ff.createNotification("success", ingredient_name);
+        nm.createSuccessNotification(ingredient_name);
       }
     };
   }
@@ -114,7 +115,7 @@ class BuildRecipeFunctionFactory {
         // Update Ingredient Info box on page async
         document.getElementById("ingredient-name").textContent = result.ingredient;
         document.getElementById("ingredient-ethics").textContent = result.problem;
-        document.getElementById("ingredient-alternatives").innerHTML = result.alternative.join("<br>");       
+        document.getElementById("ingredient-alternatives").innerHTML = result.alternative.join("<br>"); 
       });
     }
   } 
