@@ -1,0 +1,33 @@
+.login_form_container {
+    width: 100%;
+    height: 100%;
+    background-color: slategrey;
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    padding:20px;
+    z-index: -10;
+}
+
+.login_form_content {
+    width: 400px;
+    height: 250px;
+    background-color: white;
+    position: relative;
+    text-align: center;
+    padding: 10px;
+}
+
+.login_form_fieldset{
+    text-align: left;
+    border: none;
+}
+
+.form_input {
+    padding-bottom: 20px;
+}
+
+.form_submit {
+    text-align: center;
+    padding-top: 30px;
+}

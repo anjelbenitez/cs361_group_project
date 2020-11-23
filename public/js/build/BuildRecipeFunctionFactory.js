@@ -3,8 +3,8 @@ class BuildRecipeFunctionFactory {
 
   /*
   The createAddIngredientFunction function takes an ingredient's ID and name as the first two parameters.
-  The
-  It returns a function that will add the ingredient to the recipe-table-body.
+  The third parameter is an instance of the BuildRecipeViewController class.
+  It returns a function that will add the ingredient to the recipe-table-body and the recipe_ingredients object.
    */
   createAddIngredientFunction(ingredient_id, ingredient_name, brvc) {
     return function () {
@@ -27,10 +27,11 @@ class BuildRecipeFunctionFactory {
         let removeButton_cell = document.createElement('td');
         let removeButton = document.createElement('button');
         removeButton.textContent = "Remove";
-        removeButton.addEventListener('click', function() {
-          recipe_table_body.removeChild(row);
-          delete brvc.recipe_ingredients[ingredient_id];
-        });
+
+        let ff = new BuildRecipeFunctionFactory();
+        let removeFunction = ff.createRemoveIngredientFunction(row, ingredient_id, brvc);
+
+        removeButton.addEventListener('click', removeFunction);
         removeButton_cell.appendChild(removeButton);
         row.appendChild(removeButton_cell);
 
@@ -39,5 +40,33 @@ class BuildRecipeFunctionFactory {
         brvc.recipe_ingredients[ingredient_id] = ingredient_name;
       }
     };
-  }  
+  }
+
+  /*
+  The createRemoveIngredientFunction function takes a table row to remove and an ingredient's ID
+  as the first two parameters.
+  The third parameter is an instance of the BuildRecipeViewController class.
+  It returns a function that will remove the ingredient from recipe-table-body and the recipe_ingredients object.
+   */
+  createRemoveIngredientFunction(row_to_remove, ingredient_id, brvc) {
+    return function () {
+      let recipe_table_body = row_to_remove.parentElement;
+      recipe_table_body.removeChild(row_to_remove);
+      delete brvc.recipe_ingredients[ingredient_id];
+    }
+  }
+
+  createInfoFunction(ingredient_id) {
+    return function () {
+      let si = new ServerInteractor();
+
+      si.getIngredientInfo(ingredient_id, (result) => {
+        console.log(result);
+        // Update Ingredient Info box on page async
+        document.getElementById("ingredient-name").textContent = result.ingredient;
+        document.getElementById("ingredient-ethics").textContent = result.problem;
+        document.getElementById("ingredient-alternatives").innerHTML = result.alternative.join("<br>");
+      })
+    }
+  }
 } 

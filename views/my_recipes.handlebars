@@ -1,0 +1,6 @@
+<p>My Recipes</p>
+<ul>
+    {{#each results}}
+        <li><a href='/recipe?id={{this.recipeid}}'><p>{{this.recipename}}</p></a></li>
+    {{/each}}
+</ul>
