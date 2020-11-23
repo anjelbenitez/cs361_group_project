@@ -52,6 +52,7 @@ class BuildRecipeFunctionFactory {
         // Update Ingredient Info box on page asynchronously
         document.getElementById("ingredient-name").textContent = result.ingredient;
         document.getElementById("ingredient-ethics").textContent = result.problem;
+        document.getElementById("ethic-information").textContent = result.description;
 
         // Populate alternatives table with names and buttons
         altTable.innerHTML = "";
