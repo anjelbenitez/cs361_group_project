@@ -33,11 +33,19 @@ class BuildRecipeViewController {
         let ingredient_name = ingredients[i]['name'];
         tb.createTextOnlyCell(row, ingredient_name);
 
-        // Add an "Add to recipe" button
-        // Use the BuildRecipeFunctionFactory to create an add ingredient function
+        // // Add an "Add to recipe" button
+        // // Use the BuildRecipeFunctionFactory to create an add ingredient function
         let ff = new BuildRecipeFunctionFactory();
+        // let addFunction = ff.createAddIngredientFunction(ingredient_id, ingredient_name, this);
+        // tb.createButtonCell(row, 'Add', addFunction);
+
+        let addButton = document.createElement("button");
+        addButton.textContent = "Add";
+        addButton.setAttribute("id", "add-" + ingredient_id);
+
         let addFunction = ff.createAddIngredientFunction(ingredient_id, ingredient_name, this);
-        tb.createButtonCell(row, 'Add', addFunction);
+        addButton.addEventListener("click", addFunction);
+        row.appendChild(addButton);
 
         // Add an "Info" button
         let infoButton = document.createElement('button');

@@ -43,33 +43,6 @@ class BuildRecipeFunctionFactory {
     };
   }
 
-  /*
-  The createNotification function takes two strings as parameters: the notification type and ingredient name.
-  It creates a visual indicator when the user makes changes to the recipe.
-  */
-  createNotification(alertType, ingredient_name) {
-    let alertDiv = document.getElementById("alert-div");
-    let alert = document.createElement("div");
-    alert.classList.add("alert");
-    let alertString = `${ingredient_name} was added to the recipe.`;
-    
-    // modify notification appearance based on alertType
-    if (alertType == "error") {
-      alertString = `${ingredient_name} is already in the recipe.`;
-      alert.classList.add("add-error")
-    } else if (alertType == "remove") {
-      alertString = `${ingredient_name} was removed from the recipe.`;
-      alert.classList.add("remove-success")
-    }
-
-    alert.textContent = alertString;
-    alertDiv.prepend(alert);
-
-    setTimeout(() => {
-      alert.remove()
-    }, 8000);
-  }
-
   /* The createIdCell function returns a table cell containing the given ingredient's ID. */
   createIdCell(ingredient_id) {
     let id_cell = document.createElement('td');
@@ -109,13 +82,51 @@ class BuildRecipeFunctionFactory {
   createInfoFunction(ingredient_id) {
     return function () {
       let si = new ServerInteractor();
+      let ff = new BuildRecipeFunctionFactory();
 
       si.getIngredientInfo(ingredient_id, (result) => {
         console.log(result);
         // Update Ingredient Info box on page async
         document.getElementById("ingredient-name").textContent = result.ingredient;
         document.getElementById("ingredient-ethics").textContent = result.problem;
-        document.getElementById("ingredient-alternatives").innerHTML = result.alternative.join("<br>"); 
+
+        // Populate alternatives table with names and buttons
+        let altTable = document.getElementById("alt-table");
+        altTable.innerHTML = "";
+        if (result.alternative != "None") {
+          for (let i = 0; i < result.alternative.length; i++) {
+            let altRow = altTable.insertRow();
+
+            // Add a cell to hold alternative name
+            let altNameCell = altRow.insertCell();
+            altNameCell.appendChild(document.createTextNode(result.alternative[i]));
+
+            // Add a cell to hold 'Add' button
+            let altAddCell = altRow.insertCell();
+            let altAddButton = document.createElement("button");
+            altAddButton.textContent = "Add";
+            altAddButton.addEventListener("click", function() {
+              document.getElementById("add-" + result.alternative_id[i]).click();
+            });
+            altAddCell.appendChild(altAddButton);
+
+            // Add a cell to hold 'Replace' button
+            let altReplaceCell = altRow.insertCell();
+            let altReplaceButton = document.createElement("button");
+            let altReplaceFunction = function() {
+              let removeButton = document.getElementById("remove-" + result.ingredient_id);
+              if (removeButton) {
+                removeButton.click();
+              }
+              altAddButton.click();
+            }
+            altReplaceButton.textContent = "Replace";
+            altReplaceButton.addEventListener("click", altReplaceFunction);
+            altReplaceCell.appendChild(altReplaceButton);
+          }
+        } else {
+          altTable.innerHTML = "None";
+        }
       });
     }
   } 
