@@ -43,8 +43,10 @@ class BuildRecipeViewController {
         let infoButton = document.createElement('button');
         infoButton.textContent = "Info";
         // When user clicks on Info button, ingredient info show ups asynchronously on page
+
         let infoFunction = ff.createInfoFunction(ingredient_id);
         infoButton.addEventListener('click', infoFunction);
+
         row.appendChild(infoButton);
       }
     });
