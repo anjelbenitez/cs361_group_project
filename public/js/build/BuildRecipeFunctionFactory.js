@@ -8,7 +8,7 @@ class BuildRecipeFunctionFactory {
    */
   createAddIngredientFunction(ingredient_id, ingredient_name, brvc) {
     return function () {
-      let nm = new NotificationManager();
+      let nm = new BuildRecipeNotificationManager();
       let recipe_table_body = document.getElementById("recipe-table-body");
       let tb = new TableBuilder(recipe_table_body);
 

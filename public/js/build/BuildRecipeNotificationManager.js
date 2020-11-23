@@ -1,4 +1,4 @@
-class NotificationManager {
+class BuildRecipeNotificationManager {
     constructor() {};
 
     /* This function removes the notification after 8 seconds. */
