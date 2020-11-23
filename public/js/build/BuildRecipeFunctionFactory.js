@@ -8,8 +8,8 @@ class BuildRecipeFunctionFactory {
    */
   createAddIngredientFunction(ingredient_id, ingredient_name, brvc) {
     return function () {
-      let recipe_table_body = document.getElementById("recipe-table-body");
       let nm = new NotificationManager();
+      let recipe_table_body = document.getElementById("recipe-table-body");
       let tb = new TableBuilder(recipe_table_body);
 
       if (ingredient_id in brvc.recipe_ingredients) {
@@ -27,7 +27,7 @@ class BuildRecipeFunctionFactory {
           delete brvc.recipe_ingredients[ingredient_id];
           nm.createRemoveNotification(ingredient_name);
         }
-        
+
         tb.createButtonCell(row, "Remove", ingredient_id, removeFunction);
         tb.createReferenceButtonCell(row, "Info", ingredient_id);
 
@@ -38,50 +38,27 @@ class BuildRecipeFunctionFactory {
     };
   }
 
+  /* This function returns a function that asynchronously displays info of a given ingredient ID. */
   createInfoFunction(ingredient_id) {
     return function () {
       let si = new ServerInteractor();
-      let ff = new BuildRecipeFunctionFactory();
+      let altTable = document.getElementById("alt-table");
+      let tb = new TableBuilder(altTable);
 
       si.getIngredientInfo(ingredient_id, (result) => {
         console.log(result);
-        // Update Ingredient Info box on page async
+        // Update Ingredient Info box on page asynchronously
         document.getElementById("ingredient-name").textContent = result.ingredient;
         document.getElementById("ingredient-ethics").textContent = result.problem;
 
         // Populate alternatives table with names and buttons
-        let altTable = document.getElementById("alt-table");
         altTable.innerHTML = "";
-        if (result.alternative != "None") {
+        if (result.alternative[0] != "None") {
           for (let i = 0; i < result.alternative.length; i++) {
-            let altRow = altTable.insertRow();
-
-            // Add a cell to hold alternative name
-            let altNameCell = altRow.insertCell();
-            altNameCell.appendChild(document.createTextNode(result.alternative[i]));
-
-            // Add a cell to hold 'Add' button
-            let altAddCell = altRow.insertCell();
-            let altAddButton = document.createElement("button");
-            altAddButton.textContent = "Add";
-            altAddButton.addEventListener("click", function() {
-              document.getElementById("Add" + result.alternative_id[i]).click();
-            });
-            altAddCell.appendChild(altAddButton);
-
-            // Add a cell to hold 'Replace' button
-            let altReplaceCell = altRow.insertCell();
-            let altReplaceButton = document.createElement("button");
-            let altReplaceFunction = function() {
-              let removeButton = document.getElementById("Remove" + result.ingredient_id);
-              if (removeButton) {
-                removeButton.click();
-              }
-              altAddButton.click();
-            }
-            altReplaceButton.textContent = "Replace";
-            altReplaceButton.addEventListener("click", altReplaceFunction);
-            altReplaceCell.appendChild(altReplaceButton);
+            let altRow = tb.createRow();
+            tb.createTextOnlyCell(altRow, result.alternative[i]);
+            tb.createReferenceButtonCell(altRow, "Add", result.alternative_id[i])
+            tb.createReplaceButtonCell(altRow, result.ingredient_id, result.alternative_id[i]);
           }
         } else {
           altTable.innerHTML = "None";
