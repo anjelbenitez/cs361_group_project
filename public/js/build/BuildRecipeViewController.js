@@ -35,19 +35,17 @@ class BuildRecipeViewController {
 
         // Add an "Add to recipe" button
         // Use the BuildRecipeFunctionFactory to create an add ingredient function
+        // When user clicks on Add button, ingredient is added to the recipe
         let ff = new BuildRecipeFunctionFactory();
         let addFunction = ff.createAddIngredientFunction(ingredient_id, ingredient_name, this);
-        tb.createButtonCell(row, 'Add', addFunction);
+        let add_cell = tb.createButtonCell(row, "Add", addFunction);
+        add_cell.children[0].setAttribute("id", "Add" + ingredient_id);
 
         // Add an "Info" button
-        let infoButton = document.createElement('button');
-        infoButton.textContent = "Info";
         // When user clicks on Info button, ingredient info show ups asynchronously on page
-
         let infoFunction = ff.createInfoFunction(ingredient_id);
-        infoButton.addEventListener('click', infoFunction);
-
-        row.appendChild(infoButton);
+        let info_cell = tb.createButtonCell(row, "Info", infoFunction);
+        info_cell.children[0].setAttribute("id", "Info" + ingredient_id);
       }
     });
   }

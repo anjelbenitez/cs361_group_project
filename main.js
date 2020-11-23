@@ -374,7 +374,7 @@ app.post('/getIngredientForCustomRecipe', function (req, res, next) {
 
   // query to get ingredient name
   const name_query = {
-    text: `select ingredient.name as ingredient from ingredient where ingredient.id = $1`,
+    text: `select i.id as ingredient_id, i.name as ingredient from ingredient i where i.id = $1`,
     values: [req.body["id"]]
   };
 
@@ -390,10 +390,11 @@ app.post('/getIngredientForCustomRecipe', function (req, res, next) {
 
     // The 'ingredient' key stores the name the the ingredient
     response['ingredient'] = result.rows[0]['ingredient'];
+    response['ingredient_id'] = result.rows[0]['ingredient_id']
 
     // Query to get alternatives of ingredient
     const alt_query = {
-      text: `select alt.name as alternative 
+      text: `select alt.name as alternative, alt.id as alternative_id  
              from ingredient i 
              inner join ingredient_alternative ia on i.id = ia.ingredient_id 
              inner join ingredient alt on ia.alternative_id = alt.id 
@@ -410,11 +411,12 @@ app.post('/getIngredientForCustomRecipe', function (req, res, next) {
 
       // The 'alternative' key stores a list of the ingredient's alternatives
       response['alternative'] = []
+      response['alternative_id'] = []
 
       if (result.rows.length) {
         for (let i = 0; i < result.rows.length; i++) {
-          let alternative = result.rows[i]['alternative'];
-          response['alternative'].push(alternative);
+          response['alternative'].push(result.rows[i]['alternative']);
+          response['alternative_id'].push(result.rows[i]['alternative_id'])
         }
       } else {
         response['alternative'].push("None");
