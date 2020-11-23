@@ -1,5 +1,8 @@
+<p1>Build a Recipe</p1>
 <div>
-    <p>Custom Recipe: [recipe name]</p>
+    <label for="recipe_name">Recipe Name:</label>
+    <input type="text" id="recipe_name" name="recipe_name"><br>
+    <button id="save_button">Save Recipe</button>
 </div>
 <table id="full-table">
     <tr>
@@ -51,7 +54,9 @@
     </tr>
 </table>
 
+<script src="js/register.js"></script>
 <script type="text/javascript" src='/js/ServerInteractor.js'></script>
+<script type="text/javascript" src='/js/TableBuilder.js'></script>
 <script type="text/javascript" src='/js/build/BuildRecipeViewController.js'></script>
 <script type="text/javascript" src='/js/build/BuildRecipeFunctionFactory.js'></script>
 <link rel="stylesheet" type="text/css" href="css/build.css">
