@@ -33,29 +33,17 @@ class BuildRecipeViewController {
         let ingredient_name = ingredients[i]['name'];
         tb.createTextOnlyCell(row, ingredient_name);
 
-        // // Add an "Add to recipe" button
-        // // Use the BuildRecipeFunctionFactory to create an add ingredient function
+        // Add an "Add to recipe" button
+        // Use the BuildRecipeFunctionFactory to create an add ingredient function
+        // When user clicks on Add button, ingredient is added to the recipe
         let ff = new BuildRecipeFunctionFactory();
-        // let addFunction = ff.createAddIngredientFunction(ingredient_id, ingredient_name, this);
-        // tb.createButtonCell(row, 'Add', addFunction);
-
-        let addButton = document.createElement("button");
-        addButton.textContent = "Add";
-        addButton.setAttribute("id", "add-" + ingredient_id);
-
         let addFunction = ff.createAddIngredientFunction(ingredient_id, ingredient_name, this);
-        addButton.addEventListener("click", addFunction);
-        row.appendChild(addButton);
+        tb.createButtonCell(row, "Add", ingredient_id, addFunction);
 
         // Add an "Info" button
-        let infoButton = document.createElement('button');
-        infoButton.textContent = "Info";
-        infoButton.setAttribute("id", "info-" + ingredient_id);
-
         // When user clicks on Info button, ingredient info show ups asynchronously on page
         let infoFunction = ff.createInfoFunction(ingredient_id);
-        infoButton.addEventListener('click', infoFunction);
-        row.appendChild(infoButton);
+        tb.createButtonCell(row, "Info", ingredient_id, infoFunction);
       }
     });
   }

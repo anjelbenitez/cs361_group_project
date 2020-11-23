@@ -8,75 +8,34 @@ class BuildRecipeFunctionFactory {
    */
   createAddIngredientFunction(ingredient_id, ingredient_name, brvc) {
     return function () {
-      let ff = new BuildRecipeFunctionFactory();
+      let recipe_table_body = document.getElementById("recipe-table-body");
       let nm = new NotificationManager();
+      let tb = new TableBuilder(recipe_table_body);
 
       if (ingredient_id in brvc.recipe_ingredients) {
         nm.createErrorNotification(ingredient_name);
       }
-      else {
-        let recipe_table_body = document.getElementById("recipe-table-body");
-        let row = document.createElement('tr');
-
+      else { 
+        let row = tb.createRow();
         row.setAttribute("id", ingredient_id);
-        row.appendChild(ff.createIdCell(ingredient_id));
-        row.appendChild(ff.createNameCell(ingredient_name));
 
-        let removeButton = ff.createRemoveButton(ingredient_id);
-        removeButton.addEventListener('click', function() {
+        tb.createTextOnlyCell(row, ingredient_id);
+        tb.createTextOnlyCell(row, ingredient_name);
+
+        let removeFunction = function() {
           recipe_table_body.removeChild(row);
           delete brvc.recipe_ingredients[ingredient_id];
           nm.createRemoveNotification(ingredient_name);
-        });
-        row.appendChild(ff.createButtonCell(removeButton));
-
-        let infoButton = ff.createInfoButton();
-        infoButton.addEventListener("click", function() {
-          document.getElementById("info-" + ingredient_id).click();
-        });
-        row.appendChild(ff.createButtonCell(infoButton));
+        }
+        
+        tb.createButtonCell(row, "Remove", ingredient_id, removeFunction);
+        tb.createReferenceButtonCell(row, "Info", ingredient_id);
 
         recipe_table_body.appendChild(row);
         brvc.recipe_ingredients[ingredient_id] = ingredient_name;
         nm.createSuccessNotification(ingredient_name);
       }
     };
-  }
-
-  /* The createIdCell function returns a table cell containing the given ingredient's ID. */
-  createIdCell(ingredient_id) {
-    let id_cell = document.createElement('td');
-    id_cell.textContent = ingredient_id;
-    return id_cell;
-  }
-
-  /* The createNameCell function returns a table cell containing the given ingredient's name. */
-  createNameCell(ingredient_name) {
-    let name_cell = document.createElement('td');
-    name_cell.textContent = ingredient_name;
-    return name_cell;
-  }
-
-  /* The createRemoveButtonCell function returns a table cell containing a given button. */
-  createButtonCell(button) {
-    let buttonCell = document.createElement('td');
-    buttonCell.appendChild(button);
-    return buttonCell;
-  }
-
-  /* The createRemoveButton function returns a button used to remove the ingredient from the recipe. */
-  createRemoveButton(ingredient_id) {
-    let removeButton = document.createElement('button');
-    removeButton.textContent = "Remove";
-    removeButton.setAttribute("id", "remove-" + ingredient_id);
-    return removeButton;
-  }
-
-  /* The createInfoButton function returns a button used to get ingredient info. */
-  createInfoButton() {
-    let infoButton = document.createElement("button");
-    infoButton.textContent = "Info";
-    return infoButton;
   }
 
   createInfoFunction(ingredient_id) {
@@ -106,7 +65,7 @@ class BuildRecipeFunctionFactory {
             let altAddButton = document.createElement("button");
             altAddButton.textContent = "Add";
             altAddButton.addEventListener("click", function() {
-              document.getElementById("add-" + result.alternative_id[i]).click();
+              document.getElementById("Add" + result.alternative_id[i]).click();
             });
             altAddCell.appendChild(altAddButton);
 
@@ -114,7 +73,7 @@ class BuildRecipeFunctionFactory {
             let altReplaceCell = altRow.insertCell();
             let altReplaceButton = document.createElement("button");
             let altReplaceFunction = function() {
-              let removeButton = document.getElementById("remove-" + result.ingredient_id);
+              let removeButton = document.getElementById("Remove" + result.ingredient_id);
               if (removeButton) {
                 removeButton.click();
               }
