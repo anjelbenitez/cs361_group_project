@@ -19,7 +19,7 @@ class ServerInteractor {
     req.send();
   }
 
-  getIngredientInfo(callback, ingredient_id) {
+  getIngredientInfo(ingredient_id, callback) {
     let req = new XMLHttpRequest();
     req.open('POST', this.baseUrl + '/getIngredientForCustomRecipe', true);
     req.setRequestHeader('Content-Type', 'application/json');
