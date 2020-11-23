@@ -16,12 +16,11 @@ class TableBuilder {
     return cell;
   }
 
-  createButtonCell(row, buttonText, id, buttonFunction) {
+  createButtonCell(row, buttonText, buttonFunction) {
     let cell = document.createElement('td');
     row.appendChild(cell);
 
     let button = document.createElement('button');
-    button.setAttribute("id", buttonText + id);
     cell.appendChild(button);
     button.textContent = buttonText;
     button.addEventListener('click', buttonFunction);

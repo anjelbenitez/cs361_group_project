@@ -38,12 +38,14 @@ class BuildRecipeViewController {
         // When user clicks on Add button, ingredient is added to the recipe
         let ff = new BuildRecipeFunctionFactory();
         let addFunction = ff.createAddIngredientFunction(ingredient_id, ingredient_name, this);
-        tb.createButtonCell(row, "Add", ingredient_id, addFunction);
+        let add_cell = tb.createButtonCell(row, "Add", addFunction);
+        add_cell.children[0].setAttribute("id", "Add" + ingredient_id);
 
         // Add an "Info" button
         // When user clicks on Info button, ingredient info show ups asynchronously on page
         let infoFunction = ff.createInfoFunction(ingredient_id);
-        tb.createButtonCell(row, "Info", ingredient_id, infoFunction);
+        let info_cell = tb.createButtonCell(row, "Info", infoFunction);
+        info_cell.children[0].setAttribute("id", "Info" + ingredient_id);
       }
     });
   }

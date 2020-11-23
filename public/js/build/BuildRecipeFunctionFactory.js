@@ -28,7 +28,9 @@ class BuildRecipeFunctionFactory {
           nm.createRemoveNotification(ingredient_name);
         }
 
-        tb.createButtonCell(row, "Remove", ingredient_id, removeFunction);
+        let remove_cell = tb.createButtonCell(row, "Remove", removeFunction);
+        remove_cell.children[0].setAttribute("id", "Remove" + ingredient_id);
+
         tb.createReferenceButtonCell(row, "Info", ingredient_id);
 
         recipe_table_body.appendChild(row);
