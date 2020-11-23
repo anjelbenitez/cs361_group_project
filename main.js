@@ -486,10 +486,38 @@ app.post('/getIngredientForCustomRecipe', function (req, res, next) {
           response['problem'] = result.rows[0]['problem'];
         }
         
+
+      });
+
+      // Query to get ingredient's ethical problem's description
+
+      const ethical_description_query = {
+        text: `select ee.explain as description from ingredient i
+                inner join ingredient_ethical_problem ie on i.id = ie.ingredient_id
+                inner join ethical_problem e on ie.problem_id = e.id
+                inner join ethical_description ee on e.id = ee.id
+                where i.id =  $1`,
+        values: [req.body["id"]]
+      };
+    
+      // Nested query call 3
+      pg.query(ethical_description_query, function(err, result) {
+        if(err) {
+          next(err);
+          return;
+        }
+
+        response['description'] = "None";
+        if(result.rows.length) {
+          response['description'] = result.rows[0]['description'];
+        }
+        
         // Send the response
         res.setHeader('Content-Type', 'application/json');
         res.send(JSON.stringify(response));
       });
+      
+      
     });
   });
 });

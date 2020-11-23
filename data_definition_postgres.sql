@@ -4,12 +4,15 @@ DROP TABLE IF EXISTS recipe_category;
 DROP TABLE IF EXISTS ingredient_ethical_problem;
 DROP TABLE IF EXISTS ingredient_alternative;
 
+
 -- Then drop tables that are depended on
 DROP TABLE IF EXISTS ingredient;
 DROP TABLE IF EXISTS recipe;
 DROP TABLE IF EXISTS category;
 DROP TABLE IF EXISTS account;
 DROP TABLE IF EXISTS ethical_problem;
+DROP TABLE IF EXISTS ethical_description;
+
 
 CREATE TABLE ingredient (
     id SERIAL PRIMARY KEY NOT NULL,
@@ -56,7 +59,13 @@ INSERT INTO ingredient (name) VALUES
     ('Sugar'),                  --28
     ('Heavy Cream'),            --29
     ('Cashew Cream'),           --30
-    ('Soy Milk');               --31
+    ('Soy Milk'),               --31
+    ('Bananas'),                --32
+    ('Chickpeas'),              --33
+    ('Cashew Cheese'),          --34
+    ('Chicken'),                --35
+    ('Salmon');                 --36
+
 
 CREATE TABLE recipe (
     id SERIAL PRIMARY KEY NOT NULL,
@@ -164,20 +173,44 @@ create table ethical_problem (
 );
 
 insert into ethical_problem (title) values
-    ('deforestation'),
-    ('carbon emission');
+    ('Deforestation'),
+    ('Carbon Emission');
+
+create table ethical_description(
+    id SERIAL PRIMARY KEY NOT NULL,
+    explain text
+);
+
+insert into ethical_description (explain) values
+    ('The decrease in forest areas across the world that are lost for other uses such as agricultural croplands, urbanization, or mining activities.'),
+    ('The release of carbon into the atmosphere; the main contributors to climate change.');
+ 
 
 create table ingredient_ethical_problem (
     ingredient_id INT,
     problem_id INT,
-    PRIMARY KEY (ingredient_id, problem_id),
+    explain_id INT,
+    PRIMARY KEY (ingredient_id, problem_id, explain_id),
     FOREIGN KEY (ingredient_id) REFERENCES ingredient (id) ON UPDATE CASCADE ON DELETE CASCADE,
-    FOREIGN KEY (problem_id) REFERENCES ethical_problem (id) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (problem_id) REFERENCES ethical_problem (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (explain_id) REFERENCES ethical_description (id) ON UPDATE CASCADE ON DELETE CASCADE
+
 );
 
 insert into ingredient_ethical_problem values
-    (12, 1), -- Avocado and deforestation
-    (29, 2); -- Heavy cream and carbon emission
+    (12, 1, 1), -- Avocado and deforestation
+    (6, 1, 1),  -- Sirloin Steak and deforestation
+    (7, 1, 1),  -- Beef Patty and deforestation
+    (18, 1, 1), -- Eggs and carbon emission
+    (19, 2, 2), -- Butter and deforestation
+    (20, 1, 2), -- Milk and deforestation
+    (8, 1, 1),  -- Pork and carbon emission
+    (9, 2, 2),  -- Ham and deforestation
+    (10, 1, 1), -- Bacon and deforestation
+    (21, 1, 1), -- Cheddar Cheese and deforestation
+    (22, 1, 1), -- Parmesan Cheese and deforestation
+    (3, 2, 1),  -- Egg Noodle and carbon emission
+    (29, 2, 1); -- Heavy cream and carbon emission
 
 create table ingredient_alternative (
     ingredient_id INT,
@@ -189,4 +222,28 @@ create table ingredient_alternative (
 
 insert into ingredient_alternative (ingredient_id, alternative_id) values
     (29, 30), -- Heavy cream and cashew cream
-    (29, 31); -- Heavy cream and soy milk
+    (29, 31), -- Heavy cream and soy milk
+    (12,33),  -- Avacado and Chickpeas
+    (12,32),  -- Avacado and Bananas
+    (18,33),  -- Egg and Chickpeas
+    (6,35),    -- Sirloin Steak and Chicken
+    (6,36),    -- Sirloin Steak and Salmon
+    (6,13),   -- Sirloin Steak and Mushroom
+    (6,15),   -- Sirloin Steak and Lettuce
+    (7,35),    -- Beef Patty and Chicken
+    (7,36),    -- Beef Patty and Salmon
+    (7,13),   -- Beef Patty and Mushroom
+    (7,15),   -- Beef Patty and Lettuce
+    (19, 31), -- Butter and Soy Milk
+    (19,24),  -- Butter and Olive Oil
+    (20, 31), -- Milk and Soy Milk
+    (21, 34), -- Cheddar Cheese and Cashew Cheese
+    (22, 34), -- Parmesan Cheese and Cashew Cheese
+    (8, 35),  -- Pork and Chicken
+    (8, 36),  -- Pork and Salmon
+    (9, 35),  -- Ham and Chicken
+    (9, 36),  -- Ham and Salmon
+    (10, 35), -- Bacon and Chicken
+    (10, 36), -- Bacon and Salmon
+	(3, 11);  -- Egg Noodle and Russet Potatoes
+
