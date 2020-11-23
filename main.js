@@ -158,73 +158,35 @@ app.get('/recipe', function (req, res, next) {
 
 });
 
-
 /*
-display recipes for breakfast
+display on category page based on click
 */
-app.get('/breakfast',function(req,res,next){
+
+app.get('/category/:category',function(req,res,next){
   let context = {};
-  context.user = req.user || null  // req.user exists when a user is logged in
-  context.title = "Breakfast";
+  var type = req.params.category;
+  context.title = type;
 
   // Select all from the test_table
-  let query = "select r.name as recipeName, c.name as categoryName from recipe r inner join recipe_category rc on r.id = rc.recipe_id inner join category c on rc.category_id = c.id where rc.category_id=1";
+  let query = `select r.name as recipename, c.name as categoryname
+                  from category c
+                  inner join recipe_category rc on c.id = rc.category_id
+                  inner join recipe r on rc.recipe_id = r.id
+                  where c.name = $1`
+  var inserts = [type];
 
-  pg.query(query, (err, result) => {
+  pg.query(query, inserts,(err, result) => {
     if(err){
       next(err);
       return;
     }
 
     context.results = result.rows;
-    res.render('breakfast', context);
-  });
-});
-
-/*
-display recipes for lunch
-*/
-app.get('/lunch',function(req,res,next){
-  let context = {};
-  context.user = req.user || null  // req.user exists when a user is logged in
-  context.title = "Lunch";
-
-  // Select all from the test_table
-  let query = "select r.name as recipeName, c.name as categoryName from recipe r inner join recipe_category rc on r.id = rc.recipe_id inner join category c on rc.category_id = c.id where rc.category_id=2";
-
-  pg.query(query, (err, result) => {
-    if(err){
-      next(err);
-      return;
-    }
-
-    context.results = result.rows;
-    res.render('lunch', context);
+    res.render('category', context);
   });
 });
 
 
-/*
-display recipes for dinner
-*/
-app.get('/dinner',function(req,res,next){
-  let context = {};
-  context.user = req.user || null  // req.user exists when a user is logged in
-  context.title = "Dinner";
-
-  // Select all from the test_table
-  let query = "select r.name as recipeName, c.name as categoryName from recipe r inner join recipe_category rc on r.id = rc.recipe_id inner join category c on rc.category_id = c.id where rc.category_id=3";
-
-  pg.query(query, (err, result) => {
-    if(err){
-      next(err);
-      return;
-    }
-
-    context.results = result.rows;
-    res.render('dinner', context);
-  });
-});
 
 /*
 dispay ingredients for recipes
@@ -245,7 +207,6 @@ app.get('/ingredients/:recipename', function(req,res, next){
               where r.name = $1`;
 
   var inserts = [recipe];
-  console.log(recipe);
   pg.query(query, inserts, (err, result) => {
     if(err){
       next(err);
@@ -256,7 +217,6 @@ app.get('/ingredients/:recipename', function(req,res, next){
     res.render('ingredients', context);
   });
 });
-
 
 /*
 The /getIngredients endpoint returns a list of all ingredients in the database and their IDs
@@ -309,7 +269,6 @@ app.post('/getEthicalProblemForIngredientId', function (req, res, next) {
 
 
 
-
 /*
 The /getRecipeByCategory endpoint takes an id of a category as a parameter and returns a list of all the recipes within that category
  */
@@ -318,9 +277,9 @@ app.post('/getRecipesByCategoryId', function (req, res, next) {
   // Construct the query
   const query = {
     text: `select r.name as recipeName
-	        from recipe r 
-	        inner join recipe_category rc on r.id = rc.recipe_id 
-	        inner join category c on rc.category_id = c.id
+          from recipe r 
+          inner join recipe_category rc on r.id = rc.recipe_id 
+          inner join category c on rc.category_id = c.id
           where c.id = $1`,
     values: [req.body["id"]]
   };
@@ -410,7 +369,6 @@ app.post('/getAlternativesForIngredientId', function (req, res, next) {
     res.send(JSON.stringify(response));
   });
 });
-
 
 app.post('/getIngredientForCustomRecipe', function (req, res, next) {
 
@@ -621,15 +579,14 @@ app.listen(app.get('port'), function(){
     console.log('Express started on http://localhost:' + app.get('port') + '; press Ctrl-C to terminate.');
 });
 
-
 app.post('/getRecipesByCategoryId', function (req, res, next) {
 
   // Construct the query
   const query = {
     text: `select r.name as recipeName
-	        from recipe r 
-	        inner join recipe_category rc on r.id = rc.recipe_id 
-	        inner join category c on rc.category_id = c.id
+          from recipe r 
+          inner join recipe_category rc on r.id = rc.recipe_id 
+          inner join category c on rc.category_id = c.id
           where c.id = $1`,
     values: [req.body["id"]]
   };
