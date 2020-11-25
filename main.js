@@ -164,6 +164,7 @@ display on category page based on click
 
 app.get('/category/:category',function(req,res,next){
   let context = {};
+  context.user = req.user || null  // req.user exists when a user is logged in
   var type = req.params.category;
   context.title = type;
 
