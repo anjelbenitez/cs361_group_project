@@ -261,13 +261,42 @@ app.post('/getEthicalProblemForIngredientId', function (req, res, next) {
       return;
     }
 
+    let response = {};
+    response['problem'] = result.rows[0]['problem'];
+    response['ingredient'] = result.rows[0]['ingredient'];
+
     res.setHeader('Content-Type', 'application/json');
-    res.send(JSON.stringify(result.rows));
+    res.send(response);
   });
 });
 
 
+app.post('/getEthicalDescriptionForIngredientId', function (req, res, next) {
 
+  // Construct the query
+  const query = {
+    text: `select ee.explain as description from ingredient i
+            inner join ingredient_ethical_problem ie on i.id = ie.ingredient_id
+            inner join ethical_problem e on ie.problem_id = e.id
+            inner join ethical_description ee on e.id = ee.id
+            where i.id =  $1`,
+    values: [req.body["id"]]
+  };
+
+  // Run the query and send response
+  pg.query(query, function(err, result){
+    if(err){
+      next(err);
+      return;
+    }
+
+    let response = {};
+    response['description'] = result.rows[0]['description'];
+   
+    res.setHeader('Content-Type', 'application/json');
+    res.send(response);
+  });
+});
 
 /*
 The /getRecipeByCategory endpoint takes an id of a category as a parameter and returns a list of all the recipes within that category
@@ -332,39 +361,33 @@ app.post('/getAlternativesForIngredientId', function (req, res, next) {
 
   // Construct the query
   const query = {
-    text: `select i.name as ingredient, alt.name as alternative 
-           from ingredient i 
-           inner join ingredient_alternative ia on i.id = ia.ingredient_id 
-           inner join ingredient alt on ia.alternative_id = alt.id 
-           where i.id = $1`,
+    text: `select alt.name as alternative, alt.id as alternative_id  
+            from ingredient i 
+            inner join ingredient_alternative ia on i.id = ia.ingredient_id 
+            inner join ingredient alt on ia.alternative_id = alt.id 
+            where i.id = $1`,
     values: [req.body["id"]]
   };
 
-  testq = 'select i.name as ingredient from ingredient i where i.id = 1'
-
-  console.log(req.body.rows);
-
-  // Run the query and send response
   pg.query(query, function(err, result){
     if(err){
       next(err);
       return;
     }
-    console.log(result)
-    // Initialize a dictionary to store the response
-    var response = {};
-    // The 'ingredient' key stores the name the the ingredient
-    response['ingredient'] = result.rows[0]['ingredient'];
-    // The 'alternatives' (plural) key stores an array of alternatives for this ingredient
-    response['alternatives'] = [];
 
-    // Add the alternatives from Postgres to the response
-    for (let i = 0; i < result.rows.length; i++) {
-      let alternative = result.rows[i]['alternative'];
-      response['alternatives'].push(alternative);
+    var response = {};
+    response['alternative'] = [];
+    response['alternative_id'] = [];
+
+    if (result.rows.length) {
+      for (let i = 0; i < result.rows.length; i++) {
+        response['alternative'].push(result.rows[i]['alternative']);
+        response['alternative_id'].push(result.rows[i]['alternative_id'])
+      }
+    } else {
+      response['alternative'].push("None");
     }
 
-    // Send the response
     res.setHeader('Content-Type', 'application/json');
     res.send(JSON.stringify(response));
   });
