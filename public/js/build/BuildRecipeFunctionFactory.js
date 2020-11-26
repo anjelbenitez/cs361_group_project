@@ -41,7 +41,7 @@ class BuildRecipeFunctionFactory {
   }
 
   /* This function returns a function that asynchronously displays info of a given ingredient ID. */
-  createInfoFunction(ingredient_id) {
+  createInfoFunction(ingredient_id, ingredient_name) {
     return function () {
       let si = new ServerInteractor();
       let altTable = document.getElementById("alt-table");
@@ -50,7 +50,7 @@ class BuildRecipeFunctionFactory {
       si.getIngredientInfo(ingredient_id, (result) => {
         console.log(result);
         // Update Ingredient Info box on page asynchronously
-        document.getElementById("ingredient-name").textContent = result.ingredient;
+        document.getElementById("ingredient-name").textContent = ingredient_name; 
         document.getElementById("ingredient-ethics").textContent = result.problem;
         document.getElementById("ethic-information").textContent = result.description;
 
@@ -61,7 +61,7 @@ class BuildRecipeFunctionFactory {
             let altRow = tb.createRow();
             tb.createTextOnlyCell(altRow, result.alternative[i]);
             tb.createReferenceButtonCell(altRow, "Add", result.alternative_id[i])
-            tb.createReplaceButtonCell(altRow, result.ingredient_id, result.alternative_id[i]);
+            tb.createReplaceButtonCell(altRow, ingredient_id, result.alternative_id[i]);
           }
         } else {
           altTable.innerHTML = "None";

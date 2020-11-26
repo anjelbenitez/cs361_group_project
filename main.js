@@ -372,25 +372,7 @@ app.post('/getAlternativesForIngredientId', function (req, res, next) {
 
 app.post('/getIngredientForCustomRecipe', function (req, res, next) {
 
-  // query to get ingredient name
-  const name_query = {
-    text: `select i.id as ingredient_id, i.name as ingredient from ingredient i where i.id = $1`,
-    values: [req.body["id"]]
-  };
-
-  // Initialize a dictionary to store the response
   var response = {};
-
-  // Run the query and send response
-  pg.query(name_query, function(err, result){
-    if(err){
-      next(err);
-      return;
-    }
-
-    // The 'ingredient' key stores the name the the ingredient
-    response['ingredient'] = result.rows[0]['ingredient'];
-    response['ingredient_id'] = result.rows[0]['ingredient_id']
 
     // Query to get alternatives of ingredient
     const alt_query = {
@@ -475,9 +457,7 @@ app.post('/getIngredientForCustomRecipe', function (req, res, next) {
         res.send(JSON.stringify(response));
       });
       
-      
     });
-  });
 });
 
 app.post('/register', checkNotAuthenticated, async function(req, res, next) {

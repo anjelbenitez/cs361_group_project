@@ -34,6 +34,21 @@ class ServerInteractor {
     req.send(payload);
   }
 
+  // getIngredientInfo(ingredient_id, callback) {
+  //   let req = new XMLHttpRequest();
+  //   req.open('POST', this.baseUrl + '/getIngredientForCustomRecipe', true);
+  //   req.setRequestHeader('Content-Type', 'application/json');
+  //   let payload = JSON.stringify({"id":ingredient_id});
+  //   req.addEventListener('load', function() {
+  //     if(req.status >= 200 && req.status < 400) {
+  //       callback(JSON.parse(req.responseText));
+  //     } else {
+  //       console.log("Error in network request: " + req.statusText);
+  //     }
+  //   })
+  //   req.send(payload);
+  // }
+
   saveRecipe(name, ingredients, callback) {
     let req = new XMLHttpRequest();
     req.open('POST', this.baseUrl + '/saveRecipe', true);
