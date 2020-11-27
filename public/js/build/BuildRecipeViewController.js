@@ -55,7 +55,7 @@ class BuildRecipeViewController {
 
     // If a recipe ID is passed in the URL, pre-populate the page with ingredients from that recipe
     if (recipe_id) {
-
+      this.prepopulateWithRecipe(recipe_id);
     }
   }
 
@@ -88,8 +88,24 @@ class BuildRecipeViewController {
     });
   }
 
-  prepopulateWithRecipe() {
+  prepopulateWithRecipe(recipe_id) {
+    let si = new ServerInteractor();
+    let ff = new BuildRecipeFunctionFactory();
 
+    si.getRecipeIngredients(recipe_id, (results) => {
+
+      let recipe_name_field = document.getElementById("recipe_name");
+      recipe_name_field.value = results[0].recipename;
+
+      for (let i = 0; i < results.length; i++) {
+        console.log(results[i]);
+        let ingredient_id = results[i].ingredientid;
+        let ingredient_name = results[i].ingredientname;
+
+        let addFunc = ff.createAddIngredientFunction(ingredient_id, ingredient_name, this);
+        addFunc();
+      }
+    })
   }
 }
 

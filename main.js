@@ -137,7 +137,7 @@ app.get('/recipe', function (req, res, next) {
 
   let recipe_id = req.query.id;
   let query = {
-    text: `select i.name as ingredientname, r.name as recipename, r.owner_id as ownerid, r.id as recipeid 
+    text: `select i.name as ingredientname, r.name as recipename, r.owner_id as ownerid, r.id as recipeid
            from recipe r
            inner join recipe_ingredient ri on r.id = ri.recipe_id 
            inner join ingredient i on ri.ingredient_id = i.id 
@@ -154,9 +154,30 @@ app.get('/recipe', function (req, res, next) {
     context.results = result.rows;
 
     res.render('recipe', context);
-
   })
+});
 
+app.post('/getRecipeIngredientsWithRecipeId', function (req, res, next) {
+
+  let recipe_id = req.body.id;
+  let query = {
+    text: `select i.name as ingredientname, r.name as recipename, r.owner_id as ownerid, r.id as recipeid, i.id as ingredientid
+           from recipe r
+           inner join recipe_ingredient ri on r.id = ri.recipe_id 
+           inner join ingredient i on ri.ingredient_id = i.id 
+           where r.id = $1`,
+    values: [recipe_id]
+  };
+
+  pg.query(query, (err, result) => {
+    if (err) {
+      next(err);
+      return;
+    }
+
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify(result.rows));
+  })
 });
 
 /*

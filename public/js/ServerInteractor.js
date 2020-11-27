@@ -49,4 +49,19 @@ class ServerInteractor {
 
     req.send(payload);
   }
+
+  getRecipeIngredients(recipe_id, callback) {
+    let req = new XMLHttpRequest();
+    req.open('POST', this.baseUrl + '/getRecipeIngredientsWithRecipeId', true);
+    req.setRequestHeader('Content-Type', 'application/json');
+    let payload = JSON.stringify({"id":recipe_id});
+    req.addEventListener('load', function() {
+      if(req.status >= 200 && req.status < 400) {
+        callback(JSON.parse(req.responseText));
+      } else {
+        console.log("Error in network request: " + req.statusText);
+      }
+    });
+    req.send(payload);
+  }
 }
