@@ -64,7 +64,11 @@ INSERT INTO ingredient (name) VALUES
     ('Chickpeas'),              --33
     ('Cashew Cheese'),          --34
     ('Chicken'),                --35
-    ('Salmon');                 --36
+    ('Salmon'),                 --36
+    ('Bluefin Tuna'),           --37
+    ('Skipjack Tuna'),          --38
+    ('Albacore'),               --39
+    ('Lamb');                   --40
 
 
 CREATE TABLE recipe (
@@ -183,7 +187,8 @@ create table ethical_description(
 
 insert into ethical_description (explain) values
     ('The decrease in forest areas across the world that are lost for other uses such as agricultural croplands, urbanization, or mining activities.'),
-    ('The release of carbon into the atmosphere; the main contributors to climate change.');
+    ('The release of carbon into the atmosphere; the main contributors to climate change.'),
+    ('The removal of a species of fish from a body of water at a rate that the species cannot replenish, resulting in those species becoming underpopulated in that area.');
  
 
 create table ingredient_ethical_problem (
@@ -210,7 +215,9 @@ insert into ingredient_ethical_problem values
     (21, 1, 1), -- Cheddar Cheese and deforestation
     (22, 1, 1), -- Parmesan Cheese and deforestation
     (3, 2, 1),  -- Egg Noodle and carbon emission
-    (29, 2, 1); -- Heavy cream and carbon emission
+    (29, 2, 1), -- Heavy cream and carbon emission
+    (37, 3, 3), -- Bluefin Tuna and overfishing
+    (40, 2, 2); -- Lamb and carbon emission
 
 create table ingredient_alternative (
     ingredient_id INT,
@@ -245,5 +252,8 @@ insert into ingredient_alternative (ingredient_id, alternative_id) values
     (9, 36),  -- Ham and Salmon
     (10, 35), -- Bacon and Chicken
     (10, 36), -- Bacon and Salmon
-	(3, 11);  -- Egg Noodle and Russet Potatoes
+	(3, 11),  -- Egg Noodle and Russet Potatoes
+    (37, 38), -- Bluefin Tuna and Skipjack Tuna
+    (37, 39), -- Bluefin Tuna and Albacore
+    (40, 35); -- Lamb and Chicken
 
