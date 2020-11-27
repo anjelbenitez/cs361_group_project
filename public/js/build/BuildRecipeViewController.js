@@ -48,6 +48,15 @@ class BuildRecipeViewController {
         info_cell.children[0].setAttribute("id", "Info" + ingredient_id);
       }
     });
+
+    // Get access to the recipeid parameters in the URL
+    const url_params = new URLSearchParams(window.location.search);
+    let recipe_id = url_params.get('recipeid');
+
+    // If a recipe ID is passed in the URL, pre-populate the page with ingredients from that recipe
+    if (recipe_id) {
+
+    }
   }
 
   saveRecipe() {
@@ -77,6 +86,10 @@ class BuildRecipeViewController {
         alert("Recipe was saved successfully!");
       }
     });
+  }
+
+  prepopulateWithRecipe() {
+
   }
 }
 
