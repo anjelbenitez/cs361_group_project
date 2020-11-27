@@ -137,7 +137,8 @@ app.get('/recipe', function (req, res, next) {
 
   let recipe_id = req.query.id;
   let query = {
-    text: `select i.name as ingredientname, r.name as recipename from recipe r 
+    text: `select i.name as ingredientname, r.name as recipename, r.owner_id as ownerid, r.id as recipeid 
+           from recipe r
            inner join recipe_ingredient ri on r.id = ri.recipe_id 
            inner join ingredient i on ri.ingredient_id = i.id 
            where r.id = $1`,
