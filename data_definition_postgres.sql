@@ -92,7 +92,7 @@ INSERT INTO recipe (name, owner_id, public) VALUES
     ('Carbonara', NULL, TRUE),                -- 6
     ('Pancakes', NULL, TRUE),                 -- 7
     ('Cobb Salad', NULL, TRUE),               -- 8
-    ('Mashed Potatoses', NULL, TRUE);         -- 9
+    ('Mashed Potatoes', NULL, TRUE);         -- 9
 
 CREATE TABLE category (
     id SERIAL PRIMARY KEY NOT NULL,
