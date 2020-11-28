@@ -98,8 +98,14 @@ class BuildRecipeViewController {
           }
           // User wants to overwrite
           else {
-            // todo: Delete the existing recipe
+            let recipe_id = response[0].id;
 
+            let si = new ServerInteractor();
+            si.deleteRecipeWithId(recipe_id, (response) => {
+              if (response[0].id === recipe_id) {
+                console.log(`Recipe ${recipe_id} was deleted!`);
+              }
+            });
           }
         }
 
