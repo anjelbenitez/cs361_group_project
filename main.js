@@ -210,7 +210,7 @@ app.delete('/deleteRecipeWithId', (req, res, next) => {
 
   let recipe_id = req.body.id;
 
-  // Wrap the code in an annonymous async function so we can use the async-await syntax
+  // Wrap the code in an anonymous async function so we can use the async-await syntax
   (async () => {
 
     // Use a try-catch block to catch errors from async-await
