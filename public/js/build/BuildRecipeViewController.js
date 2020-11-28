@@ -78,12 +78,40 @@ class BuildRecipeViewController {
 
     // Save the recipe
     let si = new ServerInteractor();
-    si.saveRecipe(name, this.recipe_ingredients, (response) => {
+
+    // Check if the user already has a recipe with the same name
+    si.findPrivateRecipeWithName(name, (response) => {
       if (response.error) {
         alert(response.error);
       }
+      // There was no error
       else {
-        alert("Recipe was saved successfully!");
+        console.log(response);
+
+        // If an recipe with the same name already exists
+        if (response.length > 0) {
+          let override = confirm("A recipe with the same name already exists. Are you sure you want to overwrite it?");
+
+          // User does not want to overwrite, return
+          if (!override) {
+            return;
+          }
+          // User wants to overwrite
+          else {
+            // todo: Delete the existing recipe
+
+          }
+        }
+
+        // Save the recipe
+        si.saveRecipe(name, this.recipe_ingredients, (response) => {
+          if (response.error) {
+            alert(response.error);
+          }
+          else {
+            alert("Recipe was saved successfully!");
+          }
+        });
       }
     });
   }
@@ -94,13 +122,16 @@ class BuildRecipeViewController {
 
     si.getRecipeIngredients(recipe_id, (results) => {
 
+      // Populate the recipe name field
       let recipe_name_field = document.getElementById("recipe_name");
       recipe_name_field.value = results[0].recipename;
 
+      // Add the ingredients
       for (let i = 0; i < results.length; i++) {
         let ingredient_id = results[i].ingredientid;
         let ingredient_name = results[i].ingredientname;
 
+        // Create a function for adding the ingredient and then call the function
         let addFunc = ff.createAddIngredientFunction(ingredient_id, ingredient_name, this);
         addFunc();
       }

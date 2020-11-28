@@ -64,4 +64,19 @@ class ServerInteractor {
     });
     req.send(payload);
   }
+
+  findPrivateRecipeWithName(name, callback) {
+    let req = new XMLHttpRequest();
+    req.open('POST', this.baseUrl + '/findPrivateRecipeWithName', true);
+    req.setRequestHeader('Content-Type', 'application/json');
+    let payload = JSON.stringify({"name": name});
+    req.addEventListener('load', function() {
+      if(req.status >= 200 && req.status < 400) {
+        callback(JSON.parse(req.responseText));
+      } else {
+        console.log("Error in network request: " + req.statusText);
+      }
+    });
+    req.send(payload);
+  }
 }

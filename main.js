@@ -180,6 +180,32 @@ app.post('/getRecipeIngredientsWithRecipeId', function (req, res, next) {
   })
 });
 
+app.post('/findPrivateRecipeWithName', (req, res, next) => {
+
+  // Check that there is an active user session
+  if (!req.user) {
+    res.send({error: 'You have to log in first!'});
+  }
+
+  let name = req.body.name;
+  let owner_id = req.user.id;
+
+  let query = {
+    text: `select * from recipe r where name like $1 and owner_id = $2`,
+    values: [name, owner_id]
+  };
+
+  pg.query(query, (err, result) => {
+    if (err) {
+      next(err);
+      return;
+    }
+
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify(result.rows));
+  })
+});
+
 /*
 display on category page based on click
 */
@@ -256,9 +282,6 @@ app.post('/getEthicalProblemForIngredientId', function (req, res, next) {
     res.send(JSON.stringify(result.rows));
   });
 });
-
-
-
 
 /*
 The /getRecipeByCategory endpoint takes an id of a category as a parameter and returns a list of all the recipes within that category
