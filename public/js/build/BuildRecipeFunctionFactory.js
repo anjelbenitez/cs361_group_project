@@ -47,26 +47,24 @@ class BuildRecipeFunctionFactory {
       let altTable = document.getElementById("alt-table");
       let tb = new TableBuilder(altTable);
 
-      si.getIngredientInfo(ingredient_id, (result) => {
-        // console.log(result);  // CANNOT ACCESS PROPERTIES
-    
+      si.getIngredientInfo(ingredient_id, (result) => {    
         // Update Ingredient Info box on page asynchronously
         document.getElementById("ingredient-name").textContent = ingredient_name; 
         document.getElementById("ingredient-ethics").textContent = result.problem;
         document.getElementById("ethic-information").textContent = result.description;
 
         // Populate alternatives table with names and buttons
-        // altTable.innerHTML = "";
-        // if (result.alternative[0] != "None") {
-        //   for (let i = 0; i < result.alternative.length; i++) {
-        //     let altRow = tb.createRow();
-        //     tb.createTextOnlyCell(altRow, result.alternative[i]);
-        //     tb.createReferenceButtonCell(altRow, "Add", result.alternative_id[i])
-        //     tb.createReplaceButtonCell(altRow, ingredient_id, result.alternative_id[i]);
-        //   }
-        // } else {
-        //   altTable.innerHTML = "None";
-        // }
+        altTable.innerHTML = "";
+        if (result.alternative[0] != "None") {
+          for (let i = 0; i < result.alternative.length; i++) {
+            let altRow = tb.createRow();
+            tb.createTextOnlyCell(altRow, result.alternative[i]);
+            tb.createReferenceButtonCell(altRow, "Add", result.alternative_id[i])
+            tb.createReplaceButtonCell(altRow, ingredient_id, result.alternative_id[i]);
+          }
+        } else {
+          altTable.innerHTML = "None";
+        }
       });
     }
   } 

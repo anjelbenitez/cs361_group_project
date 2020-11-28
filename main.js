@@ -161,7 +161,6 @@ app.get('/recipe', function (req, res, next) {
 /*
 display on category page based on click
 */
-
 app.get('/category/:category',function(req,res,next){
   let context = {};
   context.user = req.user || null  // req.user exists when a user is logged in
@@ -187,12 +186,9 @@ app.get('/category/:category',function(req,res,next){
   });
 });
 
-
-
 /*
 dispay ingredients for recipes
 */
-
 app.get('/ingredients/:recipename', function(req,res, next){
   let context = {};
   context.user = req.user || null  // req.user exists when a user is logged in
@@ -262,15 +258,23 @@ app.post('/getEthicalProblemForIngredientId', function (req, res, next) {
     }
 
     let response = {};
-    response['problem'] = result.rows[0]['problem'];
-    response['ingredient'] = result.rows[0]['ingredient'];
-
+    
+    if (result.rows.length) {
+      response['ingredient'] = result.rows[0]['ingredient'];
+      response['problem'] = result.rows[0]['problem'];
+    } else {
+      response['problem'] = "None";
+    }
+    
     res.setHeader('Content-Type', 'application/json');
     res.send(response);
   });
 });
 
-
+/*
+The /getEthicalDescriptionForIngredientId endpoint takes the id of an ingredient as parameter and returns as a response
+the description of the ethical problem.
+ */
 app.post('/getEthicalDescriptionForIngredientId', function (req, res, next) {
 
   // Construct the query
@@ -291,8 +295,12 @@ app.post('/getEthicalDescriptionForIngredientId', function (req, res, next) {
     }
 
     let response = {};
-    response['description'] = result.rows[0]['description'];
-   
+    if (result.rows.length) {
+      response['description'] = result.rows[0]['description'];
+    } else {
+      response['description'] = "None";
+    }
+    
     res.setHeader('Content-Type', 'application/json');
     res.send(response);
   });
@@ -355,7 +363,7 @@ app.post('/getIngredientsByRecipeId', function (req, res, next) {
 
 /*
 The /getAlternativesForIngredientId endpoint takes the id of an ingredient as parameter and returns as a response
-the name of the ingredient and a list of alternatives.
+the list of alternatives and list of alternative IDs.
  */
 app.post('/getAlternativesForIngredientId', function (req, res, next) {
 
@@ -369,6 +377,7 @@ app.post('/getAlternativesForIngredientId', function (req, res, next) {
     values: [req.body["id"]]
   };
 
+  // Run the query and send response
   pg.query(query, function(err, result){
     if(err){
       next(err);
@@ -391,96 +400,6 @@ app.post('/getAlternativesForIngredientId', function (req, res, next) {
     res.setHeader('Content-Type', 'application/json');
     res.send(JSON.stringify(response));
   });
-});
-
-app.post('/getIngredientForCustomRecipe', function (req, res, next) {
-
-  var response = {};
-
-    // Query to get alternatives of ingredient
-    const alt_query = {
-      text: `select alt.name as alternative, alt.id as alternative_id  
-             from ingredient i 
-             inner join ingredient_alternative ia on i.id = ia.ingredient_id 
-             inner join ingredient alt on ia.alternative_id = alt.id 
-             where i.id = $1`,
-      values: [req.body["id"]]
-    };
-
-    // Nested query call 1
-    pg.query(alt_query, function(err, result) {
-      if(err) {
-        next(err);
-        return;
-      }
-
-      // The 'alternative' key stores a list of the ingredient's alternatives
-      response['alternative'] = []
-      response['alternative_id'] = []
-
-      if (result.rows.length) {
-        for (let i = 0; i < result.rows.length; i++) {
-          response['alternative'].push(result.rows[i]['alternative']);
-          response['alternative_id'].push(result.rows[i]['alternative_id'])
-        }
-      } else {
-        response['alternative'].push("None");
-      }
-
-      // Query to get ingredient's ethical problem
-      const ethic_query = {
-        text: `select e.title as problem from ingredient i
-                inner join ingredient_ethical_problem ie on i.id = ie.ingredient_id
-                inner join ethical_problem e on ie.problem_id = e.id
-                where i.id = $1`,
-        values: [req.body["id"]]
-      };
-    
-      // Nested query call 2
-      pg.query(ethic_query, function(err, result) {
-        if(err) {
-          next(err);
-          return;
-        }
-
-        // The 'problem' key holds the ingredient's ethical problem
-        response['problem'] = "None";
-        if(result.rows.length) {
-          response['problem'] = result.rows[0]['problem'];
-        }
-        
-
-      });
-
-      // Query to get ingredient's ethical problem's description
-
-      const ethical_description_query = {
-        text: `select ee.explain as description from ingredient i
-                inner join ingredient_ethical_problem ie on i.id = ie.ingredient_id
-                inner join ethical_problem e on ie.problem_id = e.id
-                inner join ethical_description ee on e.id = ee.id
-                where i.id =  $1`,
-        values: [req.body["id"]]
-      };
-    
-      // Nested query call 3
-      pg.query(ethical_description_query, function(err, result) {
-        if(err) {
-          next(err);
-          return;
-        }
-
-        response['description'] = "None";
-        if(result.rows.length) {
-          response['description'] = result.rows[0]['description'];
-        }
-        
-        // Send the response
-        res.setHeader('Content-Type', 'application/json');
-        res.send(JSON.stringify(response));
-      });
-      
-    });
 });
 
 app.post('/register', checkNotAuthenticated, async function(req, res, next) {

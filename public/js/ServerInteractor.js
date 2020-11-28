@@ -19,47 +19,42 @@ class ServerInteractor {
     req.send();
   }
 
-  // getIngredientInfo(ingredient_id, callback) {
-  //   let req = new XMLHttpRequest();
-  //   req.open('POST', this.baseUrl + '/getIngredientForCustomRecipe', true);
-  //   req.setRequestHeader('Content-Type', 'application/json');
-  //   let payload = JSON.stringify({"id":ingredient_id});
-  //   req.addEventListener('load', function() {
-  //     if(req.status >= 200 && req.status < 400) {
-  //       callback(JSON.parse(req.responseText));
-  //     } else {
-  //       console.log("Error in network request: " + req.statusText);
-  //     }
-  //   })
-  //   req.send(payload);
-  // }
-
   getIngredientInfo(ingredient_id, callback) {
     let index = ['/getEthicalProblemForIngredientId', '/getEthicalDescriptionForIngredientId', '/getAlternativesForIngredientId'];
     let payload = JSON.stringify({"id":ingredient_id});
     let callbackResult = {};
+    let self = this;
 
-    for (let i = 0; i < index.length; i++) {
-      let req = new XMLHttpRequest();
-      req.open('POST', this.baseUrl + index[i], true);
-      req.setRequestHeader('Content-Type', 'application/json');
-      req.addEventListener('load', function() {
-        if(req.status >= 200 && req.status < 400) {
-          let response = JSON.parse(req.responseText);
-
-          for (const property in response) {
-            callbackResult[property] = response[property];
-            // console.log(callbackResult[property]); // CAN ACCESS PROPERTIES NORMALLY
+    function serverCall(route) {
+      return new Promise(function(resolve, reject) {
+        let req = new XMLHttpRequest();
+        req.open('POST', self.baseUrl + route, true);
+        req.setRequestHeader('Content-Type', 'application/json');
+        req.addEventListener('load', function() {
+          if(req.status >= 200 && req.status < 400) {
+            let response = JSON.parse(req.responseText);
+            for (const property in response) {
+              callbackResult[property] = response[property];
+            }
+            resolve(callbackResult);
+          } else {
+            console.log("Error in network request: " + req.statusText);
           }
-        } else {
-          console.log("Error in network request: " + req.statusText);
-        }
-      });
-      req.send(payload);
+        });
+        req.send(payload);
+      })
     }
-    console.log(callbackResult);
-    // console.log(callbackResult.problem)  // CANNOT ACCESS PROPERTIES
-    callback(callbackResult);
+
+    // build list of server calls to make
+    let promiseList = [];
+    for (let i = 0; i < index.length; i++) {
+      promiseList.push(serverCall(index[i]))
+    }
+
+    // wait for all server calls to finish before returning
+    Promise.all(promiseList).then(function() {
+      callback(callbackResult);
+    });
   }
 
   saveRecipe(name, ingredients, callback) {
