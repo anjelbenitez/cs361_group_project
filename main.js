@@ -549,27 +549,3 @@ function checkNotAuthenticated(req, res, next) {
 app.listen(app.get('port'), function(){
     console.log('Express started on http://localhost:' + app.get('port') + '; press Ctrl-C to terminate.');
 });
-
-app.post('/getRecipesByCategoryId', function (req, res, next) {
-
-  // Construct the query
-  const query = {
-    text: `select r.name as recipeName
-          from recipe r 
-          inner join recipe_category rc on r.id = rc.recipe_id 
-          inner join category c on rc.category_id = c.id
-          where c.id = $1`,
-    values: [req.body["id"]]
-  };
-
-  // Run the query and send response
-  pg.query(query, function(err, result){
-    if(err){
-      next(err);
-      return;
-    }
-
-    res.setHeader('Content-Type', 'application/json');
-    res.send(JSON.stringify(result.rows));
-  });
-});
