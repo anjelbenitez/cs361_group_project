@@ -169,7 +169,7 @@ app.get('/category/:category',function(req,res,next){
   context.title = type;
 
   // Select all from the test_table
-  let query = `select r.name as recipename, c.name as categoryname
+  let query = `select r.id as recipeid ,r.name as recipename, c.name as categoryname
                   from category c
                   inner join recipe_category rc on c.id = rc.category_id
                   inner join recipe r on rc.recipe_id = r.id
@@ -184,37 +184,6 @@ app.get('/category/:category',function(req,res,next){
 
     context.results = result.rows;
     res.render('category', context);
-  });
-});
-
-
-
-/*
-dispay ingredients for recipes
-*/
-
-app.get('/ingredients/:recipename', function(req,res, next){
-  let context = {};
-  context.user = req.user || null  // req.user exists when a user is logged in
-  var recipe = req.params.recipename;
-  context.title = "Ethical Eating - " + recipe;
-
-  // Select all from the test_table
-  let query = `select r.name as recipeName, i.name as ingredientList
-              from recipe r
-              inner join recipe_ingredient ri on r.id = ri.recipe_id 
-              inner join ingredient i on ri.ingredient_id = i.id
-              where r.name = $1`;
-
-  var inserts = [recipe];
-  pg.query(query, inserts, (err, result) => {
-    if(err){
-      next(err);
-      return;
-    }
-
-    context.results = result.rows;
-    res.render('ingredients', context);
   });
 });
 
