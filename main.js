@@ -210,34 +210,40 @@ app.delete('/deleteRecipeWithId', (req, res, next) => {
 
   let recipe_id = req.body.id;
 
-  // First delete the ingredient associations
-  let recipe_ingredient_del_query = {
-    text: `delete from recipe_ingredient ri where ri.recipe_id = $1`,
-    values: [recipe_id]
-  };
-
-  pg.query(recipe_ingredient_del_query, (err, result) => {
-    if (err) {
-      next(err);
-      return;
-    }
-
-    // Then delete the recipe itself
-    let recipe_del_query = {
-      text: `delete from recipe r where r.id = $1 returning *`,
+  // First delete the recipe ingredient entries
+  let promise_del_recipe_ingredient = new Promise(function (resolve, reject) {
+    let recipe_ingredient_del_query = {
+      text: `delete from recipe_ingredient ri where ri.recipe_id = $1 returning *`,
       values: [recipe_id]
     };
 
-    pg.query(recipe_del_query, (err, result) => {
+    pg.query(recipe_ingredient_del_query, (err, result) => {
       if (err) {
-        next(err);
-        return;
+        reject(err);
       }
-
-      res.setHeader('Content-Type', 'application/json');
-      res.send(JSON.stringify(result.rows));
+      resolve(result);
     });
   });
+
+  // Once the first promise resolves (recipe-ingredient entries deleted), then delete the recipe entry
+  promise_del_recipe_ingredient
+    .then(recipe_ingredient_result => new Promise(((resolve, reject) => {
+        let recipe_del_query = {
+          text: `delete from recipe r where r.id = $1 returning *`,
+          values: [recipe_id]
+        };
+        pg.query(recipe_del_query, (err, result) => {
+          if (err) {
+            reject(err);
+          }
+
+          res.setHeader('Content-Type', 'application/json');
+          res.send(JSON.stringify(result.rows));
+        });
+    })))
+
+    // Handle any error in the promise chain
+    .catch(error => next(error));
 });
 
 /*
