@@ -210,24 +210,30 @@ app.delete('/deleteRecipeWithId', (req, res, next) => {
 
   let recipe_id = req.body.id;
 
-  // First delete the recipe ingredient entries
-  let promise_del_recipe_ingredient = new Promise(function (resolve, reject) {
-    let recipe_ingredient_del_query = {
-      text: `delete from recipe_ingredient ri where ri.recipe_id = $1 returning *`,
-      values: [recipe_id]
-    };
+  // Wrap the code in an annonymous async function so we can use the async-await syntax
+  (async () => {
 
-    pg.query(recipe_ingredient_del_query, (err, result) => {
-      if (err) {
-        reject(err);
-      }
-      resolve(result);
-    });
-  });
+    // Use a try-catch block to catch errors from async-await
+    try {
+      // First delete the recipe ingredient entries
+      let promise_del_recipe_ingredient = new Promise(function (resolve, reject) {
+        let recipe_ingredient_del_query = {
+          text: `delete from recipe_ingredient ri where ri.recipe_id = $1 returning *`,
+          values: [recipe_id]
+        };
 
-  // Once the first promise resolves (recipe-ingredient entries deleted), then delete the recipe entry
-  promise_del_recipe_ingredient
-    .then(recipe_ingredient_result => new Promise(((resolve, reject) => {
+        pg.query(recipe_ingredient_del_query, (err, result) => {
+          if (err) {
+            reject(err);
+          }
+          resolve(result);
+        });
+      });
+      // Wait for the promise to resolve
+      let recipe_ingredient_result = await promise_del_recipe_ingredient;
+
+      // Once the first promise resolves (recipe-ingredient entries deleted), then delete the recipe entry
+      let promise_del_recipe = new Promise(function (resolve, reject) {
         let recipe_del_query = {
           text: `delete from recipe r where r.id = $1 returning *`,
           values: [recipe_id]
@@ -236,14 +242,22 @@ app.delete('/deleteRecipeWithId', (req, res, next) => {
           if (err) {
             reject(err);
           }
-
-          res.setHeader('Content-Type', 'application/json');
-          res.send(JSON.stringify(result.rows));
+          resolve(result.rows);
         });
-    })))
+      });
+      // Wait for the second promise to resolve
+      let recipe_result = await promise_del_recipe;
 
-    // Handle any error in the promise chain
-    .catch(error => next(error));
+      // Send the response back to client
+      res.setHeader('Content-Type', 'application/json');
+      res.send(JSON.stringify(recipe_result));
+    }
+    catch (err) {
+      next(err);
+    }
+
+  // Call the annonymous function
+  })();
 });
 
 /*
