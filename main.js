@@ -164,7 +164,8 @@ app.get('/recipe', function (req, res, next) {
               inner join ingredient i on i.id = ip.ingredient_id
               inner join ethical_problem p on p.id = ip.problem_id
               inner join ethical_description ee on ee.id = ip.explain_id
-              where i.id = any ($1)`,
+              where i.id = any ($1)
+              order by i.name asc`,
       values: [ingredient_ids]
     }
 
