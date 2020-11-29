@@ -3,19 +3,46 @@
     <a href="javascript:history.back()">Return to View Recipes</a>
 
 </div>
-<div>
-    <p>View {{#each results}}{{#if @first}}{{this.recipename}}{{/if}}{{/each}} Ingredients</p>
-    <ul>
-        {{#each results}}
-            <li>{{this.ingredientname}}</li>
-        {{/each}}
-    </ul>
+<div id="recipe-container">
+    <div class="column">
+        <div>
+            <p>View {{#each results}}{{#if @first}}{{this.recipename}}{{/if}}{{/each}} Ingredients</p>
+            <ul>
+                {{#each results}}
+                    <li>{{this.ingredientname}}</li>
+                {{/each}}
+            </ul> 
+        </div>
+
+        <div>
+            {{#if results.1.ownerid}}
+                <a href="/build?recipeid={{results.1.recipeid}}">Edit this private recipe</a>
+            {{else}}
+                <a href="/build?recipeid={{results.1.recipeid}}">Customize this public recipe</a>
+            {{/if}}
+        </div>
+    </div>
+
+    <div class="column">
+        <p>Ethical Problems in {{#each results}}{{#if @first}}{{this.recipename}}{{/if}}{{/each}}</p>
+        <table id="ingredient-problems-table">
+            <tbody>
+                {{#if all_problems}}
+                {{#each all_problems}}
+                <tr>
+                    <td>{{this.ingredient}}</td>
+                    <td>{{this.problem}} - {{this.description}}</td>
+                </tr>
+                {{/each}}
+                {{else}}
+                <tr><td>This recipe has no ethical problems!</td></tr>
+                {{/if}}
+            </tbody>
+        </table>
+    </div>
 </div>
 
-<div>
-    {{#if results.1.ownerid}}
-        <a href="/build?recipeid={{results.1.recipeid}}">Edit this private recipe</a>
-    {{else}}
-        <a href="/build?recipeid={{results.1.recipeid}}">Customize this public recipe</a>
-    {{/if}}
-</div>
+
+<script type="text/javascript" src='/js/ServerInteractor.js'></script>
+<script type="text/javascript" src='/js/TableBuilder.js'></script>
+<link rel="stylesheet" type="text/css" href="css/recipe.css">

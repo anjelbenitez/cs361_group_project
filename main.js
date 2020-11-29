@@ -137,7 +137,7 @@ app.get('/recipe', function (req, res, next) {
 
   let recipe_id = req.query.id;
   let query = {
-    text: `select i.name as ingredientname, r.name as recipename, r.owner_id as ownerid, r.id as recipeid
+    text: `select i.id as ingredientid, i.name as ingredientname, r.name as recipename, r.owner_id as ownerid, r.id as recipeid
            from recipe r
            inner join recipe_ingredient ri on r.id = ri.recipe_id 
            inner join ingredient i on ri.ingredient_id = i.id 
@@ -153,7 +153,30 @@ app.get('/recipe', function (req, res, next) {
     context.title = result.rows[0].recipename;
     context.results = result.rows;
 
-    res.render('recipe', context);
+    let ingredient_ids = [];
+    for (let i = 0; i < context.results.length; i++) {
+      ingredient_ids.push(context.results[i].ingredientid);
+    }
+
+    let problems_query = {
+      text: `select i.name as ingredient, p.title as problem, ee.explain as description 
+              from ingredient_ethical_problem ip 
+              inner join ingredient i on i.id = ip.ingredient_id
+              inner join ethical_problem p on p.id = ip.problem_id
+              inner join ethical_description ee on ee.id = ip.explain_id
+              where i.id = any ($1)`,
+      values: [ingredient_ids]
+    }
+
+    pg.query(problems_query, (err, result) => {
+      if (err) {
+        next(err);
+        return;
+      }
+
+      context.all_problems = result.rows;
+      res.render('recipe', context);
+    })
   })
 });
 
