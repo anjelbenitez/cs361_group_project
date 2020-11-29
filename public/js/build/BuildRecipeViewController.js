@@ -48,6 +48,15 @@ class BuildRecipeViewController {
         info_cell.children[0].setAttribute("id", "Info" + ingredient_id);
       }
     });
+
+    // Get access to the recipeid parameters in the URL
+    const url_params = new URLSearchParams(window.location.search);
+    let recipe_id = url_params.get('recipeid');
+
+    // If a recipe ID is passed in the URL, pre-populate the page with ingredients from that recipe
+    if (recipe_id) {
+      this.prepopulateWithRecipe(recipe_id);
+    }
   }
 
   saveRecipe() {
@@ -69,14 +78,70 @@ class BuildRecipeViewController {
 
     // Save the recipe
     let si = new ServerInteractor();
-    si.saveRecipe(name, this.recipe_ingredients, (response) => {
+
+    // Check if the user already has a recipe with the same name
+    si.findPrivateRecipeWithName(name, (response) => {
       if (response.error) {
         alert(response.error);
       }
+      // There was no error
       else {
-        alert("Recipe was saved successfully!");
+        console.log(response);
+
+        // If an recipe with the same name already exists
+        if (response.length > 0) {
+          let override = confirm("A recipe with the same name already exists. Are you sure you want to overwrite it?");
+
+          // User does not want to overwrite, return
+          if (!override) {
+            return;
+          }
+          // User wants to overwrite
+          else {
+            let recipe_id = response[0].id;
+
+            let si = new ServerInteractor();
+            si.deleteRecipeWithId(recipe_id, (response) => {
+              if (response[0].id === recipe_id) {
+                console.log(`Recipe ${recipe_id} was deleted!`);
+              }
+            });
+          }
+        }
+
+        // Save the recipe
+        si.saveRecipe(name, this.recipe_ingredients, (response) => {
+          if (response.error) {
+            alert(response.error);
+          }
+          else {
+            alert("Recipe was saved successfully!");
+          }
+        });
       }
     });
+  }
+
+  prepopulateWithRecipe(recipe_id) {
+    let si = new ServerInteractor();
+    let ff = new BuildRecipeFunctionFactory();
+
+    si.getRecipeIngredients(recipe_id, (results) => {
+
+      // Populate the recipe name field
+      let recipe_name_field = document.getElementById("recipe_name");
+      recipe_name_field.value = results[0].recipename;
+
+      // Add the ingredients
+      for (let i = 0; i < results.length; i++) {
+        let ingredient_id = results[i].ingredientid;
+        let ingredient_name = results[i].ingredientname;
+
+        // Create a function for adding the ingredient and then call the function
+        let addFunc = ff.createAddIngredientFunction(ingredient_id, ingredient_name, this);
+        addFunc();
+      }
+    })
   }
 }
 
