@@ -14,8 +14,8 @@
 
 <div>
     {{#if results.1.ownerid}}
-        <a href="/build?recipeid={{results.1.recipeid}}">Edit this private recipe</a>
+        <a href="/build?recipeid={{results.0.recipeid}}">Edit this private recipe</a>
     {{else}}
-        <a href="/build?recipeid={{results.1.recipeid}}">Customize this public recipe</a>
+        <a href="/build?recipeid={{results.0.recipeid}}">Customize this public recipe</a>
     {{/if}}
 </div>
