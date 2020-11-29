@@ -44,23 +44,30 @@ class BuildRecipeFunctionFactory {
   createInfoFunction(ingredient_id, ingredient_name) {
     return function () {
       let si = new ServerInteractor();
-      let altTable = document.getElementById("alt-table");
-      let tb = new TableBuilder(altTable);
-
+      
       si.getIngredientInfo(ingredient_id, (result) => {    
         // Update Ingredient Info box on page asynchronously
-        document.getElementById("ingredient-name").textContent = ingredient_name; 
+        let ingTable = document.getElementById("ing-name-table");
+        ingTable.innerHTML = "";
+
+        let tb = new TableBuilder(ingTable);
+        let ingRow = tb.createRow();
+        tb.createTextOnlyCell(ingRow, ingredient_name);
+        tb.createReferenceButtonCell(ingRow, "Add", ingredient_id);
+
         document.getElementById("ingredient-ethics").textContent = result.problem;
         document.getElementById("ethic-information").textContent = result.description;
 
         // Populate alternatives table with names and buttons
+        let altTable = document.getElementById("alt-table");
         altTable.innerHTML = "";
         if (result.alternative[0] != "None") {
+          let altTb = new TableBuilder(altTable);
           for (let i = 0; i < result.alternative.length; i++) {
-            let altRow = tb.createRow();
-            tb.createTextOnlyCell(altRow, result.alternative[i]);
-            tb.createReferenceButtonCell(altRow, "Add", result.alternative_id[i])
-            tb.createReplaceButtonCell(altRow, ingredient_id, result.alternative_id[i]);
+            let altRow = altTb.createRow();
+            altTb.createTextOnlyCell(altRow, result.alternative[i]);
+            altTb.createReferenceButtonCell(altRow, "Add", result.alternative_id[i])
+            altTb.createReplaceButtonCell(altRow, ingredient_id, result.alternative_id[i]);
           }
         } else {
           altTable.innerHTML = "None";
