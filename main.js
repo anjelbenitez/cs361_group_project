@@ -137,7 +137,8 @@ app.get('/recipe', function (req, res, next) {
 
   let recipe_id = req.query.id;
   let query = {
-    text: `select i.name as ingredientname, r.name as recipename from recipe r 
+    text: `select i.name as ingredientname, r.name as recipename, r.owner_id as ownerid, r.id as recipeid
+           from recipe r
            inner join recipe_ingredient ri on r.id = ri.recipe_id 
            inner join ingredient i on ri.ingredient_id = i.id 
            where r.id = $1`,
@@ -153,9 +154,104 @@ app.get('/recipe', function (req, res, next) {
     context.results = result.rows;
 
     res.render('recipe', context);
-
   })
+});
 
+app.post('/getRecipeIngredientsWithRecipeId', function (req, res, next) {
+
+  let recipe_id = req.body.id;
+  let query = {
+    text: `select i.name as ingredientname, r.name as recipename, r.owner_id as ownerid, r.id as recipeid, i.id as ingredientid
+           from recipe r
+           inner join recipe_ingredient ri on r.id = ri.recipe_id 
+           inner join ingredient i on ri.ingredient_id = i.id 
+           where r.id = $1`,
+    values: [recipe_id]
+  };
+
+  pg.query(query, (err, result) => {
+    if (err) {
+      next(err);
+      return;
+    }
+
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify(result.rows));
+  })
+});
+
+app.post('/findPrivateRecipeWithName', (req, res, next) => {
+
+  // Check that there is an active user session
+  if (!req.user) {
+    res.send({error: 'You have to log in first!'});
+  }
+
+  let name = req.body.name;
+  let owner_id = req.user.id;
+
+  let query = {
+    text: `select * from recipe r where name like $1 and owner_id = $2`,
+    values: [name, owner_id]
+  };
+
+  pg.query(query, (err, result) => {
+    if (err) {
+      next(err);
+      return;
+    }
+
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify(result.rows));
+  })
+});
+
+app.delete('/deleteRecipeWithId', async (req, res, next) => {
+
+  let recipe_id = req.body.id;
+
+  // Use a try-catch block to catch errors from async-await
+  try {
+    // First delete the recipe ingredient entries
+    let promise_del_recipe_ingredient = new Promise(function (resolve, reject) {
+      let recipe_ingredient_del_query = {
+        text: `delete from recipe_ingredient ri where ri.recipe_id = $1 returning *`,
+        values: [recipe_id]
+      };
+
+      pg.query(recipe_ingredient_del_query, (err, result) => {
+        if (err) {
+          reject(err);
+        }
+        resolve(result);
+      });
+    });
+    // Wait for the promise to resolve
+    let recipe_ingredient_result = await promise_del_recipe_ingredient;
+
+    // Once the first promise resolves (recipe-ingredient entries deleted), then delete the recipe entry
+    let promise_del_recipe = new Promise(function (resolve, reject) {
+      let recipe_del_query = {
+        text: `delete from recipe r where r.id = $1 returning *`,
+        values: [recipe_id]
+      };
+      pg.query(recipe_del_query, (err, result) => {
+        if (err) {
+          reject(err);
+        }
+        resolve(result.rows);
+      });
+    });
+    // Wait for the second promise to resolve
+    let recipe_result = await promise_del_recipe;
+
+    // Send the response back to client
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify(recipe_result));
+  }
+  catch (err) {
+    next(err);
+  }
 });
 
 /*
@@ -234,9 +330,6 @@ app.post('/getEthicalProblemForIngredientId', function (req, res, next) {
     res.send(JSON.stringify(result.rows));
   });
 });
-
-
-
 
 /*
 The /getRecipeByCategory endpoint takes an id of a category as a parameter and returns a list of all the recipes within that category
