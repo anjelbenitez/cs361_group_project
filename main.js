@@ -332,18 +332,17 @@ app.post('/getIngredients', function (req, res, next) {
 });
 
 /*
-The /getEthicalProblemForIngredientId endpoint takes the id of an ingredient as parameter and returns as a response
-the name of the ingredient and the title of the ethical problem.
+The /getEthicsForIngredientId endpoint returns an ingredient's ethical problem and description
  */
-app.post('/getEthicalProblemForIngredientId', function (req, res, next) {
-
+app.post('/getEthicsForIngredientId', function (req, res, next) {
   // Construct the query
   const query = {
-    text: `select i.name as ingredient, p.title as problem 
-           from ingredient_ethical_problem ip 
-           inner join ethical_problem p on ip.problem_id = p.id 
-           inner join ingredient i on i.id = ip.ingredient_id 
-           where ip.ingredient_id = $1`,
+    text: `select i.name as ingredient, p.title as problem, ee.explain as description 
+          from ingredient_ethical_problem ip 
+          inner join ingredient i on i.id = ip.ingredient_id
+          inner join ethical_problem p on p.id = ip.problem_id
+          inner join ethical_description ee on ee.id = ip.explain_id
+          where i.id = $1`,
     values: [req.body["id"]]
   };
 
@@ -355,46 +354,11 @@ app.post('/getEthicalProblemForIngredientId', function (req, res, next) {
     }
 
     let response = {};
-    
     if (result.rows.length) {
-      response['ingredient'] = result.rows[0]['ingredient'];
       response['problem'] = result.rows[0]['problem'];
-    } else {
-      response['problem'] = "None";
-    }
-    
-    res.setHeader('Content-Type', 'application/json');
-    res.send(response);
-  });
-});
-
-/*
-The /getEthicalDescriptionForIngredientId endpoint takes the id of an ingredient as parameter and returns as a response
-the description of the ethical problem.
- */
-app.post('/getEthicalDescriptionForIngredientId', function (req, res, next) {
-
-  // Construct the query
-  const query = {
-    text: `select ee.explain as description from ingredient i
-            inner join ingredient_ethical_problem ie on i.id = ie.ingredient_id
-            inner join ethical_problem e on ie.problem_id = e.id
-            inner join ethical_description ee on e.id = ee.id
-            where i.id =  $1`,
-    values: [req.body["id"]]
-  };
-
-  // Run the query and send response
-  pg.query(query, function(err, result){
-    if(err){
-      next(err);
-      return;
-    }
-
-    let response = {};
-    if (result.rows.length) {
       response['description'] = result.rows[0]['description'];
     } else {
+      response['problem'] = "None";
       response['description'] = "None";
     }
     

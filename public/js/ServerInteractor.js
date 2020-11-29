@@ -20,7 +20,7 @@ class ServerInteractor {
   }
 
   getIngredientInfo(ingredient_id, callback) {
-    let index = ['/getEthicalProblemForIngredientId', '/getEthicalDescriptionForIngredientId', '/getAlternativesForIngredientId'];
+    let index = ['/getEthicsForIngredientId', '/getAlternativesForIngredientId'];
     let payload = JSON.stringify({"id":ingredient_id});
     let callbackResult = {};
     let self = this;
