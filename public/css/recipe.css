@@ -1,0 +1,32 @@
+li {
+    margin-bottom: 4px;
+}
+
+.fa-exclamation-triangle {
+    color: gray;
+    position: relative;
+}
+
+.fa-exclamation-triangle .tooltip-text {
+    visibility: hidden;
+    position: absolute;
+    z-index: 1;
+
+    width: 300px;
+    background-color: white;
+    color: black;
+    padding: 10px;
+    border: 1px solid black;
+    border-radius: 5px;
+    font-weight: normal;
+    bottom: 125%;
+    left: 50%;
+
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.fa-exclamation-triangle:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}

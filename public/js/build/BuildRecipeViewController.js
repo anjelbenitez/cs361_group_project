@@ -43,7 +43,7 @@ class BuildRecipeViewController {
 
         // Add an "Info" button
         // When user clicks on Info button, ingredient info show ups asynchronously on page
-        let infoFunction = ff.createInfoFunction(ingredient_id);
+        let infoFunction = ff.createInfoFunction(ingredient_id, ingredient_name);
         let info_cell = tb.createButtonCell(row, "Info", infoFunction);
         info_cell.children[0].setAttribute("id", "Info" + ingredient_id);
       }
