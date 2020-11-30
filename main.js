@@ -140,7 +140,7 @@ app.get('/recipe', function (req, res, next) {
     text: `select i.id as ingredientid, i.name as ingredientname, r.name as recipename, r.owner_id as ownerid, r.id as recipeid
            from recipe r
            inner join recipe_ingredient ri on r.id = ri.recipe_id 
-           inner join ingredient i on ri.ingredient_id = i.id 
+           inner join ingredient i on ri.ingredient_id = i.id
            where r.id = $1`,
     values: [recipe_id]
   };
@@ -164,8 +164,7 @@ app.get('/recipe', function (req, res, next) {
               inner join ingredient i on i.id = ip.ingredient_id
               inner join ethical_problem p on p.id = ip.problem_id
               inner join ethical_description ee on ee.id = ip.explain_id
-              where i.id = any ($1)
-              order by i.name asc`,
+              where i.id = any ($1)`,
       values: [ingredient_ids]
     }
 
@@ -175,9 +174,19 @@ app.get('/recipe', function (req, res, next) {
         return;
       }
 
-      context.all_problems = result.rows;
+      // add description to ingredients with problems
+      for (let i = 0; i < result.rows.length; i++) {
+        for (let j = 0; j < context.results.length ; j++) {
+          if (result.rows[i].ingredient == context.results[j].ingredientname) {
+            context.results[j]["problem"] = result.rows[i]["problem"];
+            context.results[j]["description"] = result.rows[i]["description"];
+            break;
+          }
+        }
+      }
+      
       res.render('recipe', context);
-    })
+      })
   })
 });
 
