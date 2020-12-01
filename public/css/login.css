@@ -8,6 +8,7 @@
     position: absolute;
     padding:20px;
     z-index: -10;
+    
 }
 
 .login_form_content {
@@ -22,6 +23,7 @@
 .login_form_fieldset{
     text-align: left;
     border: none;
+
 }
 
 .form_input {
@@ -30,5 +32,17 @@
 
 .form_submit {
     text-align: center;
-    padding-top: 30px;
+    padding-top: 10px;
+}
+
+#login_button{
+    background-color: rgb(231, 243, 220);
+    color: black;
+    padding: 5px;
+    text-align: center;
+    font-size: 10px;
+    cursor: pointer;
+    padding: 15px;
+    border-style: solid;
+    border-color: gray;
 }
