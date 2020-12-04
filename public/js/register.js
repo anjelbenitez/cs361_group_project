@@ -1,4 +1,6 @@
 import { validateSignUp } from '/js/validateRegistration.js'
+var LOC = window.location;
+let BASEURL = LOC.protocol + "//" + LOC.hostname + (LOC.port? ":"+LOC.port : "")
 
 function displayRegisterForm() {
     document.querySelector('.register_modal_container').style.display = 'flex';
@@ -37,7 +39,7 @@ function clearSignUpForm(){
     input_list.push(username);
     input_list.push(password);
     input_list.push(confirm_password);
-    for (i=0; i<input_list.length; i++) {
+    for (let i=0; i<input_list.length; i++) {
         if (input_list[i].nextElementSibling.childElementCount != 0){
             input_list[i].nextElementSibling.children[0].remove();
         }
@@ -65,7 +67,7 @@ function signUpAttempt() {
                 //create account goes here?
                 let req = new XMLHttpRequest();
                 let payload = {first_name: signUpForm.getFirstName().value,last_name: signUpForm.getLastName().value, email: signUpForm.getEmail().value, username: signUpForm.getUsername().value, password: signUpForm.getPassword().value}
-                req.open("POST", "http://localhost:3000/register", true);
+                req.open("POST", BASEURL + "/register", true);
                 req.setRequestHeader("Content-Type", "application/json");
                 req.addEventListener("load", function(){
                     if (req.status >= 200 && req.status < 400) {
