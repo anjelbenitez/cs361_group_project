@@ -64,7 +64,15 @@ INSERT INTO ingredient (name) VALUES
     ('Chickpeas'),              --33
     ('Cashew Cheese'),          --34
     ('Chicken'),                --35
-    ('Salmon');                 --36
+    ('Salmon'),                 --36
+    ('Bluefin Tuna'),           --37
+    ('Skipjack Tuna'),          --38
+    ('Albacore'),               --39
+    ('Lamb'),                   --40
+    ('Baking Powder'),          --41
+    ('Chives'),                 --42
+    ('Red-Wine Vinaigrette'),   --43
+    ('Roquefort Cheese');       --44
 
 
 CREATE TABLE recipe (
@@ -81,7 +89,10 @@ INSERT INTO recipe (name, owner_id, public) VALUES
     ('Cheeseburger', NULL, TRUE),             -- 3
     ('Pulled Pork Sandwich', NULL, TRUE),     -- 4
     ('Beef Stroganoff', NULL, TRUE),          -- 5
-    ('Carbonara', NULL, TRUE);                -- 6
+    ('Carbonara', NULL, TRUE),                -- 6
+    ('Pancakes', NULL, TRUE),                 -- 7
+    ('Cobb Salad', NULL, TRUE),               -- 8
+    ('Mashed Potatoes', NULL, TRUE);         -- 9
 
 CREATE TABLE category (
     id SERIAL PRIMARY KEY NOT NULL,
@@ -107,7 +118,10 @@ INSERT INTO recipe_category (recipe_id, category_id) VALUES
     (3, 2),
     (4, 2),
     (5, 3),
-    (6, 3);
+    (6, 3),
+    (7, 1),
+    (8, 2),
+    (9, 3);
 
 CREATE TABLE recipe_ingredient (
     recipe_id INT,
@@ -165,7 +179,31 @@ INSERT INTO recipe_ingredient (recipe_id, ingredient_id) VALUES
     (6, 22),
     (6, 24),
     (6, 26),
-    (6, 27);
+    (6, 27),
+    -- Pancakes
+    (7, 1),
+    (7, 18),
+    (7, 19),
+    (7, 20),
+    (7, 26),
+    (7, 28),
+    (7, 41),
+    -- Cobb Salad
+    (8, 15),
+    (8, 14),
+    (8, 10),
+    (8, 35),
+    (8, 18),
+    (8, 12),
+    (8, 42),
+    (8, 43),
+    (8, 44),
+    -- Mashed Patatoes
+    (9, 11),
+    (9, 19),
+    (9, 20),
+    (9, 26),
+    (9, 27);
 
 create table ethical_problem (
     id SERIAL PRIMARY KEY NOT NULL,
@@ -174,7 +212,8 @@ create table ethical_problem (
 
 insert into ethical_problem (title) values
     ('Deforestation'),
-    ('Carbon Emission');
+    ('Carbon Emission'),
+    ('Overfishing');
 
 create table ethical_description(
     id SERIAL PRIMARY KEY NOT NULL,
@@ -183,7 +222,8 @@ create table ethical_description(
 
 insert into ethical_description (explain) values
     ('The decrease in forest areas across the world that are lost for other uses such as agricultural croplands, urbanization, or mining activities.'),
-    ('The release of carbon into the atmosphere; the main contributors to climate change.');
+    ('The release of carbon into the atmosphere; the main contributors to climate change.'),
+    ('The removal of a species of fish from a body of water at a rate that the species cannot replenish, resulting in those species becoming underpopulated in that area.');
  
 
 create table ingredient_ethical_problem (
@@ -210,7 +250,10 @@ insert into ingredient_ethical_problem values
     (21, 1, 1), -- Cheddar Cheese and deforestation
     (22, 1, 1), -- Parmesan Cheese and deforestation
     (3, 2, 1),  -- Egg Noodle and carbon emission
-    (29, 2, 1); -- Heavy cream and carbon emission
+    (29, 2, 1), -- Heavy cream and carbon emission
+    (37, 3, 3), -- Bluefin Tuna and overfishing
+    (40, 2, 2), -- Lamb and carbon emission
+    (44, 1, 1); -- Roquefort Cheese and deforestation
 
 create table ingredient_alternative (
     ingredient_id INT,
@@ -245,5 +288,9 @@ insert into ingredient_alternative (ingredient_id, alternative_id) values
     (9, 36),  -- Ham and Salmon
     (10, 35), -- Bacon and Chicken
     (10, 36), -- Bacon and Salmon
-	(3, 11);  -- Egg Noodle and Russet Potatoes
+	(3, 11),  -- Egg Noodle and Russet Potatoes
+    (37, 38), -- Bluefin Tuna and Skipjack Tuna
+    (37, 39), -- Bluefin Tuna and Albacore
+    (40, 35), -- Lamb and Chicken
+    (44, 34); -- Roquefort Cheese and Cashew Cheese
 

@@ -9,34 +9,37 @@
     <!--Header and navigation bar-->
     <header>
         <div><img src="/images/banner.png" alt="banner" id="banner"></div>
+        <div class="navbar_div">
         <div class="navbar">
-            <a class="active" href="/">Home</a>
-            <a href="/build">Build a Recipe</a>
+            <a class="active" href="/">HOME</a>
+            <a href="/build">BUILD A RECIPE</a>
             <a href="/faq">FAQ</a>
             {{#if user}}
             <div class="account">
-                <a class="profile_name">Profile: {{this.user.username}}</a>
+                <a class="profile_name">PROFILE: {{this.user.username}}</a>
                 <a style="pointer-events: none">|</a>
-                <a href="/my_recipes">My Recipes</a>
+                <a href="/my_recipes">MY RECIPES</a>
                 <a style="pointer-events: none">|</a>
                 <form class="logout_form" action="/logout?_method=DELETE" method="POST">
-                    <button class="logout_button" type="submit">Logout</button>
+                    <button class="logout_button" type="submit">LOGOUT</button>
                 </form>
             </div>
             {{else}}
             <div class="account">
-                <a href="/login">Log In</a>
-                <a href="#" id="register_button" class="register_button">Register</a>
+                <a href="/login">LOG IN</a>
+                <a href="#" id="register_button" class="register_button">REGISTER</a>
             </div>
             {{/if}}
         </div>
+        </div>
     </header>
+    </div>
 
     <!--Model-->
     <div class="register_modal_container">
         <div class="register_modal_content">
             <button id="register_close" class="register_close">+</button>
-            <h2 class="sign_up_title">Sign Up</h2>
+            <h2 class="sign_up_title">SIGN UP</h2>
             <p>Create an Ethical Eating account</p>
             <form>
                 <fieldset class="form_fieldset">
@@ -102,3 +105,5 @@
     <div>{{{body}}}</div>
 </body>
 </html>
+
+<link rel="stylesheet" type="text/css" href="css/main.css">

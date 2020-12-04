@@ -1,12 +1,14 @@
-<p1>Build a Recipe</p1>
-<div>
-    <label for="recipe_name">Recipe Name:</label>
+{{!-- <div class="title">
+    <p1>Build a Recipe</p1>
+</div> --}}
+<div class="save_recipe">
+    <label for="recipe_name">Recipe Name:</label><br>
     <input type="text" id="recipe_name" name="recipe_name"><br>
     <button id="save_button">Save Recipe</button>
 </div>
 <table id="full-table">
     <tr>
-        <!--On the left, the work-in=progress recipe-->
+        <!--On the left, the work-in-progress recipe-->
         <td class="build-column">
             <div id="recipe">
                 <table id="recipe-table">
@@ -43,7 +45,7 @@
             <div id="ing-info-div">
                 <div>
                     <p class="ing-info">Ingredient Name</p>
-                    <p id="ingredient-name"><br></p>
+                    <table id="ing-name-table"></table>
                 </div>
                 <div>
                     <p class="ing-info">Ethical Problem</p>
@@ -55,9 +57,7 @@
 
                 <div>
                     <p class="ing-info">Alternatives</p>
-                    <table id="alt-table">
-                        <thead></thead>
-                    </table>
+                    <table id="alt-table"></table>
                 </div> 
             </div>
         </td>
